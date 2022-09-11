@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.User;
 using Messzendzser.Model.DB;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Messzendzser.Controllers
 {
@@ -25,19 +27,19 @@ namespace Messzendzser.Controllers
         public string Post( [FromHeader(Name = "message")] string? message, [FromHeader(Name = "chatroomId")] string? chatroomId)
         {
             //Initialize error list for possible errors
-            List<KeyValuePair<string, string>> errors = new List<KeyValuePair<string, string>>();
+            Dictionary<string, string> errors = new Dictionary<string, string>();
             int ChatroomId;
             #region Messasge verification
             if (message == null)
             {
-                errors.Add(new KeyValuePair<string, string>("message", "Message cannot be empty"));
+                errors.Add("message", "Message cannot be empty");
             }
             #endregion
 
             #region Chatroom Id verification
             if (chatroomId == null)
             {
-                errors.Add(new KeyValuePair<string, string>("chatroomId", "Chatroom id cannot be empty"));
+                errors.Add("chatroomId", "Chatroom id cannot be empty");
             }
             else
             {
@@ -45,7 +47,7 @@ namespace Messzendzser.Controllers
                     ChatroomId = Convert.ToInt32(chatroomId);
                 }catch(Exception ex)
                 {
-                    errors.Add(new KeyValuePair<string, string>("chatroomId", "Chatroom id must be a number"));
+                    errors.Add("chatroomId", "Chatroom id must be a number");
                 }
             }
             #endregion
@@ -63,14 +65,14 @@ namespace Messzendzser.Controllers
                 }
                 catch (Exception ex) // Other exception
                 {
-                    errors.Add(new KeyValuePair<string, string>("error", ex.Message)); // TODO remove for production
+                    errors.Add("error", ex.Message); // TODO remove for production
                 }
             }
             if (errors.Count != 0)
-                return ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors.ToArray()).ToJson();
+                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
 
             // TODO check if all required headers are present
-            return ResponseMessage.CreateOkMessage().ToJson();
+            return JsonSerializer.Serialize(ResponseMessage.CreateOkMessage());
         }
     }
 }

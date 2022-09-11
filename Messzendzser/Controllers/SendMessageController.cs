@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.User;
 using Messzendzser.Model.DB;
+using System.Text.Json;
 
 namespace Messzendzser.Controllers
 {
@@ -20,57 +21,79 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class SendMessageController : ControllerBase
     {
-        // POST api/Register
+        // POST api/SendMessage
         [HttpPost()]
         public string Post( [FromHeader(Name = "message")] string? message, [FromHeader(Name = "chatroomId")] string? chatroomId)
         {
+            string? userToken = null;
+            Request.Cookies.TryGetValue("user-token", out userToken);
+            return SendMessage(message,chatroomId,userToken);
+        }
+        public string SendMessage(string? message, string? chatroomId, string? usertoken)
+        {
+            if(usertoken == null)
+                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(2, "No user token given"));
             //Initialize error list for possible errors
-            List<KeyValuePair<string, string>> errors = new List<KeyValuePair<string, string>>();
+            Dictionary<string, string> errors = new Dictionary<string, string>();
             int ChatroomId;
             #region Messasge verification
             if (message == null)
             {
-                errors.Add(new KeyValuePair<string, string>("message", "Message cannot be empty"));
+                errors.Add("message", "Message cannot be empty");
             }
             #endregion
 
             #region Chatroom Id verification
             if (chatroomId == null)
             {
-                errors.Add(new KeyValuePair<string, string>("chatroomId", "Chatroom id cannot be empty"));
+                errors.Add("chatroomId", "Chatroom id cannot be empty");
             }
             else
             {
-                try {
-                    ChatroomId = Convert.ToInt32(chatroomId);
-                }catch(Exception ex)
+                try
                 {
-                    errors.Add(new KeyValuePair<string, string>("chatroomId", "Chatroom id must be a number"));
+                    ChatroomId = Convert.ToInt32(chatroomId);
+                }
+                catch (Exception ex)
+                {
+                    errors.Add("chatroomId", "Chatroom id must be a number");
                 }
             }
             #endregion
-                        
-            if(errors.Count == 0) { 
+            UserToken token;
+            try
+            {
+                token = new UserToken(usertoken);
+            }
+            catch (ArgumentException)
+            {
+                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid Token"));
+            }
+
+            if (errors.Count == 0)
+            {
                 try
                 {
                     // Connection to a datasource
                     IDataSource dataSource = new MySQLDatabaseConnection();
-                    // Creating a UserManager
-                    IUserManager userManager = new UserManager(dataSource);
+                    // Creating a MessageManager
+                    string? usertoken = Request.Cookies["userToken"];
+                    // IMessageManager userManager = new MessageManager(dataSource);
 
-                    //Logging user in
+                    // Record message
                     // TODO add MessageManager call
                 }
                 catch (Exception ex) // Other exception
                 {
-                    errors.Add(new KeyValuePair<string, string>("error", ex.Message)); // TODO remove for production
+                    errors.Add("error", ex.Message); // TODO remove for production
                 }
             }
-            if (errors.Count != 0)
-                return ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors.ToArray()).ToJson();
 
-            // TODO check if all required headers are present
-            return ResponseMessage.CreateOkMessage(new List<KeyValuePair<string, string>>() { new KeyValuePair<string,string>("token", "") }.ToArray()).ToJson();
+            if (errors.Count != 0) // If there were errors return
+                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
+
+            //Return OK message            
+            return JsonSerializer.Serialize(ResponseMessage.CreateOkMessage());
         }
     }
 }

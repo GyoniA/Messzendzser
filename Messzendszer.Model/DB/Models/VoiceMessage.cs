@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Messzendzser.Model.DB
+namespace Messzendzser.Model.DB.Models
 {
     public class VoiceMessage
     {

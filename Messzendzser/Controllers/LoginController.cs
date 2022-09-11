@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.User;
 using Messzendzser.Model.DB;
+using System.Text.Json;
 
 namespace Messzendzser.Controllers
 {
@@ -20,53 +21,56 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        // POST api/Register
+        // POST api/Login
         [HttpPost()]
         public string Post( [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
         {
+            IDataSource dataSource = new MySQLDatabaseConnection();
+            IUserManager userManager = new UserManager(dataSource);
+            return Login(username, password, userManager);
+        }
+
+        public string Login(string? username, string? password, IUserManager userManager)
+        {
             //Initialize error list for possible errors
-            List<KeyValuePair<string, string>> errors = new List<KeyValuePair<string, string>>();
+            Dictionary<string, string> errors = new Dictionary<string, string>();
 
             #region Username verification
             if (username == null)
             {
-                errors.Add(new KeyValuePair<string, string>("username", "Username cannot be empty"));
+                errors.Add("username", "Username cannot be empty");
             }
             #endregion
 
             #region Password verification
             if (password == null)
             {
-                errors.Add(new KeyValuePair<string, string>("password", "Password cannot be empty"));
+                errors.Add("password", "Password cannot be empty");
             }
             #endregion
 
             string token = "";
-            if(errors.Count == 0) { 
+            if (errors.Count == 0)
+            {
                 try
                 {
-                    // Connection to a datasource
-                    IDataSource dataSource = new MySQLDatabaseConnection();
-                    // Creating a UserManager
-                    IUserManager userManager = new UserManager(dataSource);
-
                     //Logging user in
                     token = userManager.LoginUser(username, password);
                 }
                 catch (WrongCredentialsException ex) // Given credentials don't match any record
                 {
-                    errors.Add(new KeyValuePair<string, string>("username", "Given credentials don't match any record"));
+                    errors.Add("username", "Given credentials do not match any record");
                 }
                 catch (Exception ex) // Other exception
                 {
-                    errors.Add(new KeyValuePair<string, string>("error", ex.Message)); // TODO remove for production
+                    errors.Add("error", ex.Message); // TODO remove for production
                 }
             }
             if (errors.Count != 0)
-                return ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors.ToArray()).ToJson();
+                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
 
             // TODO check if all required headers are present
-            return ResponseMessage.CreateOkMessage(new List<KeyValuePair<string, string>>() { new KeyValuePair<string,string>("token", token) }.ToArray()).ToJson();
+            return JsonSerializer.Serialize(ResponseMessage.CreateOkMessage(new Dictionary<string, string>() { { "token", token } }));
         }
     }
 }
