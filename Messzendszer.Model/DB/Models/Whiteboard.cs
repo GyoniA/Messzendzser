@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Messzendzser.Model.DB.Models
 {
-    public class Whiteboard
+    [Table("whiteboard")]
+    [MySqlCharSet("latin1")]
+    [MySqlCollation("latin1_swedish_ci")]
+    public partial class Whiteboard
     {
+        [Key]
+        [Column("id", TypeName = "int(11)")]
         public int Id { get; set; }
-        public int ChatroomId { get; set; }
-        public string Event { get; set; }
-        public DateTime DateTime { get; set; }
-
+        [Column("chatroom_id")]
+        [StringLength(45)]
+        public string ChatroomId { get; set; } = null!;
+        [Column("event")]
+        [StringLength(400)]
+        public string Event { get; set; } = null!;
+        [Column("time", TypeName = "datetime")]
+        public DateTime Time { get; set; }
     }
 }

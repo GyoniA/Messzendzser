@@ -56,7 +56,7 @@ namespace Messzendzser.Controllers
                 try
                 {
                     // Connection to a datasource
-                    IDataSource dataSource = new MySQLDatabaseConnection();
+                    IDataSource dataSource = new MySQLDbConnection();
                     // Creating a UserManager
                     IUserManager userManager = new UserManager(dataSource);
 

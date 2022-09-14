@@ -1,9 +1,6 @@
 ﻿using Messzendzser.Model.DB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Messzendzser.Model.DB.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Messzendzser.Model.Managers.User
 {
@@ -24,17 +21,25 @@ namespace Messzendzser.Model.Managers.User
         }
 
         /// <summary>
-        /// Creates and stores a new user int the given DataSource
+        /// Checks username and password against records stored in DataSource
         /// </summary>
-        /// <param name="email">Email address of the user</param>
-        /// <param name="username">Username of the user</param>
+        /// <param name="username">Email address or username of the user</param>
         /// <param name="password">Password of the user</param>
         /// <exception cref="WrongCredentialsException">Thrown if given credentials are invalid</exception>
-        public string LoginUser(string username, string password)
+        public DB.Models.User LoginUser(string username, string password)
         {
-            string token = ""; // TODO
-            throw new WrongCredentialsException();
-            return token;
+            DB.Models.User user = dataSource.FindUserByUsernameOrEmail(username);
+            if(user != null)
+            {
+                //Create pass
+                PasswordHasher<DB.Models.User> passwordHasher = new PasswordHasher<DB.Models.User>();
+                PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(null, user.Password, password); // Does not use first argument, so it can be left as null
+                if(verificationResult.HasFlag(PasswordVerificationResult.Success)|| verificationResult.HasFlag(PasswordVerificationResult.SuccessRehashNeeded))
+                {
+                    return user;
+                }
+            }
+            throw new WrongCredentialsException();            
         }
         /// <summary>
         /// Authenticates the user in the given DataSource
@@ -45,9 +50,10 @@ namespace Messzendzser.Model.Managers.User
         /// <exception cref="EmailTakenException">Thrown when the email address </exception>
         public void RegisterUser(string email, string username, string password)
         {
-            dataSource.CreateUser(email, username, password);
-            // TODO
-            throw new EmailTakenException();
+            //Create a password hasher
+            Microsoft.AspNetCore.Identity.PasswordHasher<DB.Models.User> passwordHasher = new Microsoft.AspNetCore.Identity.PasswordHasher<DB.Models.User>();
+            string hashedPassword = passwordHasher.HashPassword(null, password); // This function doesn't use the first argument, so it can be left as null
+            dataSource.CreateUser(email, username, hashedPassword); // Throws exception if unsuccessful
         }
     }
 }

@@ -23,6 +23,6 @@ namespace Messzendzser.Model.Managers.User
         /// <param name="password">Password of the user</param>
         /// <returns>Authentication token</returns>
         /// <exception cref="EmailTakenException">Thrown when the email address </exception>
-        public string LoginUser(string username, string password);
+        public DB.Models.User LoginUser(string username, string password);
     }
 }

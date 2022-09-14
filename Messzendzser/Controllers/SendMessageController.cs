@@ -75,10 +75,9 @@ namespace Messzendzser.Controllers
                 try
                 {
                     // Connection to a datasource
-                    IDataSource dataSource = new MySQLDatabaseConnection();
-                    // Creating a MessageManager
-                    string? usertoken = Request.Cookies["userToken"];
-                    // IMessageManager userManager = new MessageManager(dataSource);
+                    IDataSource dataSource = null;// new MySQLDatabaseConnection(); TODO
+                    // Creating a UserManager
+                    // IUserManager userManager = new UserManager(dataSource);
 
                     // Record message
                     // TODO add MessageManager call

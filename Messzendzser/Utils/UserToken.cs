@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Messzendzser.Model.DB.Models;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
@@ -46,6 +47,13 @@ namespace Messzendzser.Utils
             this.Id = Id;
             this.Username = Username;
             this.Email = Email;
+            Created = DateTime.Now;
+        }
+        public UserToken(User user)
+        {
+            this.Id = user.Id;
+            this.Username = user.Username;
+            this.Email = user.Email;
             Created = DateTime.Now;
         }
 

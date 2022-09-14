@@ -25,7 +25,7 @@ namespace Messzendzser.Controllers
         [HttpPost()]
         public string Post([FromHeader(Name = "email")] string? email, [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
         {
-            IDataSource dataSource = new MySQLDatabaseConnection();
+            IDataSource dataSource = new MySQLDbConnection();
             IUserManager userManager = new UserManager(dataSource);
             return Register(email,username,password,userManager);
         }

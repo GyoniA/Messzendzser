@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.User;
 using Messzendzser.Model.DB;
+using Messzendzser.Model.DB.Models;
 using System.Text.Json;
 
 namespace Messzendzser.Controllers
@@ -25,7 +26,7 @@ namespace Messzendzser.Controllers
         [HttpPost()]
         public string Post( [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
         {
-            IDataSource dataSource = new MySQLDatabaseConnection();
+            IDataSource dataSource = new MySQLDbConnection();
             IUserManager userManager = new UserManager(dataSource);
             return Login(username, password, userManager);
         }
@@ -55,7 +56,9 @@ namespace Messzendzser.Controllers
                 try
                 {
                     //Logging user in
-                    token = userManager.LoginUser(username, password);
+                    User user = userManager.LoginUser(username, password);
+                    UserToken userToken = new UserToken(user);
+                    token = userToken.ToToken();
                 }
                 catch (WrongCredentialsException ex) // Given credentials don't match any record
                 {
