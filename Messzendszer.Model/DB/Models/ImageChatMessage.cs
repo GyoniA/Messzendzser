@@ -25,6 +25,9 @@ namespace Messzendzser.Model.DB.Models
         [Column("token")]
         [StringLength(60)]
         public string Token { get; set; } = null!;
+        [Column("format")]
+        [StringLength(10)]
+        public string Format { get; set; } = null!;
 
         [ForeignKey("ChatroomId")]
         [InverseProperty("ImageChatMessages")]

@@ -1,7 +1,7 @@
 ﻿using Messzendzser.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
-using Messzendzser.Model.Managers.User;
+using Messzendzser.Model.Managers.Message;
 using Messzendzser.Model.DB;
 using System.Text.Json;
 
@@ -9,13 +9,12 @@ namespace Messzendzser.Controllers
 {
 
     /// <summary>
-    /// Api endpoint, where users can send their registration requests
+    /// Api endpoint, where users can send text messages
     /// Usage:
     ///     Method: Post
     ///     Parameters:
-    ///            email: email adress of the new user
-    ///            username: username of the new user
-    ///            password: password of the new user
+    ///            message: email adress of the new user
+    ///            chatroomId: username of the new user
     /// </summary>
     [Route("api/SendMessage")]
     [ApiController]
@@ -35,7 +34,7 @@ namespace Messzendzser.Controllers
                 return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(2, "No user token given"));
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
-            int ChatroomId;
+            int ChatroomId = -1; // Will be reasigned or show an error
             #region Messasge verification
             if (message == null)
             {
@@ -60,27 +59,32 @@ namespace Messzendzser.Controllers
                 }
             }
             #endregion
+
+            #region UserTokenVerification
             UserToken token;
+
             try
             {
                 token = new UserToken(usertoken);
             }
             catch (ArgumentException)
             {
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid Token"));
+                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token"));
             }
+            #endregion
 
             if (errors.Count == 0)
             {
                 try
                 {
                     // Connection to a datasource
-                    IDataSource dataSource = null;// new MySQLDatabaseConnection(); TODO
-                    // Creating a UserManager
-                    // IUserManager userManager = new UserManager(dataSource);
+                    IDataSource dataSource = new MySQLDbConnection();
+                    // Creating a MessageManager
+                    IMessageManager messageManager = new MessageManager();
 
                     // Record message
-                    // TODO add MessageManager call
+                    messageManager.StoreMessage(message, ChatroomId, token.ToUser());
+
                 }
                 catch (Exception ex) // Other exception
                 {

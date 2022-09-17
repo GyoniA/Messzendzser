@@ -27,6 +27,9 @@ namespace Messzendzser.Model.DB.Models
         public string Token { get; set; } = null!;
         [Column("length", TypeName = "int(11)")]
         public int Length { get; set; }
+        [Column("format")]
+        [StringLength(10)]
+        public string Format { get; set; } = null!;
 
         [ForeignKey("ChatroomId")]
         [InverseProperty("VoiceChatMessages")]

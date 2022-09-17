@@ -14,6 +14,15 @@ namespace Messzendzser.Utils
         public string Email { get; private set; }
         public DateTime Created { get; private set; }
 
+        public User ToUser()
+        {
+            User user = new User();
+            user.Id = Id;
+            user.Username = Username;
+            user.Email = Email;
+            return user;
+        }
+
         /// <summary>
         /// Creates the signed token of the UserToken instance
         /// </summary>
@@ -42,6 +51,12 @@ namespace Messzendzser.Utils
             return handler.WriteToken(token);
         }
 
+        /// <summary>
+        /// Creates a new instance of the UserToken class
+        /// </summary>
+        /// <param name="Id">Id of the user</param>
+        /// <param name="Username">Username of the user</param>
+        /// <param name="Email">Email of the user</param>
         public UserToken(int Id, string Username, string Email)
         {
             this.Id = Id;
@@ -49,6 +64,11 @@ namespace Messzendzser.Utils
             this.Email = Email;
             Created = DateTime.Now;
         }
+
+        /// <summary>
+        /// Creates a new instance of the UserToken class
+        /// </summary>
+        /// <param name="user">User object containing data about the user</param>
         public UserToken(User user)
         {
             this.Id = user.Id;
@@ -57,6 +77,11 @@ namespace Messzendzser.Utils
             Created = DateTime.Now;
         }
 
+
+        /// <summary>
+        /// Creates a new instance of the UserToken class
+        /// </summary>
+        /// <param name="token">Signed JWT token containing user data</param>
         public UserToken(string token)
         {
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();

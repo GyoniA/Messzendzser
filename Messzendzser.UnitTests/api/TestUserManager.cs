@@ -1,4 +1,5 @@
-﻿using Messzendzser.Model.Managers.User;
+﻿using Messzendzser.Model.DB.Models;
+using Messzendzser.Model.Managers.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,11 @@ namespace Messzendzser.UnitTests.api
 {
     class TestUserManager : IUserManager
     {
-        public string LoginUser(string username, string password)
+        public User LoginUser(string username, string password)
         {
             if (username == "wrongusername" || password == "wrongpassword")
                 throw new WrongCredentialsException();
-            return "SuccessfulToken";
+            return new User() { Id = 0, Email = "testemail@test.com", Username = "testusername" };
         }
 
         public void RegisterUser(string email, string username, string password)

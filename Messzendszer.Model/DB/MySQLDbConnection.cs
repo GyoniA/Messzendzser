@@ -10,6 +10,7 @@ namespace Messzendzser.Model.DB
 {
     public partial class MySQLDbConnection : DbContext, IDataSource
     {
+        // Scaffold command: Scaffold-DbContext "Server=localhost;Port=3306;Database=messzendzser;Uid=root;Pwd=secret;" Pomelo.EntityFrameworkCore.MySql -OutputDir DB\Models -Force -DataAnnotations
         public MySQLDbConnection()
         {
         }
