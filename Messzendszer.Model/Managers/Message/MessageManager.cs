@@ -18,7 +18,7 @@ namespace Messzendzser.Model.Managers.Message
             throw new NotImplementedException();
         }
 
-        public void StoreVoiceMessage(byte[] sound, int chatroomId, DB.Models.User user)
+        public void StoreVoiceMessage(byte[] sound, string format, int chatroomId, DB.Models.User user)
         {
             throw new NotImplementedException();
         }

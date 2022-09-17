@@ -30,7 +30,7 @@ namespace Messzendzser.Controllers
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
             IFormFile? file = Request.Form.Files.GetFile("voice");
-            return SendVoice(file, chatroomId, userToken);
+            return SendVoice(file, format, chatroomId, userToken);
         }
 
         public string SendVoice(IFormFile? voice,string? format, string? chatroomId, string? usertoken)
