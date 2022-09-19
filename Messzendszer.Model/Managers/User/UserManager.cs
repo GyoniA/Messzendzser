@@ -42,7 +42,7 @@ namespace Messzendzser.Model.Managers.User
             throw new WrongCredentialsException();            
         }
         /// <summary>
-        /// Authenticates the user in the given DataSource
+        /// Creates a new user in the given DataSource
         /// </summary>
         /// <param name="username">Username or email of the user</param>
         /// <param name="password">Password of the user</param>

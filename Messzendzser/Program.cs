@@ -1,4 +1,21 @@
+using Messzendzser.Voip;
+using System.Net;
+
 var builder = WebApplication.CreateBuilder(args);
+
+new Thread(() => {
+    try
+    {
+        Thread.CurrentThread.Name = "Voip Thread";
+        var voipServer = new VoipServer(5060);
+    }
+    catch(Exception ex)
+    {
+        Console.WriteLine($"Could not start Voip server: {ex.Message}");
+    }
+}).Start();
+
+
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -23,3 +40,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

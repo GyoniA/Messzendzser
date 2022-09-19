@@ -3,14 +3,11 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Messzendzser.Model.DB.Models;
-using MySqlConnector;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Messzendzser.Model.DB
 {
-    public partial class MySQLDbConnection : DbContext, IDataSource
+    public partial class MySQLDbConnection : DbContext
     {
-        // Scaffold command: Scaffold-DbContext "Server=localhost;Port=3306;Database=messzendzser;Uid=root;Pwd=secret;" Pomelo.EntityFrameworkCore.MySql -OutputDir DB\Models -Force -DataAnnotations
         public MySQLDbConnection()
         {
         }
@@ -20,55 +17,20 @@ namespace Messzendzser.Model.DB
         {
         }
 
-        protected virtual DbSet<Chatroom> Chatrooms { get; set; } = null!;
-        protected virtual DbSet<ImageChatMessage> ImageChatMessages { get; set; } = null!;
-        protected virtual DbSet<TextChatMessage> TextChatMessages { get; set; } = null!;
-        protected virtual DbSet<User> Users { get; set; } = null!;
-        protected virtual DbSet<VoiceChatMessage> VoiceChatMessages { get; set; } = null!;
-        protected virtual DbSet<Whiteboard> Whiteboards { get; set; } = null!;
-
-        public void CreateUser(string email, string username, string password)
-        {
-            try
-            {
-                this.Database.ExecuteSqlInterpolated($"call messzendzser.register_user({email}, {username}, {password});");
-            }
-            catch (MySqlException ex)
-            {
-                switch (ex.SqlState)
-                {
-                    case "50001":
-                        throw new Managers.User.EmailTakenException();
-                    case "50002":
-                        throw new Managers.User.UsernameTakenException();
-                    default:
-                        throw;
-                }
-            }
-        }
-        /// <summary>
-        /// Finds a user in DataSource by searching for their username or email address
-        /// </summary>
-        /// <param name="username">Username or email of user</param>
-        /// <returns>User identified if found, null otherwise</returns>
-        public User FindUserByUsernameOrEmail(string username)
-        {
-            try { 
-                User user = Users.Where(u => u.Username==username||u.Email==username).First<User>();
-                return user;
-            }
-            catch (InvalidOperationException ex)
-            {
-                return null;
-            }
-        }
+        public virtual DbSet<Chatroom> Chatrooms { get; set; } = null!;
+        public virtual DbSet<ImageChatMessage> ImageChatMessages { get; set; } = null!;
+        public virtual DbSet<TextChatMessage> TextChatMessages { get; set; } = null!;
+        public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<VoiceChatMessage> VoiceChatMessages { get; set; } = null!;
+        public virtual DbSet<VoipCredential> VoipCredentials { get; set; } = null!;
+        public virtual DbSet<Whiteboard> Whiteboards { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            base.OnConfiguring(optionsBuilder);
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseMySql("Server=localhost;Port=3306;Database=messzendzser;Uid=root;Pwd=secret;", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.14-mariadb"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseMySql("server=localhost;port=3306;database=messzendzser;uid=root;pwd=secret", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.14-mariadb"));
             }
         }
 
@@ -138,6 +100,19 @@ namespace Messzendzser.Model.DB
                     .WithMany(p => p.VoiceChatMessages)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("voice_chat_message_user_id");
+            });
+
+            modelBuilder.Entity<VoipCredential>(entity =>
+            {
+                entity.HasKey(e => e.UserId)
+                    .HasName("PRIMARY");
+
+                entity.Property(e => e.UserId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.User)
+                    .WithOne(p => p.VoipCredential)
+                    .HasForeignKey<VoipCredential>(d => d.UserId)
+                    .HasConstraintName("voip_credentials_user_id");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -11,5 +11,7 @@ namespace Messzendzser.Model.DB
     {
         public void CreateUser(string email, string username, string password);
         public User FindUserByUsernameOrEmail(string username);
+
+        public VoipCredential GetCredentialsForUser(string username);
     }
 }

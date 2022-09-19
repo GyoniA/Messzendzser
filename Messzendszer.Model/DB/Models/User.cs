@@ -33,6 +33,8 @@ namespace Messzendzser.Model.DB.Models
         public string Password { get; set; } = null!;
 
         [InverseProperty("User")]
+        public virtual VoipCredential? VoipCredential { get; set; }
+        [InverseProperty("User")]
         public virtual ICollection<ImageChatMessage> ImageChatMessages { get; set; }
         [InverseProperty("User")]
         public virtual ICollection<TextChatMessage> TextChatMessages { get; set; }
