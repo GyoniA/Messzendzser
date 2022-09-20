@@ -1,18 +1,23 @@
 ﻿using SIPSorcery.SIP.App;
-using System.Net;
+using SIPSorcery.SIP;
 
 namespace Messzendzser.Voip
 {
     public class SIPUserRegistration
     {
-        public IPEndPoint RemoteEndPoint { get; set; }
-        public string Username { get; set; }
+        public SIPEndPoint RemoteEndPoint { get; }
+        public string Domain { get; }
+        public string Username { get; }
 
-        public SIPCallDescriptor SIPCallDescriptor { get { return new SIPCallDescriptor($"sip:{Username}@{RemoteEndPoint}",null); } }
-        public SIPUserRegistration(IPEndPoint remoteEndPoint, string username)
+        public string DestinationURI {get; }
+
+        public SIPCallDescriptor SIPCallDescriptor { get => new SIPCallDescriptor(DestinationURI,null); }//return new SIPCallDescriptor($"sip:{Username}@{Domain}",null); } }
+        public SIPUserRegistration(SIPEndPoint remoteEndPoint, string username,string domain,string destinationURI)
         {
             RemoteEndPoint = remoteEndPoint;
             Username = username;
+            Domain = domain;
+            DestinationURI = destinationURI;
         }
 
     }

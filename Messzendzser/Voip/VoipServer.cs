@@ -14,12 +14,6 @@ namespace Messzendzser.Voip
     {
         private SIPTransport _sipTransport;
 
-        struct SIPAccountRegistration
-        {
-            public string Username;
-
-        }
-
         /// <summary>
         /// Keeps track of the current active calls. It includes both received and placed calls.
         /// </summary>
@@ -28,7 +22,7 @@ namespace Messzendzser.Voip
         /// <summary>
         /// Keeps track of the SIP account registrations.
         /// </summary>
-        private static ConcurrentDictionary<string, SIPClientUserAgent> _registrations = new ConcurrentDictionary<string, SIPClientUserAgent>();
+        private static ConcurrentDictionary<string, SIPUserRegistration> _registrations = new ConcurrentDictionary<string, SIPUserRegistration>();
 
         public VoipServer(int sipPort)
         {
@@ -47,9 +41,9 @@ namespace Messzendzser.Voip
             _sipTransport.SIPTransportRequestReceived += OnRequest;
         } 
         
-        private SIPClientUserAgent DialLookup(int id)
+        private SIPUserRegistration DialLookup(int id)
         {
-            SIPClientUserAgent? userAgent = null;
+            SIPUserRegistration? userAgent = null;
             if (id == 0)
                 _registrations.TryGetValue("voip", out userAgent);
             else if (id == 1)
@@ -165,9 +159,8 @@ namespace Messzendzser.Voip
             // TODO maybe validate calling user
 
             Console.WriteLine($"Incoming call request: {localSIPEndPoint}<-{remoteEndPoint} {sipRequest.URI}.");
-            SIPClientUserAgent caller = new SIPClientUserAgent(_sipTransport,remoteEndPoint);
             int calledNumber = Convert.ToInt32(sipRequest.Header.To.ToURI.UserWithoutParameters);
-            SIPClientUserAgent called = null;
+            SIPUserRegistration called = null;
             try {
                 called = DialLookup(calledNumber);
             }
@@ -180,7 +173,8 @@ namespace Messzendzser.Voip
             SIPResponse tryingResponse = SIPResponse.GetResponse(sipRequest, SIPResponseStatusCodesEnum.Trying, null);
             await _sipTransport.SendResponseAsync(tryingResponse);
             await Task.Delay(500);
-            called.Call();
+            SIPClientUserAgent ua = new SIPClientUserAgent(_sipTransport, called.RemoteEndPoint);
+            ua.Call(called.SIPCallDescriptor);
             SIPResponse ringingResponse = SIPResponse.GetResponse(sipRequest, SIPResponseStatusCodesEnum.Ringing, null);
             await _sipTransport.SendResponseAsync(ringingResponse);
             await Task.Delay(500);
@@ -212,7 +206,7 @@ namespace Messzendzser.Voip
                     await _sipTransport.SendResponseAsync(optionsResponse);
                     int id = _registrations.Count;
                     SIPClientUserAgent userAgent = new SIPClientUserAgent(_sipTransport, remoteEndPoint);
-                    _registrations.TryAdd(sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username, new SIPClientUserAgent(_sipTransport,remoteEndPoint));
+                    _registrations.TryAdd(sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username, new SIPUserRegistration(remoteEndPoint, sipRequest.Header.From.FromName,"",sipRequest.Header.From.FromURI.ToString()));
                     Console.WriteLine($"Voip: User {sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username} registered with id: {id}");
                     await Task.Delay(2000);
                     
