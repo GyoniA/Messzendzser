@@ -5,6 +5,7 @@ namespace Messzendzser.Voip
 {
     public class SIPUserRegistration
     {
+        public string DisplayName { get => Username; }
         public SIPEndPoint RemoteEndPoint { get; }
         public string Domain { get; }
         public string Username { get; }
