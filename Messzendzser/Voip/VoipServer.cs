@@ -4,6 +4,7 @@ using SIPSorcery.SIP;
 using SIPSorcery.SIP.App;
 using SIPSorceryMedia.Abstractions;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 
@@ -27,7 +28,7 @@ namespace Messzendzser.Voip
         /// <summary>
         /// Keeps track of the SIP account registrations.
         /// </summary>
-        private static ConcurrentDictionary<string, SIPRegistrationUserAgent> _registrations = new ConcurrentDictionary<string, SIPRegistrationUserAgent>();
+        private static ConcurrentDictionary<string, SIPClientUserAgent> _registrations = new ConcurrentDictionary<string, SIPClientUserAgent>();
 
         public VoipServer(int sipPort)
         {
@@ -44,7 +45,19 @@ namespace Messzendzser.Voip
             _sipTransport.EnableTraceLogs();
 
             _sipTransport.SIPTransportRequestReceived += OnRequest;
-        }        
+        } 
+        
+        private SIPClientUserAgent DialLookup(int id)
+        {
+            SIPClientUserAgent? userAgent = null;
+            if (id == 0)
+                _registrations.TryGetValue("voip", out userAgent);
+            else if (id == 1)
+                _registrations.TryGetValue("voip1", out userAgent);
+            if (userAgent == null)
+                throw new ArgumentException("Id could not be found");
+            return userAgent;
+        }
 
         private async Task OnRequest(SIPEndPoint localSIPEndPoint, SIPEndPoint remoteEndPoint, SIPRequest sipRequest)
         {
@@ -116,10 +129,10 @@ namespace Messzendzser.Voip
             List<AudioCodecsEnum> codecs = new List<AudioCodecsEnum> { AudioCodecsEnum.PCMU, AudioCodecsEnum.PCMA, AudioCodecsEnum.G722 };
 
             var audioSource = AudioSourcesEnum.SineWave;
-            if (string.IsNullOrEmpty(dst) || !Enum.TryParse(dst, out audioSource))
+            /*if (string.IsNullOrEmpty(dst) || !Enum.TryParse(dst, out audioSource))
             {
                 audioSource = AudioSourcesEnum.Music;
-            }
+            }*/
 
             Console.WriteLine($"RTP audio session source set to {audioSource}.");
 
@@ -145,39 +158,42 @@ namespace Messzendzser.Voip
             };
 
             return rtpAudioSession;
-        }
-
+        }       
 
         private async void HandleInviteRequest(SIPEndPoint localSIPEndPoint, SIPEndPoint remoteEndPoint, SIPRequest sipRequest)
         {
+            // TODO maybe validate calling user
+
             Console.WriteLine($"Incoming call request: {localSIPEndPoint}<-{remoteEndPoint} {sipRequest.URI}.");
-
-            SIPUserAgent ua = new SIPUserAgent(_sipTransport, null);
-            ua.OnCallHungup += OnHangup;
-            /*ua.ServerCallCancelled += (uas) => Log.LogDebug("Incoming call cancelled by remote party.");
-            ua.OnDtmfTone += (key, duration) => OnDtmfTone(ua, key, duration);
-            ua.OnRtpEvent += (evt, hdr) => Log.LogDebug($"rtp event {evt.EventID}, duration {evt.Duration}, end of event {evt.EndOfEvent}, timestamp {hdr.Timestamp}, marker {hdr.MarkerBit}.");*/
-            //ua.OnTransactionTraceMessage += (tx, msg) => Log.LogDebug($"uas tx {tx.TransactionId}: {msg}");
-            ua.ServerCallRingTimeout += (uas) =>
-            {
-                Console.WriteLine($"Incoming call timed out in {uas.ClientTransaction.TransactionState} state waiting for client ACK, terminating.");
-                ua.Hangup();
-            };
-
-            var uas = ua.AcceptCall(sipRequest);
-            var rtpSession = CreateRtpSession(ua, sipRequest.URI.User);
-
-            // Insert a brief delay to allow testing of the "Ringing" progress response.
-            // Without the delay the call gets answered before it can be sent.
-            await Task.Delay(500);
-
-            await ua.Answer(uas, rtpSession);
-
-            if (ua.IsCallActive)
-            {
-                await rtpSession.Start();
-                _calls.TryAdd(ua.Dialogue.CallId, ua);
+            SIPClientUserAgent caller = new SIPClientUserAgent(_sipTransport,remoteEndPoint);
+            int calledNumber = Convert.ToInt32(sipRequest.Header.To.ToURI.UserWithoutParameters);
+            SIPClientUserAgent called = null;
+            try {
+                called = DialLookup(calledNumber);
             }
+            catch (ArgumentException)
+            {
+                SIPResponse notRegisteredResponse = SIPResponse.GetResponse(sipRequest, SIPResponseStatusCodesEnum.DoesNotExistAnywhere, null);                
+                await _sipTransport.SendResponseAsync(notRegisteredResponse);
+                return;
+            }
+            SIPResponse tryingResponse = SIPResponse.GetResponse(sipRequest, SIPResponseStatusCodesEnum.Trying, null);
+            await _sipTransport.SendResponseAsync(tryingResponse);
+            await Task.Delay(500);
+            called.Call();
+            SIPResponse ringingResponse = SIPResponse.GetResponse(sipRequest, SIPResponseStatusCodesEnum.Ringing, null);
+            await _sipTransport.SendResponseAsync(ringingResponse);
+            await Task.Delay(500);
+            SIPResponse okResponse = SIPResponse.GetResponse(sipRequest, SIPResponseStatusCodesEnum.Ok, null);
+            await _sipTransport.SendResponseAsync(okResponse);
+            //SIPRequest request = caller.Call(new SIPCallDescriptor("sip:voip@192.168.0.104", null));
+            return;
+            /*var rtpSession = CreateRtpSession(called, sipRequest.URI.User);
+            var uas1 = called.AcceptCall(sipRequest);
+            await Task.Delay(500);
+            await called.Answer(uas1, rtpSession);*/
+            //await called.Call(new SIPCallDescriptor(caller.ContactURI.ToString(), null), rtpSession);
+            
         }
 
         private async void HandleRegisterRequest(SIPEndPoint localSIPEndPoint, SIPEndPoint remoteEndPoint, SIPRequest sipRequest)
@@ -192,10 +208,16 @@ namespace Messzendzser.Voip
             {
                 if (VoipCredentialManager.ValidateDigestResponse(sipRequest.Header.AuthenticationHeaders[0], "REGISTER"))
                 {
-                    Console.WriteLine($"Voip: User {sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username} registered");
                     SIPResponse optionsResponse = SIPResponse.GetResponse(sipRequest, SIPResponseStatusCodesEnum.Ok, null);
                     await _sipTransport.SendResponseAsync(optionsResponse);
-                    //_registrations.TryAdd(sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username, new SIPRegistrationUserAgent(_sipTransport, sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username));
+                    int id = _registrations.Count;
+                    SIPClientUserAgent userAgent = new SIPClientUserAgent(_sipTransport, remoteEndPoint);
+                    _registrations.TryAdd(sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username, new SIPClientUserAgent(_sipTransport,remoteEndPoint));
+                    Console.WriteLine($"Voip: User {sipRequest.Header.AuthenticationHeaders[0].SIPDigest.Username} registered with id: {id}");
+                    await Task.Delay(2000);
+                    
+
+
                 }
                 else
                 {
@@ -204,6 +226,7 @@ namespace Messzendzser.Voip
                     await _sipTransport.SendResponseAsync(optionsResponse);
                 }
             }
+
         }
 
 
