@@ -27,7 +27,6 @@ export default function Form(){
           let resJson = await res.json();
           if (res.status === 200) {
             setUsername("");
-            setEmail("");
             setMessage("Belépés");
           } else {
             setMessage("Valami baj van :(");
