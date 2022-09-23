@@ -16,13 +16,15 @@ export default function Form(){
     let handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          let res = await fetch("http://localhost:7043/api/Register", {
+          let res = await fetch("https://localhost:7043/api/Register", {
             method: "POST",
-            body: JSON.stringify({
+            mode: 'cors',
+              headers: {
+                'Access-Control-Allow-Origin': '*',
                 username: username,
                 email: email,
                 password: password,
-            }),
+            },
           });
           let resJson = await res.json();
           if (res.status === 200) {
