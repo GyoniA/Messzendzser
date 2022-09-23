@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState}from 'react'
 import{useForm} from 'react-hook-form';
 
 export default function Form(){
@@ -9,6 +9,7 @@ export default function Form(){
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
 
     
 
@@ -45,7 +46,7 @@ export default function Form(){
 
                         <label>Felhasználónév:</label>
                         <input type="text" value={username} {...register("username", {required:true, maxLength:10})}placeholder='Felhasználónév'
-                        onChange={(e) => setUserame(e.target.value)}/>
+                        onChange={(e) => setUsername(e.target.value)}/>
                          {errors.username?.type ==="required" && "Felhasználónév megadása kötelező"}
                         {errors.username?.type ==="maxLength" && "Felhasználónév túl hosszú"}
                         
@@ -61,6 +62,8 @@ export default function Form(){
                         {errors.password?.type ==="maxLength" && "Jelszó túl hosszú"}
                        
                         <button className='btn'>Regisztráció</button>
+
+                        
                     </form> 
             </div>
         </section>
