@@ -16,21 +16,23 @@ export default function Form(){
     let handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          let res = await fetch("http://localhost:7043/api/Register", {
+          let res = await fetch("https://localhost:7043/api/Register", {
             method: "POST",
-            body: JSON.stringify({
+            mode: 'cors',
+              headers: {
+                'Access-Control-Allow-Origin': '*',
                 username: username,
                 email: email,
                 password: password,
-            }),
+            },
           });
           let resJson = await res.json();
           if (res.status === 200) {
             setUsername("");
             setEmail("");
-            setMessage("User created successfully");
+            setMessage("Felhasználó sikeresen létrehozva");
           } else {
-            setMessage("Some error occured");
+            setMessage("Valami baj van :(");
           }
         } catch (err) {
           console.log(err);
@@ -63,6 +65,7 @@ export default function Form(){
                        
                         <button className='btn'>Regisztráció</button>
 
+                        <div className="message">{message ? <p>{message}</p> : null}</div>
                         
                     </form> 
             </div>
