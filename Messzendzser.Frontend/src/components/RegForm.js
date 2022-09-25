@@ -1,5 +1,6 @@
 import React, { useState}from 'react'
 import{useForm} from 'react-hook-form';
+import {useNavigate} from "react-router-dom";
 
 export default function Form(){
 
@@ -11,6 +12,7 @@ export default function Form(){
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
+    let navigate = useNavigate();
     
 
     let handleSubmit = async (e) => {
@@ -58,15 +60,18 @@ export default function Form(){
                         {errors.email?.type ==="required" && "E-mail cím megadása kötelező"}
 
                         <label>Jelszó:</label>
-                        <input type="text" value={password} {...register("password", {required:true, maxLength:10})}placeholder='Jelszó'
+                        <input type="password" value={password} {...register("password", {required:true, maxLength:10})}placeholder='Jelszó'
                         onChange={(e) => setPassword(e.target.value)}/>
                         {errors.password?.type ==="required" && "Jelszó megadása kötelező"}
                         {errors.password?.type ==="maxLength" && "Jelszó túl hosszú"}
                        
-                        <button className='btn'>Regisztráció</button>
+                        
 
                         <div className="message">{message ? <p>{message}</p> : null}</div>
-                        
+
+                        <button className='btn'
+                            onClick={() => {navigate("/login")}}
+                          >Regisztráció</button>
                     </form> 
             </div>
         </section>

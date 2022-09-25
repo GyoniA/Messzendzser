@@ -53,7 +53,7 @@ export default function Form(){
                         
                          
                         <label>Jelszó:</label>
-                        <input type="text" value={password} {...register("password", {required:true, maxLength:10})}placeholder='Jelszó'
+                        <input type="password" value={password} {...register("password", {required:true, maxLength:10})}placeholder='Jelszó'
                         onChange={(e) => setPassword(e.target.value)}/>
                         {errors.password?.type ==="required" && "Jelszó megadása kötelező"}
                         {errors.password?.type ==="maxLength" && "Jelszó túl hosszú"}
