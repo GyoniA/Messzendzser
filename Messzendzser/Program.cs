@@ -1,13 +1,17 @@
 using Messzendzser.Voip;
 using System.Net;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 new Thread(() => {
     try
     {
+        //LumiSoft.Net.SIP.Proxy.SIP_ProxyCore proxyCore = new LumiSoft.Net.SIP.Proxy.SIP_ProxyCore()
         Thread.CurrentThread.Name = "Voip Thread";
-        var voipServer = new VoipServer(5060);
+        //var voipServer = new VoipServer(5060);
+        var sipSerer = new SIPServer();
+        sipSerer.Start();
     }
     catch(Exception ex)
     {

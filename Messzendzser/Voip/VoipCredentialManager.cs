@@ -7,7 +7,7 @@ namespace Messzendzser.Voip
 {
     public class VoipCredentialManager
     {
-        private static VoipCredential GetVoipCredential(string username)
+        public static VoipCredential GetVoipCredential(string username)
         {
             IDataSource dataSource = new MySQLDbConnection();
 
