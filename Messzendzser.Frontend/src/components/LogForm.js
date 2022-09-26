@@ -29,7 +29,7 @@ export default function Form(){
             setUsername("");
             setMessage("Belépés");
           } else {
-            setMessage("Valami baj van :(");
+            setMessage("Sikertelen belépés");
           }
         } catch (err) {
           console.log(err);
