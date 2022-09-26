@@ -3,27 +3,18 @@ import{useForm} from 'react-hook-form';
 import { useNavigate } from "react-router-dom";
 
 
+
 export default function Form(){
 
     const{register,formState:{errors}}= useForm()
-    //const onSubmit = data => console.log(data);
 
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+  
 
     let navigate = useNavigate();
-    
-    /*let success = false;
-    function Navigate(){
-        if(success){
-            navigate("/login")
-        }
-        else{
-            return <p>{message}</p>
-        }
-    }*/
 
 
     let handleSubmit = async (e) => {
@@ -43,11 +34,11 @@ export default function Form(){
           if (res.status === 200) {
             setUsername("");
             setEmail("");
-            //success = true;
             setMessage("Felhasználó sikeresen létrehozva");
+          
           } else {
-            //success = false;
-            setMessage("Valami baj van :(");
+            setMessage("Sikertelen regisztráció");
+          
           }
         } catch (err) {
           console.log(err);
@@ -77,11 +68,15 @@ export default function Form(){
                         onChange={(e) => setPassword(e.target.value)}/>
                         {errors.password?.type ==="required" && "Jelszó megadása kötelező"}
                         {errors.password?.type ==="maxLength" && "Jelszó túl hosszú"}
-                       
+
+                    
 
                         <button className='btn'
-                            //onClick={() => Navigate()}
+                            //Vár pár másodpercet majd átirányít ha sikeres
+                            //onClick={() => setButtonPopup(true)}
                           >Regisztráció</button>
+                          
+                          <div className="message">{message ? <p>{message}</p> : null}</div>
                     </form> 
             </div>
         </section>
