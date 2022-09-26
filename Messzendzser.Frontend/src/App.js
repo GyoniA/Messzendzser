@@ -13,9 +13,9 @@ function App() {
   return (
   <Router>
     <nav>
-      <Link to="/"> Home </Link>
-      <Link to="/register"> Register </Link>
-      <Link to="/login"> Login </Link>
+      <Link to="/"> Főoldal   </Link>
+      <Link to="/register"> Regisztráció   </Link>
+      <Link to="/login"> Bejelentkezés</Link>
     </nav>
     <Routes>
       <Route path="/" element={<Home />} />
