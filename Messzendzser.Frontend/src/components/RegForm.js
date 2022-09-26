@@ -14,6 +14,16 @@ export default function Form(){
 
     let navigate = useNavigate();
     
+    let success = false;
+    function Navigate(){
+        if(success){
+            navigate("/login")
+        }
+        else{
+            return <p>{message}</p>
+        }
+    }
+
 
     let handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,8 +42,10 @@ export default function Form(){
           if (res.status === 200) {
             setUsername("");
             setEmail("");
+            success = true;
             setMessage("Felhasználó sikeresen létrehozva");
           } else {
+            success = false;
             setMessage("Valami baj van :(");
           }
         } catch (err) {
@@ -65,12 +77,9 @@ export default function Form(){
                         {errors.password?.type ==="required" && "Jelszó megadása kötelező"}
                         {errors.password?.type ==="maxLength" && "Jelszó túl hosszú"}
                        
-                        
-
-                        <div className="message">{message ? <p>{message}</p> : null}</div>
 
                         <button className='btn'
-                            onClick={() => {navigate("/login")}}
+                            onClick={() => {Navigate}}
                           >Regisztráció</button>
                     </form> 
             </div>
