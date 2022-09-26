@@ -1,6 +1,7 @@
 import React, { useState}from 'react'
 import{useForm} from 'react-hook-form';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Form(){
 
@@ -14,7 +15,7 @@ export default function Form(){
 
     let navigate = useNavigate();
     
-    let success = false;
+    /*let success = false;
     function Navigate(){
         if(success){
             navigate("/login")
@@ -22,7 +23,7 @@ export default function Form(){
         else{
             return <p>{message}</p>
         }
-    }
+    }*/
 
 
     let handleSubmit = async (e) => {
@@ -42,10 +43,10 @@ export default function Form(){
           if (res.status === 200) {
             setUsername("");
             setEmail("");
-            success = true;
+            //success = true;
             setMessage("Felhasználó sikeresen létrehozva");
           } else {
-            success = false;
+            //success = false;
             setMessage("Valami baj van :(");
           }
         } catch (err) {
@@ -79,7 +80,7 @@ export default function Form(){
                        
 
                         <button className='btn'
-                            onClick={() => {Navigate}}
+                            //onClick={() => Navigate()}
                           >Regisztráció</button>
                     </form> 
             </div>
