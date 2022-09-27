@@ -63,7 +63,7 @@ namespace Messzendzser.Controllers
             }
             catch (ArgumentException)
             {
-                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "\"Invalid user token\"")));
+                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token")));
             }
             #endregion
 
@@ -77,7 +77,11 @@ namespace Messzendzser.Controllers
                     string format = "";
                     byte[] image = media.LoadSound(soundToken, out format);
                     result = new Utils.FileResult(new FileContentResult(image, "audio/"+format));
-                }// TODO catch image not found exception                
+                }// TODO catch image not found exception
+                catch (FileNotFoundException ex)
+                {
+                    errors.Add("error", "Sound not found");
+                }
                 catch (Exception ex) // Other exception
                 {
                     errors.Add("error", ex.Message); // TODO remove for production

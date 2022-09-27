@@ -24,14 +24,14 @@ namespace Messzendzser.UnitTests.api
         public void UsernameMissingTest()
         {
             string response = controller.Register("test@asd.com", null, "Abasd123", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "username", "Username cannot be empty" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "username", "Username cannot be empty" } });
             Assert.That(response, Does.Match(pattern));                
         }
         [Test]
         public void EmailMissingTest()
         {
             string response = controller.Register(null, "username", "Abasd123", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "email", "Email cannot be empty" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "email", "Email cannot be empty" } });
             Assert.That(response, Does.Match(pattern));
         }
 
@@ -39,7 +39,7 @@ namespace Messzendzser.UnitTests.api
         public void PasswordMissingTest()
         {
             string response = controller.Register("test@asd.com", "username", null, userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "password", "Password cannot be empty" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "password", "Password cannot be empty" } });
             Assert.That(response, Does.Match(pattern));
         }
 
@@ -47,14 +47,14 @@ namespace Messzendzser.UnitTests.api
         public void PasswordWeakTest()
         {
             string response = controller.Register("test@asd.com", "username", "asd123", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "password", "Password is not strong enough" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "password", "Password is not strong enough" } });
             Assert.That(response, Does.Match(pattern));
         }
         [Test]
         public void EmailTakenTest()
         {
             string response = controller.Register("taken@test.com", "username", "Abasd123", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "email", "Email is already taken" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "email", "Email is already taken" } });
             Assert.That(response, Does.Match(pattern));
         }
 
@@ -62,7 +62,7 @@ namespace Messzendzser.UnitTests.api
         public void UsernameTakenTest()
         {
             string response = controller.Register("test@asd.com", "takenusername", "Abasd123", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "username", "Username is already taken" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "username", "Username is already taken" } });
             Assert.That(response, Does.Match(pattern));
         }
 
@@ -70,7 +70,7 @@ namespace Messzendzser.UnitTests.api
         public void SuccessfulTakenTest()
         {
             string response = controller.Register("test@asd.com", "username", "Abasd123", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(200, "Ok", null);
+            string pattern = ApiTestUtils.ResponseRegex(200, "Ok", null);
             Assert.That(response, Does.Match(pattern));
         }
     }

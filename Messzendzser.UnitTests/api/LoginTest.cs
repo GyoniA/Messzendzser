@@ -24,14 +24,14 @@ namespace Messzendzser.UnitTests.api
         public void UsernameMissingTest()
         {
             string response = controller.Login(null, "Abasd123", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "username", "Username cannot be empty" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "username", "Username cannot be empty" } });
             Assert.That(response, Does.Match(pattern));
         }
         [Test]
         public void PasswordMissingTest()
         {
             string response = controller.Login("test@asd.com", null, userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "password", "Password cannot be empty" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "password", "Password cannot be empty" } });
             Assert.That(response, Does.Match(pattern));
         }
 
@@ -39,7 +39,7 @@ namespace Messzendzser.UnitTests.api
         public void WrogCredentialsTest()
         {
             string response = controller.Login("wrongusername", "wrongpassword", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "username", "Given credentials do not match any record" } });
+            string pattern = ApiTestUtils.ResponseRegex(1, "Invalid parameters", new Dictionary<string, string>() { { "username", "Given credentials do not match any record" } });
             Assert.That(response, Does.Match(pattern));
         }
 
@@ -47,8 +47,8 @@ namespace Messzendzser.UnitTests.api
         public void SuccesfulTest()
         {
             string response = controller.Login("test@asd.com", "password", userManager);
-            string pattern = ApiTestUtils.RersponseRegex(200, "Ok", new Dictionary<string, string>() { { "token", "SuccessfulToken" } });
-            Assert.That(response, Does.Match(pattern));
+            //string pattern = ApiTestUtils.ResponseRegex(200, "Ok", new Dictionary<string, string>() { { "token", "[a-zA-Z0-9._]+" } });
+            Assert.That(response, Does.Contain("\"ResponseCode\":200,\"Message\":\"Ok\""));
         }
     }
 }
