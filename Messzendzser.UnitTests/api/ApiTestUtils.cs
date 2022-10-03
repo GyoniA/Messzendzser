@@ -9,7 +9,11 @@ namespace Messzendzser.UnitTests.api
 {
     class ApiTestUtils
     {
-        public static string RersponseRegex(int responseCode, string responseMessage, Dictionary<string,string> body)
+        public static string ResponseRegex(int responseCode, string responseMessage)
+        {
+            return ResponseRegex(responseCode, responseMessage, null);
+        }
+        public static string ResponseRegex(int responseCode, string responseMessage, Dictionary<string,string> body)
         {
             string format =@"^{""DateTime"":""[\d\-:T+.]*"",""ResponseCode"":"+ responseCode.ToString() + @",""Message"":""" + responseMessage + @"""";
             if(body != null && body.Count > 0)
