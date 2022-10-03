@@ -31,14 +31,15 @@ export default function Form(){
             },
           });
           let resJson = await res.json();
+
+          
+
           if (res.status === 200) {
+            
             setUsername("");
             setEmail("");
+            
             setMessage("Felhasználó sikeresen létrehozva");
-          
-          } else {
-            setMessage("Sikertelen regisztráció");
-          
           }
         } catch (err) {
           console.log(err);
