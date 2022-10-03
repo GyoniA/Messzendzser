@@ -23,11 +23,16 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class GetImageController : ControllerBase
     {
+        private IDataSource dataSource;
+        public GetImageController(IDataSource dataSource)
+        {
+            this.dataSource = dataSource;
+        }
+
         // POST api/Login
         [HttpGet()]
         public IActionResult Get( [FromQuery(Name = "img")] string? image)
-        {
-            IDataSource dataSource = new MySQLDbConnection();
+        {   
             IMediaManager mediaManager = null; // TODO
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);

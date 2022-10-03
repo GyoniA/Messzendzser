@@ -22,6 +22,12 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class SendImageController : ControllerBase
     {
+        private IDataSource dataSource;
+        public SendImageController(IDataSource dataSource)
+        {
+            this.dataSource = dataSource;
+        }
+
         // POST api/SendImage
         [HttpPost(), DisableRequestSizeLimit]
         public string Post([FromHeader(Name = "chatroomId")] string? chatroomId)
@@ -91,10 +97,8 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    // Connection to a datasource
-                    IDataSource dataSource = new MySQLDbConnection();
                     // Creating a MessageManager
-                    IMessageManager messageManager = new MessageManager();
+                    IMessageManager messageManager = new MessageManager(dataSource);
 
                     byte[] imageData;
                     // Record message

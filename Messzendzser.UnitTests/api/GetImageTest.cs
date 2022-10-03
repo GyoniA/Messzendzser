@@ -17,7 +17,7 @@ namespace Messzendzser.UnitTests.api
         [SetUp]
         public void SetUp()
         {
-            controller = new GetImageController();
+            controller = new GetImageController(null);
             mediaManager = new TestMediaManager();
         }
 

@@ -10,11 +10,12 @@ namespace Messzendzser.Model.DB
     {
         public MySQLDbConnection()
         {
+            ChangeTracker.LazyLoadingEnabled = false;
         }
 
         public MySQLDbConnection(DbContextOptions<MySQLDbConnection> options)
             : base(options)
-        {
+        {            
         }
 
         public virtual DbSet<Chatroom> Chatrooms { get; set; } = null!;

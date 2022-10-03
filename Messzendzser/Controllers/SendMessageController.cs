@@ -20,6 +20,12 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class SendMessageController : ControllerBase
     {
+        private IDataSource dataSource;
+        public SendMessageController(IDataSource dataSource)
+        {
+            this.dataSource = dataSource;
+        }
+
         // POST api/SendMessage
         [HttpPost()]
         public string Post( [FromHeader(Name = "message")] string? message, [FromHeader(Name = "chatroomId")] string? chatroomId)
@@ -77,10 +83,8 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    // Connection to a datasource
-                    IDataSource dataSource = new MySQLDbConnection();
                     // Creating a MessageManager
-                    IMessageManager messageManager = new MessageManager();
+                    IMessageManager messageManager = new MessageManager(dataSource);
 
                     // Record message
                     messageManager.StoreMessage(message, ChatroomId, token.ToUser());

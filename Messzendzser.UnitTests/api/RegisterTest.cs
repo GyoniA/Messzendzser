@@ -16,7 +16,7 @@ namespace Messzendzser.UnitTests.api
         [SetUp]
         public void Setup()
         {
-            controller = new RegisterController();
+            controller = new RegisterController(null);
             userManager = new TestUserManager();
         }
 

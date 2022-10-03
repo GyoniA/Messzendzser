@@ -21,11 +21,16 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class RegisterController : ControllerBase
     {
+
+        private IDataSource dataSource;
+        public RegisterController(IDataSource dataSource)
+        {
+            this.dataSource = dataSource;
+        }
         // POST api/Register
         [HttpPost()]
         public string Post([FromHeader(Name = "email")] string? email, [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
         {
-            IDataSource dataSource = new MySQLDbConnection();
             IUserManager userManager = new UserManager(dataSource);
             return Register(email,username,password,userManager);
         }

@@ -1,6 +1,7 @@
 ﻿using Messzendzser.Model.DB.Models;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
+using System.Data;
 
 namespace Messzendzser.Model.DB
 {
@@ -32,7 +33,7 @@ namespace Messzendzser.Model.DB
         /// </summary>
         /// <param name="username">Username or email of user</param>
         /// <returns>User identified if found, null otherwise</returns>
-        public User FindUserByUsernameOrEmail(string username)
+        public User GetUser(string username)
         {
             try
             {
@@ -52,6 +53,90 @@ namespace Messzendzser.Model.DB
             if (creds == null)
                 throw new ArgumentException("No user with given username");
             return creds;
+        }
+
+        public void StoreTextMessage(int userId, int chatroomId, string message)
+        {
+            TextChatMessages.Add(new TextChatMessage() { UserId = userId, ChatroomId = chatroomId, Message = message, SentTime = System.DateTime.Now });
+            SaveChanges();
+        }
+
+        public void StoreVoiceMessage(int userId, int chatroomId, string token, int length, string format)
+        {
+            VoiceChatMessages.Add(new VoiceChatMessage() { UserId = userId, ChatroomId = chatroomId, Token = token, SentTime = System.DateTime.Now , Format = format, Length = length });
+            SaveChanges();
+        }
+
+        public void StoreImageMessage(int userId, int chatroomId, string token, string format)
+        {
+            ImageChatMessages.Add(new ImageChatMessage() { UserId = userId, ChatroomId = chatroomId, Token = token, SentTime = System.DateTime.Now, Format = format });
+            SaveChanges();
+        }
+
+        public int CreateChatroom(int[] users)
+        {
+            int ChatroomId = -1;
+            using (var dbContextTransaction = Database.BeginTransaction())
+            {
+                try { 
+                    Chatroom chatroom = new Chatroom();
+                    Chatrooms.Add(chatroom);
+                    SaveChanges();
+                    ChatroomId = chatroom.Id;
+                    foreach (int userId in users)
+                    {
+                        chatroom.Users.Add(Users.Where(u => u.Id == userId).First());
+                    }
+                    dbContextTransaction.Commit();
+                }catch (Exception)
+                {
+                    dbContextTransaction.Rollback();
+                    throw;
+                }
+            }
+
+            return ChatroomId;
+        }
+
+        public void AddUserToChatroom(int userId, int chatroomId)
+        {
+            Chatroom chatroom = Chatrooms.Where(c => c.Id == chatroomId).First();
+            User user = Users.Where(u=>u.Id==userId).First();
+            chatroom.Users.Add(user);
+            SaveChanges();
+        }
+
+        public IReadOnlyList<TextChatMessage> GetTextChatMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon)
+        {
+            List<TextChatMessage> messages = new List<TextChatMessage>();
+            var results = TextChatMessages.Where(m => 
+                m.ChatroomId == chatroomId &&
+                directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time
+            ).OrderBy(m=>m.SentTime).Take(count);
+            messages.AddRange(results);
+            return messages;
+        }
+
+        public IReadOnlyList<ImageChatMessage> GetImageChatMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon)
+        {
+            List<ImageChatMessage> messages = new List<ImageChatMessage>();
+            var results = ImageChatMessages.Where(m =>
+                m.ChatroomId == chatroomId &&
+                directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time
+            ).OrderBy(m => m.SentTime).Take(count);
+            messages.AddRange(results);
+            return messages;
+        }
+
+        public IReadOnlyList<VoiceChatMessage> GetVoiceChatMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon)
+        {
+            List<VoiceChatMessage> messages = new List<VoiceChatMessage>();
+            var results = VoiceChatMessages.Where(m =>
+                m.ChatroomId == chatroomId &&
+                directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time
+            ).OrderBy(m => m.SentTime).Take(count);
+            messages.AddRange(results);
+            return messages;
         }
     }
 }

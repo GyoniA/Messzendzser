@@ -9,10 +9,11 @@ namespace Messzendzser.Voip
     {
         public static VoipCredential GetVoipCredential(string username)
         {
-            IDataSource dataSource = new MySQLDbConnection();
-
-            VoipCredential  cred = dataSource.GetCredentialsForUser(username);
-            return cred;
+            using (IDataSource dataSource = new MySQLDbConnection()) 
+            {
+                VoipCredential  cred = dataSource.GetCredentialsForUser(username);
+                return cred;
+            }
         }
 
         private static string MD5(string input)

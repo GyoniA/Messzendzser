@@ -23,6 +23,12 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class SendVoiceController : ControllerBase
     {
+        private IDataSource dataSource;
+        public SendVoiceController(IDataSource dataSource)
+        {
+            this.dataSource = dataSource;
+        }
+
         // POST api/Register
         [HttpPost(),DisableRequestSizeLimit]
         public string Post( [FromHeader(Name = "format")] string? format, [FromHeader(Name = "chatroomId")] string? chatroomId)
@@ -88,10 +94,8 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    // Connection to a datasource
-                    IDataSource dataSource = new MySQLDbConnection();
                     // Creating a MessageManager
-                    IMessageManager messageManager = new MessageManager();
+                    IMessageManager messageManager = new MessageManager(dataSource);
 
                     byte[] voiceData;
                     // Record message

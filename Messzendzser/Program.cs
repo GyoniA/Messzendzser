@@ -1,3 +1,4 @@
+using Messzendzser.Model.DB;
 using Messzendzser.Voip;
 using System.Net;
 
@@ -23,6 +24,9 @@ new Thread(() => {
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+// Add DbContext service
+builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
 
 var app = builder.Build();
 

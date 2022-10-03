@@ -23,11 +23,15 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class GetVoiceController : ControllerBase
     {
+        private IDataSource dataSource;
+        public GetVoiceController(IDataSource dataSource)
+        {
+            this.dataSource = dataSource;
+        }
         // POST api/Voice
         [HttpGet()]
         public IActionResult Get( [FromQuery(Name = "voice")] string? voice)
-        {
-            IDataSource dataSource = new MySQLDbConnection();
+        {            
             IMediaManager mediaManager = null; // TODO
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);

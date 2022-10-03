@@ -28,7 +28,7 @@ namespace Messzendzser.Model.Managers.User
         /// <exception cref="WrongCredentialsException">Thrown if given credentials are invalid</exception>
         public DB.Models.User LoginUser(string username, string password)
         {
-            DB.Models.User user = dataSource.FindUserByUsernameOrEmail(username);
+            DB.Models.User user = dataSource.GetUser(username);
             if(user != null)
             {
                 //Create pass

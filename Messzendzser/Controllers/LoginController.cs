@@ -22,11 +22,15 @@ namespace Messzendzser.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
+        private IDataSource dataSource;
+        public LoginController(IDataSource dataSource)
+        {
+            this.dataSource = dataSource;
+        }
         // POST api/Login
         [HttpPost()]
         public string Post( [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
-        {
-            IDataSource dataSource = new MySQLDbConnection();
+        {            
             IUserManager userManager = new UserManager(dataSource);
             return Login(username, password, userManager);
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Messzendzser.Model.DB;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,10 @@ namespace Messzendzser.Model.Managers.Message
 {
     public class MessageManager : IMessageManager
     {
+        public MessageManager(IDataSource dataSource)
+        {
+
+        }
         public void StoreImageMessage(byte[] image, string format, int chatroomId, DB.Models.User user)
         {
             throw new NotImplementedException();

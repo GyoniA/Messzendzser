@@ -17,7 +17,7 @@ namespace Messzendzser.UnitTests.api
         [SetUp]
         public void SetUp()
         {
-            controller = new GetVoiceController();
+            controller = new GetVoiceController(null);
             mediaManager = new TestMediaManager();
         }
 
