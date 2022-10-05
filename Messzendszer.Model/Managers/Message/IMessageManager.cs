@@ -37,30 +37,12 @@ namespace Messzendzser.Model.Managers.Message
         public void StoreImageMessage(byte[] image,string format, int chatroomId, DB.Models.User user);
 
         /// <summary>
-        /// Returns a list of text messages to a chatroom that were sent after a certain date
+        /// Returns a list of messages to a chatroom that were sent after a certain date
         /// </summary>
         /// <param name="chatroomId">Chatroom to search for messages</param>
         /// <param name="count">Text message to be retrieved</param>
         /// <param name="time">Time after which to search for messages</param>
         /// <param name="direction">Direction in which to search for messages</param>
-        public IReadOnlyList<TextChatMessage> UpdateTextMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon);
-
-        /// <summary>
-        /// Returns a list of image messages to a chatroom that were sent after a certain date
-        /// </summary>
-        /// <param name="chatroomId">Chatroom to search for messages</param>
-        /// <param name="count">Text message to be retrieved</param>
-        /// <param name="time">Time after which to search for messages</param>
-        /// <param name="direction">Direction in which to search for messages</param>        
-        public IReadOnlyList<ImageChatMessage> UpdateImageChatMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon);
-
-        /// <summary>
-        /// Returns a list of voice messages to a chatroom that were sent after a certain date
-        /// </summary>
-        /// <param name="chatroomId">Chatroom to search for messages</param>
-        /// <param name="count">Text message to be retrieved</param>
-        /// <param name="time">Time after which to search for messages</param>
-        /// <param name="direction">Direction in which to search for messages</param>        
-        public IReadOnlyList<VoiceChatMessage> UpdateVoiceChatMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon);
+        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon);
     }
 }

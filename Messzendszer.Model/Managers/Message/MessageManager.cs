@@ -41,19 +41,16 @@ namespace Messzendzser.Model.Managers.Message
             throw new NotImplementedException();
         }
 
-        public IReadOnlyList<ImageChatMessage> UpdateImageChatMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon)
+        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon)
         {
-            return dataSource.GetImageChatMessages(chatroomId, count, time, directon);
-        }
+            IReadOnlyList<TextChatMessage> texts = dataSource.GetTextChatMessages(chatroomId, count, time, directon);
+            IReadOnlyList<ImageChatMessage> images = dataSource.GetImageChatMessages(chatroomId, count, time, directon);
+            IReadOnlyList<VoiceChatMessage> voices = dataSource.GetVoiceChatMessages(chatroomId, count, time, directon);
+            
+            //TODO convert messages with factory
 
-        public IReadOnlyList<TextChatMessage> UpdateTextMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon)
-        {
-            return dataSource.GetTextChatMessages(chatroomId, count, time, directon);
-        }
 
-        public IReadOnlyList<VoiceChatMessage> UpdateVoiceChatMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon)
-        {
-            return dataSource.GetVoiceChatMessages(chatroomId, count, time, directon);
+            throw new NotImplementedException();
         }
     }
 }
