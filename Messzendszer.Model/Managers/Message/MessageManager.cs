@@ -1,5 +1,6 @@
 ﻿using Messzendzser.Model.DB;
 using Messzendzser.Model.DB.Models;
+using Messzendzser.Model.Managers.Media;
 using Org.BouncyCastle.Asn1.X509;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,9 @@ namespace Messzendzser.Model.Managers.Message
         {
             this.dataSource = dataSource;
         }
-        public void StoreImageMessage(byte[] image, string format, int chatroomId, DB.Models.User user)
+        public void StoreImageMessage(byte[] image, string format, int chatroomId, DB.Models.User user, IMediaManager manager)
         {
-            string token = "";
-            //TODO store image and set token
+            string token = manager.StoreImage(image);
             dataSource.StoreImageMessage(user.Id, chatroomId, token, format);
             throw new NotImplementedException();
         }
@@ -34,16 +34,14 @@ namespace Messzendzser.Model.Managers.Message
             dataSource.StoreTextMessage(user.Id, chatroomId, message);
         }
 
-        public void StoreVoiceMessage(byte[] sound, string format, int chatroomId, DB.Models.User user)
+        public void StoreVoiceMessage(byte[] sound, string format, int chatroomId, DB.Models.User user, int length, IMediaManager manager)
         {
-            string token = "";
-            int length = 0;
-            //TODO store sound and set token, also set length
+            string token = manager.StoreSound(sound, format);
             dataSource.StoreVoiceMessage(user.Id, chatroomId, token, length, format);
             throw new NotImplementedException();
         }
 
-        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton direction)
+        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton direction, IMediaManager manager)
         {
             IReadOnlyList<TextChatMessage> texts = dataSource.GetTextChatMessages(chatroomId, count, time, direction);
             IReadOnlyList<ImageChatMessage> images = dataSource.GetImageChatMessages(chatroomId, count, time, direction);
@@ -55,8 +53,8 @@ namespace Messzendzser.Model.Managers.Message
                 count = numberOfMessages;
             }
             List<JsonTextMessage> jsonTexts = texts.Select(x => new JsonTextMessage(x)).ToList();
-            List<JsonImageMessage> jsonImages = images.Select(x => new JsonImageMessage(x)).ToList();
-            List<JsonVoiceMessage> jsonVoices = voices.Select(x => new JsonVoiceMessage(x)).ToList();
+            List<JsonImageMessage> jsonImages = images.Select(x => new JsonImageMessage(x, manager)).ToList();
+            List<JsonVoiceMessage> jsonVoices = voices.Select(x => new JsonVoiceMessage(x, manager)).ToList();
             List<JsonMessage> combined = new List<JsonMessage>();
             combined.AddRange(jsonTexts);
             combined.AddRange(jsonImages);

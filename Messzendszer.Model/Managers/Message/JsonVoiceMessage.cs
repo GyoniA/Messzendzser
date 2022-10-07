@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Messzendzser.Model.DB.Models;
 using static System.Net.Mime.MediaTypeNames;
 using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
+using Messzendzser.Model.Managers.Media;
 
 namespace Messzendzser.Model.Managers.Message
 {
@@ -18,11 +19,14 @@ namespace Messzendzser.Model.Managers.Message
         public string Format { get; set; }
         public int Length { get; set; }
 
+        public byte[] Voice { get; set; }
+
         public JsonVoiceMessage()
         {
             Token = "";
             Format = "";
             Length = 0;
+            Voice = new byte[0];
         }
 
         public JsonVoiceMessage(int userId, int chatroomId, DateTime time, string token, string format, int length) : base(userId, chatroomId, time)
@@ -30,13 +34,15 @@ namespace Messzendzser.Model.Managers.Message
             Token = token;
             Format = format;
             Length = length;
+            Voice = new byte[0];
         }
 
-        public JsonVoiceMessage(VoiceChatMessage message) : base(message.UserId, message.ChatroomId, message.SentTime)
+        public JsonVoiceMessage(VoiceChatMessage message, IMediaManager manager) : base(message.UserId, message.ChatroomId, message.SentTime)
         {
             Token = message.Token;
             Format = message.Format;
             Length = message.Length;
+            Voice = manager.LoadSound(message.Token, out string format);
         }
 
         public override ISerializeableMessage Deserialize(byte[] jsonUTF8)
