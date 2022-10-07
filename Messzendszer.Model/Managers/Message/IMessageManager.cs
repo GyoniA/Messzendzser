@@ -48,6 +48,6 @@ namespace Messzendzser.Model.Managers.Message
         /// <param name="time">Time after which to search for messages</param>
         /// <param name="direction">Direction in which to search for messages</param>
         /// <param name="manager">The file manager object</param>
-        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon, IMediaManager manager);
+        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon);
     }
 }
