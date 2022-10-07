@@ -41,7 +41,7 @@ namespace Messzendzser.Model.Managers.Message
             throw new NotImplementedException();
         }
 
-        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton direction, IMediaManager manager)
+        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton direction)
         {
             IReadOnlyList<TextChatMessage> texts = dataSource.GetTextChatMessages(chatroomId, count, time, direction);
             IReadOnlyList<ImageChatMessage> images = dataSource.GetImageChatMessages(chatroomId, count, time, direction);
@@ -53,8 +53,8 @@ namespace Messzendzser.Model.Managers.Message
                 count = numberOfMessages;
             }
             List<JsonTextMessage> jsonTexts = texts.Select(x => new JsonTextMessage(x)).ToList();
-            List<JsonImageMessage> jsonImages = images.Select(x => new JsonImageMessage(x, manager)).ToList();
-            List<JsonVoiceMessage> jsonVoices = voices.Select(x => new JsonVoiceMessage(x, manager)).ToList();
+            List<JsonImageMessage> jsonImages = images.Select(x => new JsonImageMessage(x)).ToList();
+            List<JsonVoiceMessage> jsonVoices = voices.Select(x => new JsonVoiceMessage(x)).ToList();
             List<JsonMessage> combined = new List<JsonMessage>();
             combined.AddRange(jsonTexts);
             combined.AddRange(jsonImages);
