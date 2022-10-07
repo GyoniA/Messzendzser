@@ -154,7 +154,7 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    IReadOnlyList<ISerializeableMessage> messages = messageManager.Update(chatroomId, messageCount, dateTime, timeDirecton,null);
+                    IReadOnlyList<ISerializeableMessage> messages = messageManager.Update(chatroomId, messageCount, dateTime, timeDirecton);
                     Utils.ResponseMessage.CreateOkMessage(new Dictionary<string, string>() { { "messages", JsonSerializer.Serialize(messages.Select(x => x.Serialize())) } });
                 }
                 catch (Exception ex) // Other exception
