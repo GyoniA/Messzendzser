@@ -32,9 +32,9 @@ namespace Messzendzser.Controllers
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
-            return SendMessage(message,chatroomId,userToken);
+            return SendMessage(message,chatroomId,userToken,new MessageManager(dataSource));
         }
-        public string SendMessage(string? message, string? chatroomId, string? usertoken)
+        public string SendMessage(string? message, string? chatroomId, string? usertoken,IMessageManager messageManager)
         {
             if(usertoken == null)
                 return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(2, "No user token given"));
@@ -83,9 +83,6 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    // Creating a MessageManager
-                    IMessageManager messageManager = new MessageManager(dataSource);
-
                     // Record message
                     messageManager.StoreMessage(message, ChatroomId, token.ToUser());
 

@@ -6,6 +6,7 @@ using Messzendzser.Model.DB;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Messzendzser.Model.Managers.Message;
+using Messzendzser.Model.Managers.Media;
 
 namespace Messzendzser.Controllers
 {
@@ -31,21 +32,23 @@ namespace Messzendzser.Controllers
 
         // POST api/Register
         [HttpPost(),DisableRequestSizeLimit]
-        public string Post( [FromHeader(Name = "format")] string? format, [FromHeader(Name = "chatroomId")] string? chatroomId)
+        public string Post( [FromHeader(Name = "format")] string? format, [FromHeader(Name = "chatroomId")] string? chatroomId, [FromHeader(Name = "length")] string? length)
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
             IFormFile? file = Request.Form.Files.GetFile("voice");
-            return SendVoice(file, format, chatroomId, userToken);
+            return SendVoice(file, format, chatroomId,length, userToken, new MessageManager(dataSource), null);
         }
 
-        public string SendVoice(IFormFile? voice,string? format, string? chatroomId, string? usertoken)
+        public string SendVoice(IFormFile? voice,string? format, string? chatroomId,string? length, string? usertoken, IMessageManager messageManager, IMediaManager mediaManager)
         {
             if (usertoken == null)
                 return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(2, "No user token given"));
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
             int ChatroomId = -1; // Will be reasigned or show an error
+            int Length = -1;
+
             #region Format verification
             if (format == null)
                 errors.Add("format", "Format cannot be empty");
@@ -77,6 +80,24 @@ namespace Messzendzser.Controllers
             }
             #endregion
 
+            #region Length verification
+            if (length == null)
+            {
+                errors.Add("length", "length cannot be empty");
+            }
+            else
+            {
+                try
+                {
+                    Length = Convert.ToInt32(length);
+                }
+                catch (Exception ex)
+                {
+                    errors.Add("length", "length must be a number");
+                }
+            }
+            #endregion
+
             #region UserTokenVerification
             UserToken token;
 
@@ -94,9 +115,6 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    // Creating a MessageManager
-                    IMessageManager messageManager = new MessageManager(dataSource);
-
                     byte[] voiceData;
                     // Record message
                     using (var memoryStream = new MemoryStream())
@@ -107,7 +125,7 @@ namespace Messzendzser.Controllers
                             voiceData = memoryStream.ToArray();
                         }
                     }
-                    messageManager.StoreVoiceMessage(voiceData, format, ChatroomId, token.ToUser());
+                    messageManager.StoreVoiceMessage(voiceData, format, ChatroomId, token.ToUser(),Length, mediaManager);
 
                 }
                 catch (Exception ex) // Other exception

@@ -6,6 +6,7 @@ using Messzendzser.Model.DB;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
 using Microsoft.AspNetCore.Identity;
+using Messzendzser.Model.Managers.Media;
 
 namespace Messzendzser.Controllers
 {
@@ -35,9 +36,9 @@ namespace Messzendzser.Controllers
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
             IFormFile? file = Request.Form.Files.GetFile("image");
-            return SendImage(file,chatroomId,userToken);
+            return SendImage(file,chatroomId,userToken,new MessageManager(dataSource), null);
         }
-        public string SendImage(IFormFile? image, string? chatroomId, string? usertoken)
+        public string SendImage(IFormFile? image, string? chatroomId, string? usertoken,IMessageManager messageManager,IMediaManager mediaManager)
         {
             if(usertoken == null)
                 return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(2, "No user token given"));
@@ -97,9 +98,6 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    // Creating a MessageManager
-                    IMessageManager messageManager = new MessageManager(dataSource);
-
                     byte[] imageData;
                     // Record message
                     using (var memoryStream = new MemoryStream())
@@ -109,7 +107,7 @@ namespace Messzendzser.Controllers
                             imageData = memoryStream.ToArray();
                         }
                     }
-                    messageManager.StoreImageMessage(imageData,format, ChatroomId, token.ToUser());
+                    messageManager.StoreImageMessage(imageData,format, ChatroomId, token.ToUser(),mediaManager);
 
                 }
                 catch (Exception ex) // Other exception
