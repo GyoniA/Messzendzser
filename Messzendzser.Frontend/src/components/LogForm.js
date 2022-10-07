@@ -71,9 +71,11 @@ export default function Form(){
 
                        
                         
-                       <div className='row'>
+                    <div className='row'>
+                        <div className='remember_me'>
                             <label className='remember'>Emlékezz rám</label>
                             <input className='box' type="checkbox" />
+                        </div>
                             <button className='reference' 
                                     onClick={() => {navigate("/register")}}>
                                     Regisztráció

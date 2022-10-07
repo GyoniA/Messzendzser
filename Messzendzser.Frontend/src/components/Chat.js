@@ -13,6 +13,7 @@ class Chat extends React.Component {
     render() {
         return (
             <div className='chatapp'>
+
                 <div className='upper_row'>
 
                     <ComboBoxComponent 
@@ -28,6 +29,23 @@ class Chat extends React.Component {
                     <button className='phone'>
                         <img src = "/images/phone.png" ></img>
                     </button> 
+
+                </div>
+
+                <div className='middle_part'>
+                   
+                    <label className='msg_from_me' >
+                        Hello
+                    </label>
+                    <label className='msg_from_other' >
+                        Szia
+                    </label>
+                    <label className='msg_from_me' >
+                        Mit csinálsz?
+                    </label>
+                    <label className='msg_from_other' >
+                        A témalabort
+                    </label>
 
                 </div>
 
