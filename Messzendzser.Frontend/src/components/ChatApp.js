@@ -1,30 +1,75 @@
-//require('../css/ChatApp.css');
-
-
+import { Component } from "react"
 import React from 'react';
-import { useNavigate } from "react-router-dom";
 
-import Messages from './Messages';
-import ChatInput from './ChatInput';
+//it’ll handle the data and the connection with the API.
+import DUMMY_DATA from './DummyData'
+import MessageList from './MessageList';
 
-// This is where the main logic of the app will be. Here is where we will
-// communicate with the chat server (send and receive messages). We will
-// then pass the data received from the server to other components to be
-// displayed
+import SendMessageForm from './SendMessageForm';
+
 class ChatApp extends React.Component {
-  render() {
-    return (
-      <div className="container">
-        <h3>Messzendzser</h3>
-        <Messages messages={this.state.messages} />
-        <ChatInput onSend={this.sendHandler} />
-      </div>
-    );
+      
+    //Set dummydata as state
+    constructor() {
+        super()
+        this.state = {
+           messages: DUMMY_DATA
+        }
+      }
+
+    render() {
+      return (
+        <div className="chatapp">
+            //Next three are the components
+            <p>Beszélegtés</p>
+          //Pass down messages to MessageList 
+          <MessageList messages={this.state.messages}/>
+          <SendMessageForm sendMessage={this.sendMessage} />
+       </div>
+      )
+    }
+
+    
+
+
+//This section needs to be done differently
+//WE have to connect to our own API here
+//**************************************************************************************************** */
+
+//Sending the message off to Chatkit
+//The only parameter is the message text
+/*sendMessage(text) {
+    this.currentUser.sendMessage({
+      text: text,
+      roomId: roomId
+    })
   }
 
-}
-ChatApp.defaultProps = {
-  username: 'Anonymous'
-};
 
-export default ChatApp;
+    //Connecting react Components to API
+    componentDidMount() {
+        const chatManager = new Chatkit.ChatManager({
+          instanceLocator: instanceLocator,
+          userId: userId,
+          tokenProvider: new Chatkit.TokenProvider({
+            url: testToken
+          })
+       })  
+    //Connect with API
+    chatManager.connect().then(currentUser => {
+        currentUser.subscribeToRoom({
+        roomId: roomId,
+        hooks: {
+          onNewMessage: message => {
+            this.setState({
+              messages: [...this.state.messages, message]
+            })
+          }
+        }
+      })
+    })
+  }
+  //***************************************************************************************************** */
+
+  }
+  export default ChatApp;

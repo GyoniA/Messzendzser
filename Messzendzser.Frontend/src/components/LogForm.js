@@ -12,6 +12,7 @@ export default function Form(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const [nav, setNav] = useState("");
 
     
 
@@ -28,11 +29,18 @@ export default function Form(){
             },
           });
           let resJson = await res.json();
+
           if (res.status === 200) {
             setUsername("");
-            setMessage("Belépés");
-          } else {
-            setMessage("Sikertelen belépés");
+
+            if (resJson.ResponseCode !== 1) {
+              setMessage("Sikeres belépés");
+              setNav(true);
+            } else {
+              let responseM = resJson.Message;
+              setMessage(responseM);
+              setNav(false);
+          }
           }
         } catch (err) {
           console.log(err);
@@ -73,7 +81,14 @@ export default function Form(){
 
                         </div>
 
-                        <button className='btn'>Belépés</button>
+                        <button className='btn'onClick={
+                            () => {
+                                
+                                if (nav) {
+                                    //navigate("/chat")
+                                }
+                                
+                            }}>Belépés</button>
 
                         <div className="message">{message ? <p>{message}</p> : null}</div>
                     </form> 
