@@ -7,7 +7,7 @@ import {BrowserRouter as Router, Routes, Route, Link} from "react-router-dom";
 import RegForm from './components/RegForm';
 import LogForm from './components/LogForm';
 import Home from './components/Home';
-import Chat from './components/ChatApp';
+import Chat from './components/Chat';
  
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
       <Link to="/"> Főoldal   </Link>
       <Link to="/register"> Regisztráció   </Link>
       <Link to="/login"> Bejelentkezés  </Link>
-      <Link to="/chat"> Beszélgetés</Link>
+      <Link to="/chat"> Beszélgetés  </Link>
     </nav>
     <Routes>
       <Route path="/" element={<Home />} />

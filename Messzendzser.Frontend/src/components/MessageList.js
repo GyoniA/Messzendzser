@@ -2,7 +2,7 @@
 import React from 'react';
 
 //Takes one prop, messages, which contains an array of objects
-//Simpli rendering out text and senderId properties from the object
+//Simply rendering out text and senderId properties from the object
 class MessageList extends React.Component {
     render() {
       return (
