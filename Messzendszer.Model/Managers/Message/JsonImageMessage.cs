@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Messzendzser.Model.DB.Models;
+using Messzendzser.Model.Managers.Media;
 
 namespace Messzendzser.Model.Managers.Message
 {
@@ -12,10 +13,27 @@ namespace Messzendzser.Model.Managers.Message
     {
         public string Token { get; set; }
         public string Format { get; set; }
+
+        public byte[] Image { get; set; }
+
+        public JsonImageMessage()
+        {
+            Token = "";
+            Format = "";
+            Image = new byte[0];
+        }
         public JsonImageMessage(int userId, int chatroomId, DateTime time, string token, string format) : base(userId, chatroomId, time)
         {
             Token = token;
             Format = format;
+            Image = new byte[0];
+        }
+
+        public JsonImageMessage(ImageChatMessage message, IMediaManager manager) : base(message.UserId, message.ChatroomId, message.SentTime)
+        {
+            Token = message.Token;
+            Format = message.Format;
+            Image = manager.LoadImage(message.Token, out string format);
         }
 
         public override ISerializeableMessage Deserialize(byte[] jsonUTF8)

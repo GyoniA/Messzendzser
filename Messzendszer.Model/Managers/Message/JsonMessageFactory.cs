@@ -1,6 +1,9 @@
-﻿using Messzendzser.Model.Managers.User;
+﻿using Messzendzser.Model.DB;
+using Messzendzser.Model.DB.Models;
+using Messzendzser.Model.Managers.User;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,16 +15,15 @@ namespace Messzendzser.Model.Managers.Message
         //Makes a new instance of the requested type of Json message
         public ISerializeableMessage GetMessage(string type)
         {
-            //TODO turn into converter maybe?
-            throw new NotImplementedException();
+            //TODO make class work like it should
             switch (type)
             {
                 case "text":
-                    //return new JsonTextMessage();
+                    return new JsonTextMessage();
                 case "image":
-                    //return new JsonImageMessage();
-                case "file":
-                    //return new JsonFileMessage();
+                    return new JsonImageMessage();
+                case "voice":
+                    return new JsonVoiceMessage();
                 default:
                     throw new Exception("Wrong type. This type of Json message doesn't exist.");
             }

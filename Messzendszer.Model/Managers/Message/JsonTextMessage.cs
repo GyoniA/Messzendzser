@@ -11,9 +11,19 @@ namespace Messzendzser.Model.Managers.Message
     public class JsonTextMessage : JsonMessage
     {
         public string Text { get; set; }
+
+        public JsonTextMessage()
+        {
+            Text = "";
+        }
         public JsonTextMessage(int userId, int chatroomId, DateTime time, string text) : base(userId, chatroomId, time)
         {
             Text = text;
+        }
+
+        public JsonTextMessage(TextChatMessage message) : base(message.UserId, message.ChatroomId, message.SentTime)
+        {
+            Text = message.Message;
         }
 
         public override ISerializeableMessage Deserialize(byte[] jsonUTF8)

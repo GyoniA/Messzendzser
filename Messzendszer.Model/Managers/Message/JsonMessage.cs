@@ -14,6 +14,13 @@ namespace Messzendzser.Model.Managers.Message
         public int ChatroomId { get; set; }
         public DateTime Time { get; set; }
 
+        public JsonMessage()
+        {
+            UserId = 0;
+            ChatroomId = 0;
+            Time = DateTime.Now;
+        }
+
         public JsonMessage(int userId, int chatroomId, DateTime time)
         {
             UserId = userId;
