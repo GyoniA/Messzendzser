@@ -12,10 +12,22 @@ namespace Messzendzser.Model.Managers.Message
     {
         public string Token { get; set; }
         public string Format { get; set; }
+
+        public JsonImageMessage()
+        {
+            Token = "";
+            Format = "";
+        }
         public JsonImageMessage(int userId, int chatroomId, DateTime time, string token, string format) : base(userId, chatroomId, time)
         {
             Token = token;
             Format = format;
+        }
+
+        public JsonImageMessage(ImageChatMessage message) : base(message.UserId, message.ChatroomId, message.SentTime)
+        {
+            Token = message.Token;
+            Format = message.Format;
         }
 
         public override ISerializeableMessage Deserialize(byte[] jsonUTF8)
