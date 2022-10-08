@@ -17,6 +17,7 @@ namespace Messzendzser.Model.DB
         public void StoreImageMessage(int userId, int chatroomId, string token, string format);
         public int CreateChatroom(int[] users);
         public void AddUserToChatroom(int userId, int chatroomId);
+        public bool IsUserInChatroom(int userId, int chatroomId);
 
         public enum TimeDirecton
         {

@@ -37,16 +37,16 @@ namespace Messzendzser.Controllers
 
         // POST api/Login
         [HttpGet()]
-        public string Get( [FromQuery(Name = "chatroomId")] string? chatroom, [FromQuery(Name = "count")] string? count, [FromQuery(Name = "time")] string? time,[FromQuery(Name = "dir")] string? dir)
+        public string Get( [FromHeader(Name = "chatroomId")] string? chatroom, [FromHeader(Name = "count")] string? count, [FromHeader(Name = "time")] string? time,[FromHeader(Name = "dir")] string? dir)
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
             IMessageManager messageManager = new MessageManager(dataSource);//new MediaManager();
             IUserManager userManager = new UserManager(dataSource);
-            return GetMessages(chatroom,count,time,dir,userToken, messageManager, userManager);
+            return FetchMessages(chatroom,count,time,dir,userToken, messageManager, userManager);
         }
-
-        public string GetMessages(string? chatroom,string? count, string? time, string? dir,string? usertoken, IMessageManager messageManager,IUserManager userManager)
+        [NonAction]
+        public string FetchMessages(string? chatroom,string? count, string? time, string? dir,string? usertoken, IMessageManager messageManager,IUserManager userManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();

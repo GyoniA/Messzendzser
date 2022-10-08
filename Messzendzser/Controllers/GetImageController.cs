@@ -46,7 +46,7 @@ namespace Messzendzser.Controllers
                 return new FileContentResult(Encoding.UTF8.GetBytes(result.ErrorJson),"text/json");
             }
         }
-
+        [NonAction]
         public Utils.FileResult LoadImage(string? imageToken, string? usertoken, IMediaManager media)
         {
             //Initialize error list for possible errors

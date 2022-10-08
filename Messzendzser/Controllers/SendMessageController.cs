@@ -34,6 +34,8 @@ namespace Messzendzser.Controllers
             Request.Cookies.TryGetValue("user-token", out userToken);
             return SendMessage(message,chatroomId,userToken,new MessageManager(dataSource));
         }
+
+        [NonAction]
         public string SendMessage(string? message, string? chatroomId, string? usertoken,IMessageManager messageManager)
         {
             if(usertoken == null)

@@ -45,7 +45,7 @@ namespace Messzendzser.Controllers
                 return new FileContentResult(Encoding.UTF8.GetBytes(result.ErrorJson),"text/json");
             }
         }
-
+        [NonAction]
         public Utils.FileResult LoadSound(string? soundToken, string? usertoken, IMediaManager media)
         {
             //Initialize error list for possible errors

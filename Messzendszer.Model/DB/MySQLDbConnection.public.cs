@@ -138,5 +138,10 @@ namespace Messzendzser.Model.DB
             messages.AddRange(results);
             return messages;
         }
+
+        public bool IsUserInChatroom(int userId, int chatroomId)
+        {
+            return Users.Where(x=>x.Id == userId).First().Chatrooms.Where(c=>c.Id== chatroomId).Any();
+        }
     }
 }

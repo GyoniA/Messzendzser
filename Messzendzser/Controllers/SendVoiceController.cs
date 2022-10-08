@@ -40,6 +40,7 @@ namespace Messzendzser.Controllers
             return SendVoice(file, format, chatroomId,length, userToken, new MessageManager(dataSource), null);
         }
 
+        [NonAction]
         public string SendVoice(IFormFile? voice,string? format, string? chatroomId,string? length, string? usertoken, IMessageManager messageManager, IMediaManager mediaManager)
         {
             if (usertoken == null)

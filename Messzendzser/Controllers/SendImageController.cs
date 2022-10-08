@@ -38,6 +38,8 @@ namespace Messzendzser.Controllers
             IFormFile? file = Request.Form.Files.GetFile("image");
             return SendImage(file,chatroomId,userToken,new MessageManager(dataSource), null);
         }
+
+        [NonAction]
         public string SendImage(IFormFile? image, string? chatroomId, string? usertoken,IMessageManager messageManager,IMediaManager mediaManager)
         {
             if(usertoken == null)

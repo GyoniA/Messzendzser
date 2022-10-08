@@ -55,5 +55,23 @@ namespace Messzendzser.Model.Managers.User
             string hashedPassword = passwordHasher.HashPassword(null, password); // This function doesn't use the first argument, so it can be left as null
             dataSource.CreateUser(email, username, hashedPassword); // Throws exception if unsuccessful
         }
+
+        /// <summary>
+        /// Returns wether the specified user is assgined to the chatroom
+        /// </summary>
+        /// <param name="chatroomId">Id of the chatroom</param>
+        /// <param name="user">User to check for</param>
+        /// <returns>True if an assignment was found in the datasource, false otherwise</returns>
+        public bool HasAccessToChatroom(int chatroomId,Model.DB.Models.User user)
+        {
+            try { 
+                return dataSource.IsUserInChatroom(user.Id, chatroomId);
+            }
+            catch (Exception e)
+            {
+                // TODO add logging
+            }
+            return false;
+        }
     }
 }

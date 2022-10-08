@@ -34,7 +34,7 @@ namespace Messzendzser.Controllers
             IUserManager userManager = new UserManager(dataSource);
             return Login(username, password, userManager);
         }
-
+        [NonAction]
         public string Login(string? username, string? password, IUserManager userManager)
         {
             //Initialize error list for possible errors
