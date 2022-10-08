@@ -54,6 +54,7 @@ namespace Messzendzser.Model.Managers.User
             Microsoft.AspNetCore.Identity.PasswordHasher<DB.Models.User> passwordHasher = new Microsoft.AspNetCore.Identity.PasswordHasher<DB.Models.User>();
             string hashedPassword = passwordHasher.HashPassword(null, password); // This function doesn't use the first argument, so it can be left as null
             dataSource.CreateUser(email, username, hashedPassword); // Throws exception if unsuccessful
+            dataSource.AddAllAssociations(dataSource.GetUser(username).Id);
         }
 
         /// <summary>
