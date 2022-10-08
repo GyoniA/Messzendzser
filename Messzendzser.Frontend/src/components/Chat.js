@@ -1,6 +1,6 @@
 import { Component } from "react"
 import React from 'react';
-import {ComboBoxComponent} from '@syncfusion/ej2-react-dropdowns'
+//import {ComboBoxComponent} from '@syncfusion/ej2-react-dropdowns'
 
 
 
@@ -16,11 +16,7 @@ class Chat extends React.Component {
 
                 <div className='upper_row'>
 
-                    <ComboBoxComponent 
-                        className='combobox'
-                        placeholder="Név"
-                        dataSource={['Gábor', 'Gyóni', 'Noi']}>
-                    </ComboBoxComponent>
+                   
 
                     
 

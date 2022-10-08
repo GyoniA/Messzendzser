@@ -132,8 +132,13 @@ form {
   padding: 0 1rem 1rem 1rem; 
 }
 
-.msg{
-  flex: 1;
+.e-input-group e-control-wrapper e-ddl {
+    width: fit-content;
+}
+
+
+.msg {
+    flex: 1;
 }
 
 .middle_part {
