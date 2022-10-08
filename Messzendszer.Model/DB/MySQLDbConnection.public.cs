@@ -143,5 +143,19 @@ namespace Messzendzser.Model.DB
         {
             return Users.Where(x=>x.Id == userId).First().Chatrooms.Where(c=>c.Id== chatroomId).Any();
         }
+
+        public void AddAllAssociations(int userId)
+        {
+            if (Users.Where(x => x.Id == userId).Any()) { 
+                foreach(User user in Users.Where(x => x.Id != userId))
+                {
+                    CreateChatroom(new int[] { user.Id, userId });
+                }
+            }
+            else
+            {
+                throw new ArgumentException("specified user not found");
+            }
+        }
     }
 }
