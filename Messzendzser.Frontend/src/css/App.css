@@ -141,7 +141,7 @@ form {
     width: 100%;
     gap: 1em;
     flex-direction: column;
-    padding-left: 1rem;
+    padding: 0 1rem;
 }
 
 .msg_from_me{
@@ -149,6 +149,7 @@ form {
     background: white;
     width: fit-content;
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    align-self: flex-end;
 }
 
 .msg_from_other {
@@ -157,6 +158,8 @@ form {
     width: fit-content;
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     float: right;
+    
+    
 }
 
 

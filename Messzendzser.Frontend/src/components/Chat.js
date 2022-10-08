@@ -22,6 +22,8 @@ class Chat extends React.Component {
                         dataSource={['Gábor', 'Gyóni', 'Noi']}>
                     </ComboBoxComponent>
 
+                    
+
                     <button className='whiteboard'>
                         <img src = "/images/whiteboard.png" ></img>
                     </button> 
