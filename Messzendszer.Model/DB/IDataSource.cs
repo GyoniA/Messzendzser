@@ -1,4 +1,5 @@
 ﻿using Messzendzser.Model.DB.Models;
+using Messzendzser.Model.Managers.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace Messzendzser.Model.DB
         public void AddUserToChatroom(int userId, int chatroomId);
         public bool IsUserInChatroom(int userId, int chatroomId);
         public void AddAllAssociations(int userId);
+        public IReadOnlyList<ChatroomInfo> GetChatrooms(int userId);
 
         public enum TimeDirecton
         {

@@ -1,4 +1,5 @@
 ﻿using Messzendzser.Model.DB.Models;
+using Messzendzser.Model.Managers.User;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using System.Data;
@@ -147,7 +148,7 @@ namespace Messzendzser.Model.DB
         public void AddAllAssociations(int userId)
         {
             if (Users.Where(x => x.Id == userId).Any()) { 
-                foreach(User user in Users.Where(x => x.Id != userId))
+                foreach(User user in Users.Where(x => x.Id != userId).ToList())
                 {
                     CreateChatroom(new int[] { user.Id, userId });
                 }
@@ -156,6 +157,25 @@ namespace Messzendzser.Model.DB
             {
                 throw new ArgumentException("specified user not found");
             }
+        }
+
+        public IReadOnlyList<ChatroomInfo> GetChatrooms(int userId)
+        {
+            if (!Users.Where(x => x.Id == userId).Any()) {
+                throw new ArgumentException("UserNotFound");
+            }
+            List<Chatroom> chatrooms = Users.Where(x => x.Id == userId).First().Chatrooms.ToList();
+            List<ChatroomInfo> chatroomInfos = new List<ChatroomInfo>();
+            foreach (Chatroom chatroom in chatrooms) {
+                List<User> assignedUsers = chatroom.Users.ToList();
+                string name = "";
+                foreach (User user in assignedUsers) {
+                    if (user.Id != userId)
+                        name += $" {user.Username}";
+                }
+                chatroomInfos.Add(new ChatroomInfo(name, chatroom.Id));
+            }
+            return chatroomInfos;
         }
     }
 }

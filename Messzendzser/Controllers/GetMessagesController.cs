@@ -41,7 +41,7 @@ namespace Messzendzser.Controllers
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
-            IMessageManager messageManager = new MessageManager(dataSource);//new MediaManager();
+            IMessageManager messageManager = new MessageManager(dataSource);
             IUserManager userManager = new UserManager(dataSource);
             return FetchMessages(chatroom,count,time,dir,userToken, messageManager, userManager);
         }
