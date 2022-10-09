@@ -1,6 +1,7 @@
 import { Component } from "react"
 import React from 'react';
-//import {ComboBoxComponent} from '@syncfusion/ej2-react-dropdowns'
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 
 
@@ -16,17 +17,25 @@ class Chat extends React.Component {
 
                 <div className='upper_row'>
 
-                   
-
                     
 
-                    <button className='whiteboard'>
-                        <img src = "/images/whiteboard.png" ></img>
-                    </button> 
+                    <select>
+                        <option>Gábor</option>
+                        <option>Gyóni</option>
+                        <option>Noi</option>
+                       
+                    </select>
+
+                    <div className='icons_up'>
+
+                        <button className='whiteboard'>
+                            <img src = "/images/whiteboard.png" ></img>
+                        </button> 
                         
-                    <button className='phone'>
-                        <img src = "/images/phone.png" ></img>
-                    </button> 
+                        <button className='phone'>
+                            <img src = "/images/phone.png" ></img>
+                        </button>
+                    </div>
 
                 </div>
 
@@ -49,7 +58,7 @@ class Chat extends React.Component {
 
                 <div className='bottom_row'>
 
-                <button className='send'>
+                    <button className='send'>
                         <img src = "/images/send.png" ></img>
                     </button> 
 
