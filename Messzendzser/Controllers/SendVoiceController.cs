@@ -16,9 +16,9 @@ namespace Messzendzser.Controllers
     /// Usage:
     ///     Method: Post
     ///     Parameters:
-    ///            email: email adress of the new user
-    ///            username: username of the new user
-    ///            password: password of the new user
+    ///            format: format of the uploaded audio file
+    ///            chatroomId: id of the chatroom to send the message to
+    ///            length: length of the audio message
     /// </summary>
     [Route("api/SendVoice")]
     [ApiController]
