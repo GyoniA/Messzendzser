@@ -28,7 +28,7 @@ namespace Messzendzser.Controllers
 
         // POST api/SendMessage
         [HttpPost()]
-        public string Post( [FromHeader(Name = "message")] string? message, [FromHeader(Name = "chatroomId")] string? chatroomId)
+        public ResponseMessage<object> Post( [FromHeader(Name = "message")] string? message, [FromHeader(Name = "chatroomId")] string? chatroomId)
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
@@ -36,10 +36,8 @@ namespace Messzendzser.Controllers
         }
 
         [NonAction]
-        public string SendMessage(string? message, string? chatroomId, string? usertoken,IMessageManager messageManager)
+        public ResponseMessage<object> SendMessage(string? message, string? chatroomId, string? usertoken,IMessageManager messageManager)
         {
-            if(usertoken == null)
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(2, "No user token given"));
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
             int ChatroomId = -1; // Will be reasigned or show an error
@@ -69,15 +67,15 @@ namespace Messzendzser.Controllers
             #endregion
 
             #region UserTokenVerification
-            UserToken token;
+            UserToken token = null;
 
             try
             {
                 token = new UserToken(usertoken);
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token"));
+                errors.Add("usertoken", "Invalid user token");
             }
             #endregion
 
@@ -96,10 +94,10 @@ namespace Messzendzser.Controllers
             }
 
             if (errors.Count != 0) // If there were errors return
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
+                return ResponseMessage<object>.CreateErrorMessage(1, "Invalid parameters", errors);
 
             //Return OK message            
-            return JsonSerializer.Serialize(ResponseMessage.CreateOkMessage());
+            return ResponseMessage<object>.CreateOkMessage();
         }
     }
 }

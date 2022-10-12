@@ -29,13 +29,13 @@ namespace Messzendzser.Controllers
         }
         // POST api/Login
         [HttpPost()]
-        public string Post( [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
+        public ResponseMessage<Dictionary<string, string>> Post( [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
         {            
             IUserManager userManager = new UserManager(dataSource);
             return Login(username, password, userManager);
         }
         [NonAction]
-        public string Login(string? username, string? password, IUserManager userManager)
+        public ResponseMessage<Dictionary<string, string>> Login(string? username, string? password, IUserManager userManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -63,6 +63,7 @@ namespace Messzendzser.Controllers
                     User user = userManager.LoginUser(username, password);
                     UserToken userToken = new UserToken(user);
                     token = userToken.ToToken();
+                    return ResponseMessage<Dictionary<string, string>>.CreateOkMessage(new Dictionary<string, string>() { { "token", token } });
                 }
                 catch (WrongCredentialsException ex) // Given credentials don't match any record
                 {
@@ -73,11 +74,9 @@ namespace Messzendzser.Controllers
                     errors.Add("error", ex.Message); // TODO remove for production
                 }
             }
-            if (errors.Count != 0)
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
+            // Error count has to be greater than 0
+            return ResponseMessage<Dictionary<string, string>>.CreateErrorMessage(1, "Invalid parameters", errors);
 
-            // TODO check if all required headers are present
-            return JsonSerializer.Serialize(ResponseMessage.CreateOkMessage(new Dictionary<string, string>() { { "token", token } }));
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Messzendzser.Controllers
 
         // POST api/Login
         [HttpGet()]
-        public string Get( [FromHeader(Name = "chatroomId")] string? chatroom, [FromHeader(Name = "count")] string? count, [FromHeader(Name = "time")] string? time,[FromHeader(Name = "dir")] string? dir)
+        public ResponseMessage<IReadOnlyList<ISerializeableMessage>> Get( [FromHeader(Name = "chatroomId")] string? chatroom, [FromHeader(Name = "count")] string? count, [FromHeader(Name = "time")] string? time,[FromHeader(Name = "dir")] string? dir)
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
@@ -46,7 +46,7 @@ namespace Messzendzser.Controllers
             return FetchMessages(chatroom,count,time,dir,userToken, messageManager, userManager);
         }
         [NonAction]
-        public string FetchMessages(string? chatroom,string? count, string? time, string? dir,string? usertoken, IMessageManager messageManager,IUserManager userManager)
+        public ResponseMessage<IReadOnlyList<ISerializeableMessage>> FetchMessages(string? chatroom,string? count, string? time, string? dir,string? usertoken, IMessageManager messageManager,IUserManager userManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -136,35 +136,34 @@ namespace Messzendzser.Controllers
             #endregion
 
             #region UserTokenVerification
-            UserToken token;
+            UserToken token = null;
 
             try
             {
                 token = new UserToken(usertoken);
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token"));
+                errors.Add("usertoken", "Invalid user token");
             }
             #endregion
 
 
-            string result = "";
             if (errors.Count == 0)
             {
                 try
                 {
                     IReadOnlyList<ISerializeableMessage> messages = messageManager.Update(chatroomId, messageCount, dateTime, timeDirecton);
-                    Utils.ResponseMessage.CreateOkMessage(new Dictionary<string, string>() { { "messages", JsonSerializer.Serialize(messages.Select(x => x.Serialize())) } });
+                    return ResponseMessage<IReadOnlyList<ISerializeableMessage>>.CreateOkMessage(messages);
                 }
                 catch (Exception ex) // Other exception
                 {
                     errors.Add("error", ex.Message); // TODO remove for production
                 }
             }
-            if (errors.Count != 0)
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
-            return result; 
+            // Error count has to be greater than 0
+            return ResponseMessage<IReadOnlyList<ISerializeableMessage>>.CreateErrorMessage(1, "Invalid parameters", errors);
+            
         }
     }
 }

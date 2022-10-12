@@ -2,14 +2,17 @@
 
 namespace Messzendzser.Utils
 {
-    public class ResponseMessage
+    public class ResponseMessage<T>
     {        
         public DateTime DateTime { get; }
         public int ResponseCode { get; }
         public string Message { get; }
 
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public Dictionary<string, string>? Body { get; }
+        public Dictionary<string, string>? Errors { get; private set; }
+
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public T? Body { get; }
 
         public ResponseMessage(int responseCode, string responseMessage)
         {
@@ -18,7 +21,7 @@ namespace Messzendzser.Utils
             Message = responseMessage;
         }
 
-        public ResponseMessage(int responseCode, string responseMessage,Dictionary<string,string>? body)
+        public ResponseMessage(int responseCode, string responseMessage,T? body)
         {
             DateTime = DateTime.Now;
             ResponseCode = responseCode;
@@ -26,20 +29,20 @@ namespace Messzendzser.Utils
             Body = body;
         }
 
-        public static ResponseMessage CreateOkMessage() {
-            return CreateOkMessage(null);
+        public static ResponseMessage<T> CreateOkMessage() {
+            return CreateOkMessage(default(T));
         }
-        public static ResponseMessage CreateOkMessage(Dictionary<string, string>? body)
+        public static ResponseMessage<T> CreateOkMessage(T? body)
         {
-            return new ResponseMessage(200, "Ok", body);
+            return new ResponseMessage<T>(200, "Ok", body);
         }
-        public static ResponseMessage CreateErrorMessage(int errorCode,string errorMessage)
+        public static ResponseMessage<T> CreateErrorMessage(int errorCode,string errorMessage)
         {
-            return CreateErrorMessage(errorCode, errorMessage,null);
+            return CreateErrorMessage(errorCode, errorMessage, null);
         }
-        public static ResponseMessage CreateErrorMessage(int errorCode, string errorMessage, Dictionary<string, string>? body)
+        public static ResponseMessage<T> CreateErrorMessage(int errorCode, string errorMessage, Dictionary<string, string> errors)
         {
-            return new ResponseMessage(errorCode, errorMessage, body);
+            return new ResponseMessage<T>(errorCode, errorMessage, default(T)) { Errors = errors };
         }
     }
 }

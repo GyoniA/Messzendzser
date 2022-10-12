@@ -16,7 +16,6 @@ namespace Messzendzser.Controllers
     /// Usage:
     ///     Method: Post
     ///     Parameters:
-    ///            message: email adress of the new user
     ///            chatroomId: username of the new user
     /// </summary>
     [Route("api/SendImage")]
@@ -31,7 +30,7 @@ namespace Messzendzser.Controllers
 
         // POST api/SendImage
         [HttpPost(), DisableRequestSizeLimit]
-        public string Post([FromHeader(Name = "chatroomId")] string? chatroomId)
+        public ResponseMessage<object> Post([FromHeader(Name = "chatroomId")] string? chatroomId)
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
@@ -40,10 +39,8 @@ namespace Messzendzser.Controllers
         }
 
         [NonAction]
-        public string SendImage(IFormFile? image, string? chatroomId, string? usertoken,IMessageManager messageManager,IMediaManager mediaManager)
+        public ResponseMessage<object> SendImage(IFormFile? image, string? chatroomId, string? usertoken,IMessageManager messageManager,IMediaManager mediaManager)
         {
-            if(usertoken == null)
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(2, "No user token given"));
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
             int ChatroomId = -1; // Will be reasigned or show an error
@@ -84,15 +81,15 @@ namespace Messzendzser.Controllers
             #endregion
 
             #region UserTokenVerification
-            UserToken token;
+            UserToken token = null;
 
             try
             {
                 token = new UserToken(usertoken);
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token"));
+                errors.Add("usertoken", "Invalid user token");
             }
             #endregion
 
@@ -119,10 +116,10 @@ namespace Messzendzser.Controllers
             }
 
             if (errors.Count != 0) // If there were errors return
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
+                return ResponseMessage<object>.CreateErrorMessage(1, "Invalid parameters", errors);
 
             //Return OK message            
-            return JsonSerializer.Serialize(ResponseMessage.CreateOkMessage());
+            return ResponseMessage<object>.CreateOkMessage();
         }
 
         /// <summary>
@@ -130,6 +127,7 @@ namespace Messzendzser.Controllers
         /// </summary>
         /// <param name="header">First eight bytes of the file</param>
         /// <returns>True, if the header matches the png header, false otherwise</returns>
+        [NonAction]
         private bool isPngHeader(List<byte> header) 
         {
             List<byte> pngHeader = new List<byte>() { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
