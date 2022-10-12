@@ -21,12 +21,13 @@ new Thread(() => {
 }).Start();
 
 
-
 // Add services to the container.
 builder.Services.AddControllers();
 
 // Add DbContext service
 builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
+
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -51,6 +52,12 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseSwagger();
+app.UseSwaggerUI(options => {
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = "swagger";
+});
 
 app.Run();
 
