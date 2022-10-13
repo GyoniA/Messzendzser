@@ -32,7 +32,7 @@
                 server.Start();
 
                 // Enter the listening loop.
-                ListeningLoop(server);
+                ListeningLoop(server).Wait();
             }
             catch (SocketException e)
             {
@@ -47,7 +47,7 @@
             Console.WriteLine("\nHit enter to continue...");
             Console.Read();
         }
-
+        // szálbiztos lista kapcsolatokra
         private async Task ListeningLoop(TcpListener server)
         {
 
@@ -61,8 +61,30 @@
                     // Perform a blocking call to accept requests.
                     // You could also user server.AcceptSocket() here.
                     TcpClient client = await server.AcceptTcpClientAsync();
-                    Console.WriteLine("Connected!");
+                    /*new Thread(client)...{
+                     * NetworkStream stream = client.GetStream();
+                     * while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)...
+                     * byte[] message
+                       state machine(new connection, authenticated)
+                        switch(state){
+                            newConnection:
+                                message feldoozása (legyen authenticate typusú) mint WhiteboardAuthenticationMessage
+                                ha elfogadjuk Ok küldése és authenticated állapotba rakni ha nem Denied küldése
+                                WhiteboardImageEvent küldése, hol tart éppen a rajzolgatás
+                                kapcsolat felvétele new WhiteboadConnection(chatrommid,client...)
+                            authenticated:
+                                message feldolgozása amúgy
+                                új event message érkezik:
+                                    kikeressük az összes chatroomhoz tartozó WhiteboadConnection, összesnek elküldeni, hogy mi változott
 
+                            pár másodpercenként IsAlive küldése
+                            ha hiba/nem kap választ: kapcsolat megszakadt, takarítás, ha nincs kapcsolat a chatroomhoz akkor azt ki kell írni fileba
+                                    
+                        }
+
+                    }*/
+                    Console.WriteLine("Connected!");
+                    //TODO  check authentication with state machine
                     data = null;
 
                     // Get a stream object for reading and writing

@@ -68,11 +68,11 @@ namespace Messzendzser.Controllers
             }
             catch (ArgumentException)
             {
-                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token")));
+                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage<object>.CreateErrorMessage(3, "Invalid user token")));
             }
             #endregion
 
-            Utils.FileResult result = new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(4,"Unknown error")));
+            Utils.FileResult result = new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage<object>.CreateErrorMessage(4,"Unknown error")));
 
             if (errors.Count == 0)
             {
@@ -81,7 +81,7 @@ namespace Messzendzser.Controllers
                     //Retrieving image
                     string format = "";
                     byte[] image = media.LoadImage(imageToken, out format);
-                    result = new Utils.FileResult(new FileContentResult(image, "image/"+format));
+                    return new Utils.FileResult(new FileContentResult(image, "image/"+format));
                 }
                 catch (FileNotFoundException ex) // Image could not be found
                 {
@@ -92,9 +92,9 @@ namespace Messzendzser.Controllers
                     errors.Add("error", ex.Message); // TODO remove for production
                 }
             }
-            if (errors.Count != 0)
-                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors)));
-            return result; 
+            // Error count has to be greater than 0
+            return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage<object>.CreateErrorMessage(1, "Invalid parameters", errors)));
+             
         }
     }
 }

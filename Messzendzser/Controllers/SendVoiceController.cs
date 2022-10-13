@@ -32,7 +32,7 @@ namespace Messzendzser.Controllers
 
         // POST api/Register
         [HttpPost(),DisableRequestSizeLimit]
-        public string Post( [FromHeader(Name = "format")] string? format, [FromHeader(Name = "chatroomId")] string? chatroomId, [FromHeader(Name = "length")] string? length)
+        public ResponseMessage<object> Post( [FromHeader(Name = "format")] string? format, [FromHeader(Name = "chatroomId")] string? chatroomId, [FromHeader(Name = "length")] string? length)
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
@@ -41,10 +41,8 @@ namespace Messzendzser.Controllers
         }
 
         [NonAction]
-        public string SendVoice(IFormFile? voice,string? format, string? chatroomId,string? length, string? usertoken, IMessageManager messageManager, IMediaManager mediaManager)
+        public ResponseMessage<object> SendVoice(IFormFile? voice,string? format, string? chatroomId,string? length, string? usertoken, IMessageManager messageManager, IMediaManager mediaManager)
         {
-            if (usertoken == null)
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(2, "No user token given"));
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
             int ChatroomId = -1; // Will be reasigned or show an error
@@ -100,15 +98,15 @@ namespace Messzendzser.Controllers
             #endregion
 
             #region UserTokenVerification
-            UserToken token;
+            UserToken token = null;
 
             try
             {
                 token = new UserToken(usertoken);
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token"));
+                errors.Add("usertoken", "Invalid user token");
             }
             #endregion
 
@@ -136,10 +134,10 @@ namespace Messzendzser.Controllers
             }
 
             if (errors.Count != 0) // If there were errors return
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
+                return ResponseMessage<object>.CreateErrorMessage(1, "Invalid parameters", errors);
 
             //Return OK message            
-            return JsonSerializer.Serialize(ResponseMessage.CreateOkMessage());
+            return ResponseMessage<object>.CreateOkMessage();
         }
     }
 }

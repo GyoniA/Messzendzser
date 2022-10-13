@@ -10,6 +10,7 @@ using System.Text.Unicode;
 using System.Text;
 using System.Runtime.CompilerServices;
 using Messzendzser.Model.Managers.Message;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 
 namespace Messzendzser.Controllers
 {
@@ -32,7 +33,7 @@ namespace Messzendzser.Controllers
 
         // POST api/Login
         [HttpGet()]
-        public string Get( )
+        public ResponseMessage<IReadOnlyList<ChatroomInfo>> Get( )
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
@@ -41,41 +42,39 @@ namespace Messzendzser.Controllers
             return GetChatrooms(userToken,userManager);
         }
         [NonAction]
-        public string GetChatrooms(string? usertoken,IUserManager userManager)
+        public ResponseMessage<IReadOnlyList<ChatroomInfo>> GetChatrooms(string? usertoken,IUserManager userManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
 
             #region UserTokenVerification
-            UserToken token;
+            UserToken token = null;
 
             try
             {
                 token = new UserToken(usertoken);
             }
-            catch (ArgumentException)
+            catch (Exception)
             {
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token"));
+                errors.Add("usertoken", "Invalid user token");
             }
             #endregion
 
-
-            string result = "";
             if (errors.Count == 0)
             {
                 try
                 {
                     IReadOnlyList<ChatroomInfo> messages = dataSource.GetChatrooms(token.Id);
-                    Utils.ResponseMessage.CreateOkMessage(new Dictionary<string, string>() { { "chatrooms", JsonSerializer.Serialize(messages) } });
+                    return Utils.ResponseMessage<IReadOnlyList<ChatroomInfo>>.CreateOkMessage(messages);
                 }
                 catch (Exception ex) // Other exception
                 {
                     errors.Add("error", ex.Message); // TODO remove for production
                 }
             }
-            if (errors.Count != 0)
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
-            return result; 
+            // error count has to be greater than 0
+            return ResponseMessage<IReadOnlyList<ChatroomInfo>>.CreateErrorMessage(1, "Invalid parameters", errors);
+            
         }
     }
 }

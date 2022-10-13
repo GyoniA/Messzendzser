@@ -67,11 +67,11 @@ namespace Messzendzser.Controllers
             }
             catch (ArgumentException)
             {
-                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(3, "Invalid user token")));
+                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage<object>.CreateErrorMessage(3, "Invalid user token")));
             }
             #endregion
 
-            Utils.FileResult result = new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(4, "Unknown error")));
+            Utils.FileResult result = new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage<object>.CreateErrorMessage(4, "Unknown error")));
 
             if (errors.Count == 0)
             {
@@ -92,7 +92,7 @@ namespace Messzendzser.Controllers
                 }
             }
             if (errors.Count != 0)
-                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors)));
+                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage<object>.CreateErrorMessage(1, "Invalid parameters", errors)));
             return result;
         }
     }

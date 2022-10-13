@@ -29,13 +29,13 @@ namespace Messzendzser.Controllers
         }
         // POST api/Register
         [HttpPost()]
-        public string Post([FromHeader(Name = "email")] string? email, [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
+        public ResponseMessage<object> Post([FromHeader(Name = "email")] string? email, [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
         {
             IUserManager userManager = new UserManager(dataSource);
             return Register(email,username,password,userManager);
         }
         [NonAction]
-        public string Register(string? email,string? username,string? password, IUserManager userManager)
+        public ResponseMessage<object> Register(string? email,string? username,string? password, IUserManager userManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -93,10 +93,10 @@ namespace Messzendzser.Controllers
             }
 
             if (errors.Count != 0)
-                return JsonSerializer.Serialize(ResponseMessage.CreateErrorMessage(1, "Invalid parameters", errors));
+                return ResponseMessage<object>.CreateErrorMessage(1, "Invalid parameters", errors);
 
             // TODO check if all required headers are present
-            return JsonSerializer.Serialize(ResponseMessage.CreateOkMessage());
+            return ResponseMessage<object>.CreateOkMessage();
         }
     }
 }
