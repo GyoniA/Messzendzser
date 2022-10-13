@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Messzendzser.Model.Managers.Media
@@ -31,7 +32,11 @@ namespace Messzendzser.Model.Managers.Media
 
         public byte[] LoadWhiteboard(int chatroomId)
         {
-            throw new NotImplementedException();
+            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Whiteboards\board" + chatroomId + ".png";
+            using (var reader = new BinaryReader(new FileStream(filepath, FileMode.Open, FileAccess.Read)))
+            {
+                return reader.ReadBytes((int)reader.BaseStream.Length);
+            }
         }
 
         public string StoreImage(byte[] image)
@@ -57,7 +62,13 @@ namespace Messzendzser.Model.Managers.Media
 
         public string StoreWhiteboard(byte[] image, int chatroomId)
         {
-            throw new NotImplementedException();
+            string filename = "board" + chatroomId;
+            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Whiteboards\" + filename + ".png";
+            using (var writer = new BinaryWriter(new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.Write)))
+            {
+                writer.Write(image);
+            }
+            return filename;
         }
     }
 }
