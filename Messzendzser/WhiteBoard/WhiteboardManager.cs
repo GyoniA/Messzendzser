@@ -32,7 +32,7 @@
                 server.Start();
 
                 // Enter the listening loop.
-                ListeningLoop(server);
+                ListeningLoop(server).Wait();
             }
             catch (SocketException e)
             {
@@ -62,7 +62,7 @@
                     // You could also user server.AcceptSocket() here.
                     TcpClient client = await server.AcceptTcpClientAsync();
                     Console.WriteLine("Connected!");
-
+                    //TODO  check authentication with state machine
                     data = null;
 
                     // Get a stream object for reading and writing
