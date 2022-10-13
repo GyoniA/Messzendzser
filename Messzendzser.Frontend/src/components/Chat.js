@@ -1,7 +1,7 @@
 import { Component } from "react"
 
 
-import React, { useState } from 'react'
+import React from 'react'
 
 
 
@@ -18,13 +18,58 @@ class Chat extends React.Component {
             //This is the new message what we will send
             message: "",
             chatroomId: "",
-            error: null
+            chatrooms: [],
+            error: null,
+            messageNum: 20
         }
         this.handleChange = this.handleChange.bind(this);
         this.create = this.create.bind(this);
     }
 
-    
+    componentDidUpdate() {
+        //Get the messages from API 
+        fetch("https://localhost:7043/api/GetMessages", {
+            method: "GET",
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'count': '20',
+                'time': 'Date().toLocaleString()',
+                'dir': 'backward'
+            }
+
+        })
+            .then(res => res.json())
+            .then((res) => {
+                this.setState({
+                    messages: res
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+
+
+
+        //Get ChatroomId from API
+        fetch("https://localhost:7043/api/GetChatrooms", {
+            method: "GET",
+            mode: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            }
+
+        })
+            .then(res => res.json())
+            .then((res) => {
+                this.setState({
+                    chatrooms: res
+                });
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
 
     //HONNAN TUDJUK MELYIK UZENETEK MERT NEM ADTUK MEG A CHATROOM ID-T------ EZZEL AKKOR MIT KELL TENNI????
     //HOGY NZ KI EGY UZENET? UZENET MELYIK ATTRIBUTUMA A SZOVEG???
@@ -35,7 +80,10 @@ class Chat extends React.Component {
             method: "GET",
             mode: 'cors',
             headers: {
-            'Access-Control-Allow-Origin': '*'  
+                'Access-Control-Allow-Origin': '*',
+                'count': '20',
+                'time': 'Date().toLocaleString()',
+                'dir': 'backward'
             }
 
         })
@@ -48,6 +96,9 @@ class Chat extends React.Component {
         .catch(err => {
             console.log(err);
         });
+
+
+
         //Get ChatroomId from API
         fetch("https://localhost:7043/api/GetChatrooms", {
             method: "GET",
@@ -60,7 +111,7 @@ class Chat extends React.Component {
         .then(res => res.json())
         .then((res) => {
             this.setState({
-                chatroomId: res
+                chatrooms: res
             });
         })
         .catch(err => {
@@ -104,7 +155,13 @@ class Chat extends React.Component {
 
 
     render() {
-        
+
+        for (let i = 0; i < this.state.messageNum; i++) {
+            if (this.state.messages[i].hasOwnProperty('text')) {
+               
+            }
+        }
+       
         return (
             <div className='chatapp'>
 
@@ -112,14 +169,13 @@ class Chat extends React.Component {
 
                     
 
-                    <select
-                        value={this.state.chatroomId}
-                        onChange={(e) => this.handleChange({ chatroomId: e.target.value })}
-                        >
-                        <option>Gábor</option>
-                        <option>Gyóni</option>
-                        <option>Noi</option>
-                       
+                    <select onChange={(e) => this.handleChange({ chatroomId: e.target.value })}>
+                        {this.state.chatrooms.map((option) => (
+                            <option value={this.state.chatroomId}>
+                                {option}
+                            </option>
+                        ))}
+
                     </select>
 
                     <div className='icons_up'>
@@ -136,7 +192,7 @@ class Chat extends React.Component {
                 </div>
  
                 <div className='middle_part'>
-                   
+
                     
 
                     <label className='msg_from_me' >
