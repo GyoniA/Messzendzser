@@ -6,7 +6,7 @@
 
         public WhiteboardMessage(byte[] message)
         {
-            this.changes.AddLast(new WhiteboardEvent(message));
+            //this.changes.AddLast(new WhiteboardEvent(message));
         }
     }
 }
