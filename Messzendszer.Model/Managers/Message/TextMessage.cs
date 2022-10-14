@@ -8,29 +8,29 @@ using Messzendzser.Model.DB.Models;
 
 namespace Messzendzser.Model.Managers.Message
 {
-    public class JsonTextMessage : JsonMessage
+    public class TextMessage : Message
     {
         public string Text { get; set; }
 
-        public JsonTextMessage()
+        public TextMessage()
         {
             Text = "";
         }
-        public JsonTextMessage(int userId, int chatroomId, DateTime time, string text) : base(userId, chatroomId, time)
+        public TextMessage(int userId, int chatroomId, DateTime time, string text) : base(userId, chatroomId, time)
         {
             Text = text;
         }
 
-        public JsonTextMessage(TextChatMessage message) : base(message.UserId, message.ChatroomId, message.SentTime)
+        public TextMessage(TextChatMessage message) : base(message.UserId, message.ChatroomId, message.SentTime)
         {
             Text = message.Message;
         }
-
+        /*
         public override ISerializeableMessage Deserialize(byte[] jsonUTF8)
         {
             var utf8Reader = new Utf8JsonReader(jsonUTF8);
-            JsonTextMessage message = JsonSerializer.Deserialize<JsonTextMessage>(ref utf8Reader)!;
+            TextMessage message = JsonSerializer.Deserialize<TextMessage>(ref utf8Reader)!;
             return message;
-        }
+        }*/
     }
 }
