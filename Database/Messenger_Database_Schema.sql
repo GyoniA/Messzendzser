@@ -247,3 +247,23 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2022-10-03 15:10:08
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `register_user`(IN email_in varchar(60),IN username_in varchar(60),IN password_in varchar(80))
+BEGIN
+    SET @conflict_count = (SELECT count(id) FROM user as u WHERE u.email = email_in);
+    IF @conflict_count != 0 THEN
+        SIGNAL sqlstate '50001' SET message_text = 'email adress is already taken';
+    END IF;
+    SET @conflict_count = (SELECT count(id) FROM user as u WHERE u.username = username_in);
+    IF @conflict_count != 0 THEN
+        SIGNAL sqlstate '50002' SET message_text = 'username adress is already taken';
+    END IF;
+    START TRANSACTION;
+    INSERT INTO user (email, username, password) VALUES(email_in,username_in,password_in);
+    SET @new_user_id = (SELECT id FROM user WHERE email = email_in);    
+    SET @voip_password = (SELECT MD5(RAND()) as password);    
+    INSERT INTO voip_credentials (user_id,voip_username,voip_password,voip_realm_hash) VALUES (@new_user_id,username_in,@voip_password,MD5(CONCAT(username_in,":messzendzser:",@voip_password)));
+    COMMIT;
+END$$
+DELIMITER ;
