@@ -1,251 +1,212 @@
-import { Component } from "react"
+import React, { useEffect, useState } from "react";
+import {useNavigate} from "react-router-dom";
 
 
-import React from 'react'
+function Chat(){
 
+    let navigate = useNavigate();
 
+    const [messages, setMessages] = useState([]);
+    const [chatrooms, setChatrooms] = useState([]);
 
+    const [message, setMessage] = useState("");
+    const [chatroomId, setChatroomId] = useState("");
+    const messageNum = 20;
 
-
-class Chat extends React.Component {
-    
-    constructor(props) {
-        super(props)
-        this.state = {
-            //Here can we load the previous messages
-            messages: [],
-
-            //This is the new message what we will send
-            message: "",
-            chatroomId: "",
-            chatrooms: [],
-            error: null,
-            messageNum: 20
-        }
-        this.handleChange = this.handleChange.bind(this);
-        this.create = this.create.bind(this);
-    }
-
-    componentDidUpdate() {
-        //Get the messages from API 
-        fetch("https://localhost:7043/api/GetMessages", {
-            method: "GET",
-            mode: 'cors',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'count': '20',
-                'time': 'Date().toLocaleString()',
-                'dir': 'backward'
-            }
-
-        })
-            .then(res => res.json())
-            .then((res) => {
-                this.setState({
-                    messages: res
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-
-
-
-        //Get ChatroomId from API
-        fetch("https://localhost:7043/api/GetChatrooms", {
-            method: "GET",
-            mode: 'cors',
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            }
-
-        })
-            .then(res => res.json())
-            .then((res) => {
-                this.setState({
-                    chatrooms: res
-                });
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
-
-    //HONNAN TUDJUK MELYIK UZENETEK MERT NEM ADTUK MEG A CHATROOM ID-T------ EZZEL AKKOR MIT KELL TENNI????
-    //HOGY NZ KI EGY UZENET? UZENET MELYIK ATTRIBUTUMA A SZOVEG???
-    //result.messages? result melyik tagja az uzenetek
-    componentDidMount() {
-        //Get the messages from API 
-        fetch("https://localhost:7043/api/GetMessages", {
-            method: "GET",
-            mode: 'cors',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'count': '20',
-                'time': 'Date().toLocaleString()',
-                'dir': 'backward'
-            }
-
-        })
-        .then(res => res.json())
-        .then((res) => {
-            this.setState({
-                messages: res
-            });
-        })
-        .catch(err => {
-            console.log(err);
-        });
-
-
-
-        //Get ChatroomId from API
-        fetch("https://localhost:7043/api/GetChatrooms", {
-            method: "GET",
-            mode: 'cors',
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            }
-
-        })
-        .then(res => res.json())
-        .then((res) => {
-            this.setState({
-                chatrooms: res
-            });
-        })
-        .catch(err => {
-            console.log(err);
-        });
-
-    }
-
-    //Function to send a message to the API
-    create(e) {
-        //POST method
+    //Send message to API
+    const messageSent = async (e) => {
         e.preventDefault();
-
-        fetch("https://localhost:7043/api/SendMessage", {
+        try {
+          const res = await fetch("https://localhost:7043/api/SendMessage", {
             method: "POST",
             mode: 'cors',
-            headers: {
+              headers: {
                 'Access-Control-Allow-Origin': '*',
-                message: this.state.message,
-                chatroomId: this.state.chatroomId
+                message: message,
+                chatroomId: chatroomId
             },
+          });
+          let resJson = await res.json();
 
-        })
-            .then(res => res.json())
-            .then(res => {
-                console.log(res)
-            })
-            .catch(err => {
-                console.log(err);
-            });
-        
+          if (res.status === 200) {
+            setMessage("");
 
-
-    }
-    //Function to update inner state
-    handleChange(changeObject) {
-        this.setState(changeObject);
-    }
-
-
-
-
-    render() {
-
-        for (let i = 0; i < this.state.messageNum; i++) {
-            if (this.state.messages[i].hasOwnProperty('text')) {
-               
-            }
+            if (resJson.ResponseCode !== 1) {
+             
+            } 
+          }
+        } catch (err) {
+          console.log(err);
         }
-       
-        return (
-            <div className='chatapp'>
+    };
+    
+    //Load messages from API
+    const loadMessages = async (e) => {
+        e.preventDefault();
+        try {
+          const res = await fetch("https://localhost:7043/api/GetMessages", {
+            method: "GET",
+            mode: 'cors',
+              headers: {
+                'Access-Control-Allow-Origin': '*',
+                count: 20,
+                time: Date(),
+                dir: "backward"
+            },
+          });
+          let resJson = await res.json();
 
-                <div className='upper_row'>
+          if (res.status === 200) {
+            setMessages(resJson);
 
-                    
+            if (resJson.ResponseCode !== 1) {
+             
+            } 
+          }
+        } catch (err) {
+          console.log(err);
+        }
+    };
 
-                    <select onChange={(e) => this.handleChange({ chatroomId: e.target.value })}>
-                        {this.state.chatrooms.map((option) => (
-                            <option value={this.state.chatroomId}>
-                                {option}
-                            </option>
-                        ))}
+    //Load chatrooms from API
+    const loadChatrooms = async (e) => {
+        e.preventDefault();
+        try {
+          const res = await fetch("https://localhost:7043/api/GetChatrooms", {
+            method: "GET",
+            mode: 'cors',
+              headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+          });
+          let resJson = await res.json();
 
-                    </select>
+          if (res.status === 200) {
+            setChatrooms(resJson);
 
-                    <div className='icons_up'>
+            if (resJson.ResponseCode !== 1) {
+             
+            } 
+          }
+        } catch (err) {
+          console.log(err);
+        }
+    };
 
-                        <button className='whiteboard'>
-                            <img src = "/images/whiteboard.png" ></img>
-                        </button> 
+    //Run once after the initial render
+    useEffect(() => {
+        loadMessages();
+        loadChatrooms();
+        const timer = setTimeout(() => {
+            loadMessages();
+            loadChatrooms();
+        }, 3000);
+          return () => clearTimeout(timer);
+    });
+
+    const displayMessages = messages.map((msg) => {
+        if (msg.hasOwnProperty('text')) {
+            return(
+                <li>
+                    {msg.text}
+                </li>
+            )
+        }
+        if(msg.hasOwnProperty('length')){
+            return(
+                <li>
+                    <audio controls>
+                        <source src="localhost:7043/api/GetVoice?voice=msg.token"
+                                type="audio/ogg">
+                        </source>
+                    </audio>
+                </li>
+            )
+        }else{
+            return(
+                <li>
+                    <img src="localhost:7043/api/GetImage?image=msg.token">
+                    </img>
+                </li>
+            )
+        }
+    })
+
+    return (
+        <div className='chatapp'>
+            <div className='upper_row'>
+                
+                <select onChange={(e) => setChatroomId(e.target.value )}>
+                    {chatrooms.map((ci, index) => (
+                        <option key= {index} value={chatroomId}>
+                            {ci.name}
+                        </option>
+                    ))}
+                </select>
+
+                <div className='icons_up'>
+
+                    <button className='whiteboard'
+                            onClick={() => {navigate("/whiteboard")}}>
+                        <img src = "/images/whiteboard.png" ></img>
+                    </button> 
                         
-                        <button className='phone'>
-                            <img src = "/images/phone.png" ></img>
-                        </button>
-                    </div>
-
-                </div>
- 
-                <div className='middle_part'>
-
-                    
-
-                    <label className='msg_from_me' >
-                        Hello
-                    </label>
-                    <label className='msg_from_other' >
-                        Szia
-                    </label>
-                    <label className='msg_from_me' >
-                        Mit csinálsz?
-                    </label>
-                    <label className='msg_from_other' >
-                        A témalabort
-                    </label>
-
-                </div>
-
-                <div className='bottom_row'>
-
-                    <button className='send'
-                        onClick={(e) => {
-                            this.create(e);
-
-                        }
-                        }>
-                        <img src = "/images/send.png" ></img>
-                    </button> 
-
-                  
-                    <input className="msg"
-                        type="text"
-                        value={this.state.message}
-                        placeholder='Üzenet írása...'
-                        onChange={(e) => this.handleChange({ message: e.target.value })}>
-                        </input>
-                   
-
-                    <button className='microphone'>
-                        <img src = "/images/microphone.png" ></img>
-                    </button> 
-
-                    <button className='picture'>
-                        <img src = "/images/picture.png" ></img>
+                    <button className='phone'>
+                        <img src = "/images/phone.png" ></img>
                     </button>
-
-                    
-
                 </div>
 
             </div>
-        )
+ 
+            <div className='middle_part'>
 
-    }
+                <ul>
+                    {displayMessages}
+                </ul>
+
+                <label className='msg_from_me' >
+                    Hello
+                </label>
+                <label className='msg_from_other' >
+                    Szia
+                </label>
+                <label className='msg_from_me' >
+                    Mit csinálsz?
+                </label>
+                <label className='msg_from_other' >
+                    A témalabort
+                </label>
+
+            </div>
+
+            <div className='bottom_row'>
+
+                <button className='send'
+                    onClick={messageSent}>
+                    <img src = "/images/send.png" ></img>
+                </button> 
+
+                  
+                <input className="msg"
+                    type="text"
+                    value={message}
+                    placeholder='Üzenet írása...'
+                    onChange={(e) => setMessage(e.target.value)}>
+                </input>
+                   
+
+                <button className='microphone'>
+                    <img src = "/images/microphone.png" ></img>
+                </button> 
+
+                <button className='picture'>
+                    <img src = "/images/picture.png" ></img>
+                </button>
+
+            </div>
+
+        </div>
+    )
 
 }
 export default Chat;

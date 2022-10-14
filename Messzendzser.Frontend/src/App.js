@@ -8,6 +8,7 @@ import RegForm from './components/RegForm';
 import LogForm from './components/LogForm';
 import Home from './components/Home';
 import Chat from './components/Chat';
+import WhiteBoard from './components/WhiteBoard';
  
 
 function App() {
@@ -18,12 +19,14 @@ function App() {
       <Link to="/register"> Regisztráció   </Link>
       <Link to="/login"> Bejelentkezés  </Link>
       <Link to="/chat"> Beszélgetés  </Link>
+      <Link to="/whiteboard"> Whiteboard  </Link>
     </nav>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/register" element={<RegForm />} />
       <Route path="/login" element={<LogForm />} />
       <Route path="/chat" element={<Chat />} />
+      <Route path="/whiteboard" element={<WhiteBoard />} />
     </Routes>
   </Router>
   );

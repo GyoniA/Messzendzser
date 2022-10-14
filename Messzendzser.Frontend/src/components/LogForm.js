@@ -25,13 +25,14 @@ export default function Form(){
               headers: {
                 'Access-Control-Allow-Origin': '*',
                 username: username,
-                password: password,
+                password: password
             },
           });
           let resJson = await res.json();
 
           if (res.status === 200) {
             setUsername("");
+            setPassword("");
 
             if (resJson.ResponseCode !== 1) {
               setMessage("Sikeres belépés");
@@ -40,7 +41,7 @@ export default function Form(){
               let responseM = resJson.Message;
               setMessage(responseM);
               setNav(false);
-          }
+            }
           }
         } catch (err) {
           console.log(err);
