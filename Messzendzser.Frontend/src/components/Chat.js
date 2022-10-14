@@ -14,16 +14,19 @@ function Chat(){
     const messageNum = 20;
 
     //Send message to API
-    const messageSent = async (e) => {
+    let messageSent = async (e) => {
         e.preventDefault();
         try {
-          const res = await fetch("https://localhost:7043/api/SendMessage", {
+          let res = await fetch("https://localhost:7043/api/SendMessage", {
             method: "POST",
-            mode: 'cors',
+             mode: 'cors',
+
+            
               headers: {
                 'Access-Control-Allow-Origin': '*',
                 message: message,
-                chatroomId: chatroomId
+                chatroomId: chatroomId,
+                
             },
           });
           let resJson = await res.json();

@@ -1,12 +1,36 @@
 ﻿namespace Messzendzser.WhiteBoard
 {
+    public enum MessageType
+        {
+            Authentication,
+            Denied,
+            OK,
+            IsAlive,
+            Event
+        }
     public class WhiteboardMessage
     {
-        private LinkedList<WhiteboardEvent> changes = new LinkedList<WhiteboardEvent>();
+        public MessageType MessageType { get; set; }
 
         public WhiteboardMessage(byte[] message)
         {
-            //this.changes.AddLast(new WhiteboardEvent(message));
+            WhiteboardMessage wm = DeSerialize(message);
+            MessageType = wm.MessageType;
+        }
+
+        public WhiteboardMessage(MessageType messageType)
+        {
+            MessageType = messageType;
+        }
+
+        public byte[] Serialize() {
+            throw new NotImplementedException();
+        }
+
+        public WhiteboardMessage DeSerialize(byte[] message)
+        {
+            //return new WhiteboardMessage(MessageType.Authentication);
+            throw new NotImplementedException();
         }
     }
 }
