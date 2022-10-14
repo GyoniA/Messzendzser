@@ -75,7 +75,8 @@ function Chat(){
         try {
           const res = await fetch("https://localhost:7043/api/GetChatrooms", {
             method: "GET",
-            mode: 'cors',
+              mode: 'cors',
+              credentials: "include",
               headers: {
                 'Access-Control-Allow-Origin': '*'
             },
