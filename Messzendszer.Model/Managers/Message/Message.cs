@@ -8,31 +8,31 @@ using System.Threading.Tasks;
 
 namespace Messzendzser.Model.Managers.Message
 {
-    public abstract class JsonMessage : ISerializeableMessage
+    public abstract class Message : ISerializeableMessage
     {
         public int UserId { get; set; }
         public int ChatroomId { get; set; }
         public DateTime Time { get; set; }
 
-        public JsonMessage()
+        public Message()
         {
             UserId = 0;
             ChatroomId = 0;
             Time = DateTime.Now;
         }
 
-        public JsonMessage(int userId, int chatroomId, DateTime time)
+        public Message(int userId, int chatroomId, DateTime time)
         {
             UserId = userId;
             ChatroomId = chatroomId;
             Time = time;
         }
-
+        /*
         public byte[] Serialize() {
             byte[] jsonUTF8 = JsonSerializer.SerializeToUtf8Bytes(this, this.GetType());
             return jsonUTF8;
         }
 
-        public abstract ISerializeableMessage Deserialize(byte[] jsonUTF8);
+        public abstract ISerializeableMessage Deserialize(byte[] jsonUTF8);*/
     }
 }

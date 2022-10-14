@@ -19,11 +19,11 @@ namespace Messzendzser.Model.Managers.Message
             switch (type)
             {
                 case "text":
-                    return new JsonTextMessage();
+                    return new TextMessage();
                 case "image":
-                    return new JsonImageMessage();
+                    return new ImageMessage();
                 case "voice":
-                    return new JsonVoiceMessage();
+                    return new VoiceMessage();
                 default:
                     throw new Exception("Wrong type. This type of Json message doesn't exist.");
             }

@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 namespace Messzendzser.Model.Managers.Message
 {
     public interface ISerializeableMessage
-    {
+    {/*
         public byte[] Serialize();
-        public ISerializeableMessage Deserialize(byte[] jsonUTF8);
+        public ISerializeableMessage Deserialize(byte[] jsonUTF8);*/
     }
 }

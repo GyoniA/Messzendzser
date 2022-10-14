@@ -52,10 +52,10 @@ namespace Messzendzser.Model.Managers.Message
             {
                 count = numberOfMessages;
             }
-            List<JsonTextMessage> jsonTexts = texts.Select(x => new JsonTextMessage(x)).ToList();
-            List<JsonImageMessage> jsonImages = images.Select(x => new JsonImageMessage(x)).ToList();
-            List<JsonVoiceMessage> jsonVoices = voices.Select(x => new JsonVoiceMessage(x)).ToList();
-            List<JsonMessage> combined = new List<JsonMessage>();
+            List<TextMessage> jsonTexts = texts.Select(x => new TextMessage(x)).ToList();
+            List<ImageMessage> jsonImages = images.Select(x => new ImageMessage(x)).ToList();
+            List<VoiceMessage> jsonVoices = voices.Select(x => new VoiceMessage(x)).ToList();
+            List<Message> combined = new List<Message>();
             combined.AddRange(jsonTexts);
             combined.AddRange(jsonImages);
             combined.AddRange(jsonVoices);
