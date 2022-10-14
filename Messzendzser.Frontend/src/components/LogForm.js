@@ -12,7 +12,6 @@ export default function Form(){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const [nav, setNav] = useState("");
 
     
 
@@ -31,16 +30,21 @@ export default function Form(){
           let resJson = await res.json();
 
           if (res.status === 200) {
-            setUsername("");
-            setPassword("");
+            
 
-            if (resJson.ResponseCode !== 1) {
-              setMessage("Sikeres belépés");
-              setNav(true);
+            if (resJson.message === "Ok") {
+              
+              setUsername("");
+              setPassword("");
+              let tok = resJson.body.token;
+              console.log(tok);
+              document.cookie = "user-token="+resJson.body.token;
+
+              navigate("/chat")
+              
             } else {
               let responseM = resJson.Message;
               setMessage(responseM);
-              setNav(false);
             }
           }
         } catch (err) {
@@ -84,14 +88,7 @@ export default function Form(){
 
                         </div>
 
-                        <button className='btn'onClick={
-                            () => {
-                                
-                                if (nav) {
-                                    //navigate("/chat")
-                                }
-                                
-                            }}>Belépés</button>
+                        <button className='btn'>Belépés</button>
 
                         <div className="message">{message ? <p>{message}</p> : null}</div>
                     </form> 

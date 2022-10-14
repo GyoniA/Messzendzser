@@ -47,6 +47,7 @@ function Chat(){
           const res = await fetch("https://localhost:7043/api/GetMessages", {
             method: "GET",
             mode: 'cors',
+            
               headers: {
                 'Access-Control-Allow-Origin': '*',
                 'count': '20',

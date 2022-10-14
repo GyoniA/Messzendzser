@@ -36,7 +36,7 @@ export default function Form(){
           if (res.status === 200) {
             setUsername("");
             setEmail("");
-
+            setPassword("");
               if (resJson.ResponseCode !== 1) {
                   setMessage("Felhasználó sikeresen létrehozva");
                   setNav(true);
