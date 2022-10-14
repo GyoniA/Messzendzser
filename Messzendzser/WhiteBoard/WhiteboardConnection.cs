@@ -9,8 +9,15 @@
     using System.Threading;
     public class WhiteboardConnection
     {
-        private TcpClient client;
+        public TcpClient Client { get; set; }
         private string username;
         private Chatroom room;
+
+        public WhiteboardConnection(string username, Chatroom room, TcpClient client)
+        {
+            this.username = username;
+            this.room = room;
+            this.Client = client;
+        }
     }
 }

@@ -2,17 +2,17 @@
 
 namespace Messzendzser.WhiteBoard
 {
-    public class WhiteboardAuthenticationMessage
+    public class WhiteboardAuthenticationMessage : WhiteboardMessage
     {
-        private string username;
-        private string password;
-        private Chatroom chatroom;
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public Chatroom Chatroom { get; set; }
 
-        public WhiteboardAuthenticationMessage(string username, string password, Chatroom chatroom)
+        public WhiteboardAuthenticationMessage(byte[] message, string username, string password, Chatroom chatroom) : base(message)
         {
-            this.username = username;
-            this.password = password;
-            this.chatroom = chatroom;
+            Username = username;
+            Password = password;
+            Chatroom = chatroom;
         }
     }
 }
