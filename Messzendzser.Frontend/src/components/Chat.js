@@ -19,8 +19,8 @@ function Chat(){
         try {
           let res = await fetch("https://localhost:7043/api/SendMessage", {
             method: "POST",
-             mode: 'cors',
-
+            mode: 'cors',
+            credentials: "include",
             
               headers: {
                 'Access-Control-Allow-Origin': '*',
@@ -45,16 +45,20 @@ function Chat(){
     
     //Load messages from API
     const loadMessages = async (e) => {
-        
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time;
+
         try {
           const res = await fetch("https://localhost:7043/api/GetMessages", {
             method: "GET",
             mode: 'cors',
-            
+            credentials: "include",
               headers: {
                 'Access-Control-Allow-Origin': '*',
                 'count': '20',
-                'time': 'Date()',
+                'time': dateTime,
                 'dir': "backward"
             },
           });
