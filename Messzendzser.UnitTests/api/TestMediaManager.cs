@@ -28,6 +28,12 @@ namespace Messzendzser.UnitTests.api
             }
             throw new FileNotFoundException("Image not found");
         }
+
+        public byte[] LoadWhiteboard(int chatroomId)
+        {
+            throw new NotImplementedException();
+        }
+
         public string StoreImage(byte[] image)
         {
             return "token";
@@ -36,6 +42,11 @@ namespace Messzendzser.UnitTests.api
         public string StoreSound(byte[] sound, string format)
         {
             return format;
+        }
+
+        public string StoreWhiteboard(byte[] image, int chatroomId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
