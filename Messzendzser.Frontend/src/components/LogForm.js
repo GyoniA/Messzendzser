@@ -21,10 +21,12 @@ export default function Form(){
           let res = await fetch("https://localhost:7043/api/Login", {
             method: "POST",
             mode: 'cors',
+            
               headers: {
                 'Access-Control-Allow-Origin': '*',
                 username: username,
-                password: password
+                password: password,
+                
             },
           });
           let resJson = await res.json();

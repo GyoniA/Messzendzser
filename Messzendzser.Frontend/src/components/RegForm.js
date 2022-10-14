@@ -12,7 +12,6 @@ export default function Form(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const [nav, setNav] = useState("");
   
 
     let navigate = useNavigate();
@@ -34,16 +33,17 @@ export default function Form(){
           let resJson = await res.json();
           
           if (res.status === 200) {
-            setUsername("");
-            setEmail("");
-            setPassword("");
-              if (resJson.ResponseCode !== 1) {
-                  setMessage("Felhasználó sikeresen létrehozva");
-                  setNav(true);
+            
+
+            if (resJson.message === "Ok") {
+                  setUsername("");
+                  setPassword("");
+                  setEmail("");
+                  navigate("/login");
+                  
               } else {
                   let responseM = resJson.Message;
                   setMessage(responseM);
-                  setNav(false);
               }
             
           }
@@ -78,16 +78,7 @@ export default function Form(){
 
                     
 
-                        <button className='btn'
-                            //Vár pár másodpercet majd átirányít ha sikeres
-                        onClick={
-                            () => {
-                                
-                                if (nav) {
-                                    navigate("/login")
-                                }
-                                
-                            }}>
+                        <button className='btn'>
                           Regisztráció</button>
                           
                           <div className="message">{message ? <p>{message}</p> : null}</div>

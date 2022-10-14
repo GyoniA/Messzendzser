@@ -18,7 +18,7 @@ function App() {
       <Link to="/"> Főoldal   </Link>
       <Link to="/register"> Regisztráció   </Link>
       <Link to="/login"> Bejelentkezés  </Link>
-      <Link to="/chat"> Beszélgetés  </Link>
+      
       <Link to="/whiteboard"> Whiteboard  </Link>
     </nav>
     <Routes>
