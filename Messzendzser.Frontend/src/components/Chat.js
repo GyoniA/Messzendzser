@@ -42,16 +42,16 @@ function Chat(){
     
     //Load messages from API
     const loadMessages = async (e) => {
-        e.preventDefault();
+        
         try {
           const res = await fetch("https://localhost:7043/api/GetMessages", {
             method: "GET",
             mode: 'cors',
               headers: {
                 'Access-Control-Allow-Origin': '*',
-                count: 20,
-                time: Date(),
-                dir: "backward"
+                'count': '20',
+                'time': 'Date()',
+                'dir': "backward"
             },
           });
           let resJson = await res.json();
@@ -70,7 +70,7 @@ function Chat(){
 
     //Load chatrooms from API
     const loadChatrooms = async (e) => {
-        e.preventDefault();
+       
         try {
           const res = await fetch("https://localhost:7043/api/GetChatrooms", {
             method: "GET",
@@ -97,14 +97,14 @@ function Chat(){
     useEffect(() => {
         loadMessages();
         loadChatrooms();
-        const timer = setTimeout(() => {
+        const interval = setInterval(() => {
             loadMessages();
             loadChatrooms();
         }, 3000);
-          return () => clearTimeout(timer);
-    });
+          return () => clearInterval(interval);
+    }, []);
 
-    const displayMessages = messages.map((msg) => {
+    /*const displayMessages = messages.map((msg) => {
         if (msg.hasOwnProperty('text')) {
             return(
                 <li>
@@ -130,19 +130,18 @@ function Chat(){
                 </li>
             )
         }
-    })
+    })*/
 
     return (
         <div className='chatapp'>
             <div className='upper_row'>
                 
-                <select onChange={(e) => setChatroomId(e.target.value )}>
-                    {chatrooms.map((ci, index) => (
-                        <option key= {index} value={chatroomId}>
-                            {ci.name}
-                        </option>
-                    ))}
+                <select onChange={(e) => setChatroomId(e.target.value )}
+                        value={chatroomId}
+                        otions={chatrooms}>
                 </select>
+                    
+                
 
                 <div className='icons_up'>
 
@@ -160,9 +159,7 @@ function Chat(){
  
             <div className='middle_part'>
 
-                <ul>
-                    {displayMessages}
-                </ul>
+                
 
                 <label className='msg_from_me' >
                     Hello
