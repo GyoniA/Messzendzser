@@ -60,9 +60,33 @@ form  {
   }
 
 
+  .decideCall-decide-call{
+    background: white;
+    height: 300px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .caller{
+    padding-top: 1rem;
+
+  }
+
+.buttons{
+  display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.pickup, .dropcall{
+  cursor: pointer;
+}
 
   h3{
-    color: white;
+    font-weight: 500;
+    color: grey;
+    font-size: 1rem;
   }
 
   
