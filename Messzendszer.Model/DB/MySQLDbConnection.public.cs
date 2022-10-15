@@ -110,10 +110,9 @@ namespace Messzendzser.Model.DB
         public IReadOnlyList<TextChatMessage> GetTextChatMessages(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton directon)
         {
             List<TextChatMessage> messages = new List<TextChatMessage>();
-            var results = TextChatMessages.Where(m => 
-                m.ChatroomId == chatroomId &&
-                directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time
-            ).OrderBy(m=>m.SentTime).Take(count);
+            var results = TextChatMessages.Where(m =>( 
+                m.ChatroomId == chatroomId)
+            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time).OrderBy(m=>m.SentTime).Take(count);
             messages.AddRange(results);
             return messages;
         }
@@ -122,9 +121,8 @@ namespace Messzendzser.Model.DB
         {
             List<ImageChatMessage> messages = new List<ImageChatMessage>();
             var results = ImageChatMessages.Where(m =>
-                m.ChatroomId == chatroomId &&
-                directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time
-            ).OrderBy(m => m.SentTime).Take(count);
+                m.ChatroomId == chatroomId
+            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time).OrderBy(m => m.SentTime).Take(count);
             messages.AddRange(results);
             return messages;
         }
@@ -133,9 +131,8 @@ namespace Messzendzser.Model.DB
         {
             List<VoiceChatMessage> messages = new List<VoiceChatMessage>();
             var results = VoiceChatMessages.Where(m =>
-                m.ChatroomId == chatroomId &&
-                directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time
-            ).OrderBy(m => m.SentTime).Take(count);
+                m.ChatroomId == chatroomId
+            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time).OrderBy(m => m.SentTime).Take(count);
             messages.AddRange(results);
             return messages;
         }
