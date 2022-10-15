@@ -25,12 +25,10 @@ namespace Messzendzser.Model.Managers.Message
         {
             string token = manager.StoreImage(image, format);
             dataSource.StoreImageMessage(user.Id, chatroomId, token, format);
-            throw new NotImplementedException();
         }
 
         public void StoreMessage(string message, int chatroomId, DB.Models.User user)
         {
-            //TODO check if chatroom and user exists (or don't if it was checked before)
             dataSource.StoreTextMessage(user.Id, chatroomId, message);
         }
 
@@ -38,7 +36,6 @@ namespace Messzendzser.Model.Managers.Message
         {
             string token = manager.StoreSound(sound, format);
             dataSource.StoreVoiceMessage(user.Id, chatroomId, token, length, format);
-            throw new NotImplementedException();
         }
 
         public IReadOnlyList<Message> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton direction)
