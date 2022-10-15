@@ -52,15 +52,17 @@ namespace Messzendzser.Model.Managers.Message
             {
                 count = numberOfMessages;
             }
-            List<TextMessage> jsonTexts = texts.Select(x => new TextMessage(x)).ToList();
-            List<ImageMessage> jsonImages = images.Select(x => new ImageMessage(x)).ToList();
-            List<VoiceMessage> jsonVoices = voices.Select(x => new VoiceMessage(x)).ToList();
+            List<TextMessage> Texts = texts.Select(x => new TextMessage(x)).ToList();
+            List<ImageMessage> Images = images.Select(x => new ImageMessage(x)).ToList();
+            List<VoiceMessage> Voices = voices.Select(x => new VoiceMessage(x)).ToList();
             List<Message> combined = new List<Message>();
-            combined.AddRange(jsonTexts);
-            combined.AddRange(jsonImages);
-            combined.AddRange(jsonVoices);
+            combined.AddRange(Texts);
+            combined.AddRange(Images);
+            combined.AddRange(Voices);
             combined = combined.OrderBy(x => x.Time).ToList();
-            return (IReadOnlyList<ISerializeableMessage>)combined.Take(count);
+            
+            List<ISerializeableMessage> parentList = combined.Take(count).Cast<ISerializeableMessage>().ToList();
+            return parentList;
         }
     }
 }

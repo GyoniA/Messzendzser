@@ -1,6 +1,7 @@
 ﻿namespace Messzendzser.WhiteBoard
 {
     using Messzendzser.Model.DB.Models;
+    using Microsoft.Extensions.Logging;
     using Org.BouncyCastle.Utilities;
     using System;
     using System.Collections;
@@ -208,6 +209,7 @@
                 whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
+                //TODO CHECK IF CORRECT
                 throw;
             }
             return false;
@@ -215,10 +217,6 @@
 
         private void ListeningLoop(TcpListener server)
         {
-
-            // Buffer for reading data
-            Byte[] bytes = new Byte[256];
-            String data = null;
             _ = Task.Run(async () =>
             {
                 while (!stop.IsCancellationRequested)
@@ -257,10 +255,21 @@
             //return this.whiteboard.GetData();
         }
 
+        public byte[] GetWhiteboardData(Chatroom chatroom)
+        {
+            whiteboards.TryGetValue(chatroom, out Whiteboard whiteboard);
+            return whiteboard?.GetData();
+        }
+
         public void UpdateWhiteboard(byte[] message)
         {
             throw new NotImplementedException();
             //this.whiteboard.AddMessage(new WhiteboardMessage(sentMessage));
+        }
+        public void UpdateWhiteboard(Chatroom chatroom, LinkedList<WhiteboardEvent> newEvents)
+        {
+            whiteboards.TryGetValue(chatroom, out Whiteboard whiteboard);
+            whiteboard?.AddEvents(newEvents);
         }
     }
 }
