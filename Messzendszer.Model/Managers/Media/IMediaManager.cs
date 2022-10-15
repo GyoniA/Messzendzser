@@ -8,7 +8,7 @@ namespace Messzendzser.Model.Managers.Media
 {
     public interface IMediaManager
     {
-        public string StoreImage(byte[] image);
+        public string StoreImage(byte[] image, string format);
         public string StoreSound(byte[] sound, string format);
         public string StoreWhiteboard(byte[] image, int chatroomId);
         public byte[] LoadSound(string token, out string format);

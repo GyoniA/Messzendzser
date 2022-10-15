@@ -4,7 +4,7 @@
     using Org.BouncyCastle.Utilities;
     using System;
     using System.Collections;
-    using System.Collections.Immutable;
+    using System.Collections.Concurrent;
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
@@ -21,14 +21,14 @@
 
         //TODO szálbiztos lista kapcsolatokra ellenőrzése
         //stores each chatrooms whiteboard
-        private ImmutableDictionary<Chatroom, Whiteboard> whiteboards;
+        private ConcurrentDictionary<Chatroom, Whiteboard> whiteboards;
         
         private CancellationTokenSource stop = new CancellationTokenSource();
         TcpListener server;
         
         public WhiteboardManager()
         {
-            this.whiteboards = ImmutableDictionary<Chatroom, Whiteboard>.Empty;
+            this.whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
             try
             {
                 // Set the TcpListener on port 13000.
@@ -104,13 +104,9 @@
                             bool authenticated = true;
                             if (authenticated)
                             {
+                                whiteboards.TryAdd(auth.Chatroom, new Whiteboard(auth.Chatroom));
                                 Whiteboard board;
                                 whiteboards.TryGetValue(auth.Chatroom, out board);
-                                if (board == null)
-                                {
-                                    whiteboards.Add(auth.Chatroom, new Whiteboard(auth.Chatroom));
-                                    whiteboards.TryGetValue(auth.Chatroom, out board);
-                                }
                                 board?.AddConnection(new WhiteboardConnection(auth.Username, auth.Chatroom, client));
                                 //TODO send OK message
                                 new WhiteboardOKMessage(new byte[0]).Serialize();
