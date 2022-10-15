@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function Chat(){
 
     let navigate = useNavigate();
+    
 
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
@@ -13,6 +14,7 @@ function Chat(){
     const [message, setMessage] = useState("");
     const [chatroomId, setChatroomId] = useState("");
     const messageNum = 20;
+    let crid = chatroomId;
 
     //Send message to API
     let messageSent = async (e) => {
@@ -47,6 +49,8 @@ function Chat(){
     //Load messages from API
     const loadMessages = async (e) => {
 
+        console.log(chatroomId);
+
         function addZero(i) {
             if (i < 10) { i = "0" + i }
             return i;
@@ -64,9 +68,10 @@ function Chat(){
             credentials: "include",
               headers: {
                 'Access-Control-Allow-Origin': '*',
-                'count': '20',
-                'time': dateTime,
-                'dir': "backward"
+                chatroomId: crid,
+                count: 20,
+                time: dateTime,
+                dir: "backward"
             },
           });
           let resJson = await res.json();
@@ -161,11 +166,16 @@ function Chat(){
             <div className='upper_row'>
 
 
-                <select onChange={(e) => setChatroomId(e.target.value)}>
+                <select onChange={(e) => {
+                    setChatroomId(e.target.value);
+                    crid = chatroomId;}
+                }>
+                    
                     {Chatrooms()}
                 </select>
                     
-                
+                <h1>{chatroomId}</h1>
+                 <h1>{crid}</h1>
 
                 <div className='icons_up'>
 
