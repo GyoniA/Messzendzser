@@ -1,7 +1,9 @@
 using Messzendzser.Model.DB;
+using Messzendzser.Model.DB.Models;
 using Messzendzser.Voip;
 using System.Net;
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +26,27 @@ new Thread(() => {
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddAuthentication().AddCookie(options=>options.Cookie.Name = "new-user-token");
+
 // Add DbContext service
 builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
 
+builder.Services.AddDefaultIdentity<MesszendzserIdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<MySQLDbConnection>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddSwaggerGen();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Cookie settings
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+    options.LoginPath = "/api/Login";
+    options.AccessDeniedPath = "/ilyennincs";
+    options.SlidingExpiration = true;
+});
 
 var app = builder.Build();
 
@@ -48,6 +67,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 

@@ -16,10 +16,10 @@ namespace Messzendzser.UnitTests.api
         [SetUp]
         public void Setup()
         {
-            controller = new RegisterController(null);
-            userManager = new TestUserManager();
+            /*controller = new RegisterController(null);
+            userManager = new TestUserManager();*/
         }
-
+        /*
         [Test]
         public void UsernameMissingTest()
         {
@@ -72,6 +72,6 @@ namespace Messzendzser.UnitTests.api
             string response = controller.Register("test@asd.com", "username", "Abasd123", userManager);
             string pattern = ApiTestUtils.ResponseRegex(200, "Ok", null);
             Assert.That(response, Does.Match(pattern));
-        }
+        }*/
     }
 }

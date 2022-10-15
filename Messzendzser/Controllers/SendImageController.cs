@@ -3,14 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.Message;
 using Messzendzser.Model.DB;
-using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.AspNetCore.Identity;
 using Messzendzser.Model.Managers.Media;
 
 namespace Messzendzser.Controllers
 {
-
     /// <summary>
     /// Api endpoint, where users can send text messages
     /// Usage:
