@@ -4,17 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 
 function Chat(){
-
     let navigate = useNavigate();
     
-
+    const [chatroomId, setChatroomId] = useState("");
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
-
     const [message, setMessage] = useState("");
-    const [chatroomId, setChatroomId] = useState("");
+    
     const messageNum = 20;
-    let crid = chatroomId;
 
     //Send message to API
     let messageSent = async (e) => {
@@ -34,27 +31,22 @@ function Chat(){
           });
           let resJson = await res.json();
 
-          if (res.status === 200) {
-            setMessage("");
-
-            if (resJson.ResponseCode !== 1) {
-             
-            } 
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+                    setMessage("");
+                }
           }
         } catch (err) {
           console.log(err);
         }
     };
-    
-    //Load messages from API
-    const loadMessages = async (e) => {
-
-        console.log(chatroomId);
-
-        function addZero(i) {
+    function addZero(i) {
             if (i < 10) { i = "0" + i }
             return i;
         }
+    //Load messages from API
+    const loadMessages = async (e) => {
+
 
         var today = new Date();
         var date = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
@@ -68,20 +60,19 @@ function Chat(){
             credentials: "include",
               headers: {
                 'Access-Control-Allow-Origin': '*',
-                chatroomId: crid,
+                chatroomId: chatroomId,
                 count: 20,
                 time: dateTime,
-                dir: "backward"
+                dir: "backward",
             },
           });
           let resJson = await res.json();
 
-          if (res.status === 200) {
-            setMessages(resJson);
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+                    setMessages(resJson.body);
+                }
 
-            if (resJson.ResponseCode !== 1) {
-             
-            } 
           }
         } catch (err) {
           console.log(err);
@@ -102,12 +93,10 @@ function Chat(){
           });
           let resJson = await res.json();
 
-          if (res.status === 200) {
-            setChatrooms(resJson.body);
-
-            if (resJson.ResponseCode !== 1) {
-             
-            } 
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+                    setChatrooms(resJson.body);
+                }
           }
         } catch (err) {
           console.log(err);
@@ -123,9 +112,9 @@ function Chat(){
             loadChatrooms();
         }, 3000);
           return () => clearInterval(interval);
-    }, []);
+    },[chatroomId]);
 
-    /*const displayMessages = messages.map((msg) => {
+    const displayMessages = messages.map((msg) => {
         if (msg.hasOwnProperty('text')) {
             return(
                 <li>
@@ -151,12 +140,12 @@ function Chat(){
                 </li>
             )
         }
-    })*/
+    })
 
 
    const Chatrooms = () => {
         return chatrooms.map((cr) => {
-            return <option value={cr.id}>{cr.name}
+            return <option key={cr.id} value={cr.id}>{cr.name}
             </option>;
         });
     };
@@ -166,16 +155,13 @@ function Chat(){
             <div className='upper_row'>
 
 
-                <select onChange={(e) => {
-                    setChatroomId(e.target.value);
-                    crid = chatroomId;}
-                }>
-                    
+                <select onChange={(e) => setChatroomId(e.target.value) }>
+                    <option value="choose" disabled selected="selected">
+                        Név:
+                    </option>
                     {Chatrooms()}
                 </select>
                     
-                <h1>{chatroomId}</h1>
-                 <h1>{crid}</h1>
 
                 <div className='icons_up'>
 
