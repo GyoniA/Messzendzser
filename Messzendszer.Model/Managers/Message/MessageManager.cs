@@ -23,7 +23,7 @@ namespace Messzendzser.Model.Managers.Message
         }
         public void StoreImageMessage(byte[] image, string format, int chatroomId, DB.Models.User user, IMediaManager manager)
         {
-            string token = manager.StoreImage(image);
+            string token = manager.StoreImage(image, format);
             dataSource.StoreImageMessage(user.Id, chatroomId, token, format);
             throw new NotImplementedException();
         }

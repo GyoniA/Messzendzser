@@ -1,4 +1,5 @@
 ﻿using Messzendzser.Model.DB.Models;
+using System.Collections.Concurrent;
 using System.Collections.Immutable;
 
 namespace Messzendzser.WhiteBoard
@@ -6,18 +7,23 @@ namespace Messzendzser.WhiteBoard
     public class Whiteboard
     {
         private Chatroom room;
-        private ImmutableList<WhiteboardConnection> connections = ImmutableList<WhiteboardConnection>.Empty;
-        private ImmutableList<WhiteboardEvent> events = ImmutableList<WhiteboardEvent>.Empty;
+        //private ImmutableList<WhiteboardConnection> connections = ImmutableList<WhiteboardConnection>.Empty;
+        private ConcurrentDictionary<String, WhiteboardConnection> connections = new ConcurrentDictionary<string, WhiteboardConnection>();
+        //private ImmutableList<WhiteboardEvent> events = ImmutableList<WhiteboardEvent>.Empty;
+        private ConcurrentQueue<WhiteboardEvent> events = new ConcurrentQueue<WhiteboardEvent>();
         private byte[] image = new byte[0];
 
         public Whiteboard(Chatroom room)
         {
             this.room = room;
         }
-
+        
         public void AddConnection(WhiteboardConnection connection)
         {
-            connections = connections.Add(connection);
+            if (!connections.TryAdd(connection.Username, connection))
+            {
+                connections[connection.Username] = connection;
+            }
         }
 
         private void Draw(WhiteboardEvent e)
@@ -31,12 +37,12 @@ namespace Messzendzser.WhiteBoard
             foreach (var e in newEvents)
             {
                 Draw(e);
-                events.Add(e);
+                events.Enqueue(e);
             }
             foreach (var c in connections)
             {
                 //TODO send changes to clients
-                c.Client.GetStream();
+                c.Value.Client.GetStream();
             }
         }
 

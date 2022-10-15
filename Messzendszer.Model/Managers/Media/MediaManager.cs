@@ -12,8 +12,10 @@ namespace Messzendzser.Model.Managers.Media
     {
         public byte[] LoadImage(string token, out string format)
         {
-            format = "png";
-            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Images\" + token + ".png";
+            string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Mediamanager\Images\", token + "*");
+            FileInfo fi = new FileInfo(files[0]);
+            format = fi.Extension;
+            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Images\" + files[0];
             using (var reader = new BinaryReader(new FileStream(filepath, FileMode.Open, FileAccess.Read)))
             {
                 return reader.ReadBytes((int)reader.BaseStream.Length);
@@ -22,8 +24,10 @@ namespace Messzendzser.Model.Managers.Media
 
         public byte[] LoadSound(string token, out string format)
         {
-            format = "mp3";
-            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Sounds\" + token + ".mp3";
+            string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Mediamanager\Sounds\", token + "*");
+            FileInfo fi = new FileInfo(files[0]);
+            format = fi.Extension;
+            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Sounds\" + files[0];
             using (var reader = new BinaryReader(new FileStream(filepath, FileMode.Open, FileAccess.Read)))
             {
                 return reader.ReadBytes((int)reader.BaseStream.Length);
@@ -39,10 +43,10 @@ namespace Messzendzser.Model.Managers.Media
             }
         }
 
-        public string StoreImage(byte[] image)
+        public string StoreImage(byte[] image, string format)
         {
             string filename = Guid.NewGuid().ToString();
-            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Images\" + filename +".png";
+            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Images\" + filename +"." + format;
             using (var writer = new BinaryWriter(new FileStream(filepath , FileMode.OpenOrCreate, FileAccess.Write))) { 
                 writer.Write(image);
             }
@@ -52,7 +56,7 @@ namespace Messzendzser.Model.Managers.Media
         public string StoreSound(byte[] sound, string format)
         {
             string filename = Guid.NewGuid().ToString();
-            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Sounds\" + filename + ".mp3";
+            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Sounds\" + filename + "." + format;
             using (var writer = new BinaryWriter(new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.Write)))
             {
                 writer.Write(sound);
