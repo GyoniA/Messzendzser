@@ -64,8 +64,8 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    IReadOnlyList<ChatroomInfo> messages = dataSource.GetChatrooms(token.Id);
-                    return Utils.ResponseMessage<IReadOnlyList<ChatroomInfo>>.CreateOkMessage(messages);
+                    IReadOnlyList<ChatroomInfo> chatrooms = dataSource.GetChatrooms(token.Id);
+                    return Utils.ResponseMessage<IReadOnlyList<ChatroomInfo>>.CreateOkMessage(chatrooms);
                 }
                 catch (Exception ex) // Other exception
                 {

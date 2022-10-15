@@ -164,10 +164,11 @@ namespace Messzendzser.Model.DB
             if (!Users.Where(x => x.Id == userId).Any()) {
                 throw new ArgumentException("UserNotFound");
             }
-            List<Chatroom> chatrooms = Users.Where(x => x.Id == userId).First().Chatrooms.ToList();
+            User u = Users.Where(x => x.Id == userId).First();
+            List <Chatroom> chatrooms = Chatrooms.Where(x=>x.Users.Contains(u)).ToList();
             List<ChatroomInfo> chatroomInfos = new List<ChatroomInfo>();
             foreach (Chatroom chatroom in chatrooms) {
-                List<User> assignedUsers = chatroom.Users.ToList();
+                List<User> assignedUsers = Users.Where(x=>x.Chatrooms.Contains(chatroom)).ToList();
                 string name = "";
                 foreach (User user in assignedUsers) {
                     if (user.Id != userId)
