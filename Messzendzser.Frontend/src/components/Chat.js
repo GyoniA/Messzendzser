@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Select from 'react-select'
 
 
 function Chat(){
@@ -91,7 +92,7 @@ function Chat(){
           let resJson = await res.json();
 
           if (res.status === 200) {
-            setChatrooms(resJson);
+            setChatrooms(resJson.body);
 
             if (resJson.ResponseCode !== 1) {
              
@@ -141,13 +142,21 @@ function Chat(){
         }
     })*/
 
+
+   const Chatrooms = () => {
+        return chatrooms.map((cr) => {
+            return <option value={cr.id}>{cr.name}
+            </option>;
+        });
+    };
+
     return (
         <div className='chatapp'>
             <div className='upper_row'>
-                
-                <select onChange={(e) => setChatroomId(e.target.value )}
-                        value={chatroomId}
-                        otions={chatrooms}>
+
+
+                <select onChange={(e) => setChatroomId(e.target.value)}>
+                    {Chatrooms()}
                 </select>
                     
                 
