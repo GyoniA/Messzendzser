@@ -10,7 +10,8 @@ function Chat() {
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
-    const [userId, setUserId] = useState("");
+
+    var userId;
 
     const messageNum = 20;
 
@@ -120,17 +121,17 @@ function Chat() {
         let token = document.cookie;
         token = token.split('.')[1].replace('-', '+').replace('_', '/');
         let decoded = atob(token);
-
-        console.log(decoded);
-        console.log(decoded.split('.')[1].replace('-', '+').replace('_', '/'));
-        //setUserId(decodedSplit(',')[0]);
-        //console.log(userId);
+        decoded = (decoded.split(',')[0]).split(':')[1];
+        userId = parseInt(decoded);
+    
     }
 
     const displayMessages = () => {
         return messages.map((msg) => {
+            userIdSet();
             if (msg.hasOwnProperty('text')) {
-                if (true) {
+
+                if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
                             {msg.text}
@@ -146,7 +147,7 @@ function Chat() {
 
             }
             if (msg.hasOwnProperty('length')) {
-                if (true) {
+                if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
                             <audio controls>
@@ -167,7 +168,7 @@ function Chat() {
                 }
 
             } else {
-                if (true) {
+                if (msg.userId == userId ){
                     return (
                         <li className="msg_from_me">
                             <img src="localhost:7043/api/GetImage?image=msg.token">
@@ -198,7 +199,8 @@ function Chat() {
     };
 
     return (
-        userIdSet(),
+
+        
         <div className='chatapp'>
             <div className='upper_row'>
 
@@ -225,7 +227,7 @@ function Chat() {
 
             </div>
 
-
+            
 
             <ul>
                 {displayMessages()}
