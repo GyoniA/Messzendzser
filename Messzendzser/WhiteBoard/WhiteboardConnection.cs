@@ -11,12 +11,12 @@
     {
         public TcpClient Client { get; set; }
         public string Username { get; set; }
-        private Chatroom room;
+        public Chatroom Room { get; set; }
 
         public WhiteboardConnection(string username, Chatroom room, TcpClient client)
         {
             this.Username = username;
-            this.room = room;
+            this.Room = room;
             this.Client = client;
         }
     }

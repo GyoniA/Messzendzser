@@ -10,6 +10,8 @@
     using System.Net.Sockets;
     using System.Text;
     using System.Threading;
+    using System.Timers;
+    using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
     public class WhiteboardManager : IWhiteboardManager
     {
@@ -19,16 +21,22 @@
             Authenticated
         }
 
+        private int waitTime = 5000;
+
         //TODO szálbiztos lista kapcsolatokra ellenőrzése
         //stores each chatrooms whiteboard
         private ConcurrentDictionary<Chatroom, Whiteboard> whiteboards;
-        
+
+
+        private ConcurrentDictionary<WhiteboardConnection, DateTime> lastTimestamps;
+
         private CancellationTokenSource stop = new CancellationTokenSource();
         TcpListener server;
         
         public WhiteboardManager()
         {
-            this.whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
+            whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
+            lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();
             try
             {
                 // Set the TcpListener on port 13000.
@@ -67,6 +75,31 @@
                 private Chatroom chatroom;*/
             return true;
         }
+
+        class CustomTimer : System.Timers.Timer
+        {
+            public WhiteboardConnection connection;
+        }
+        private void CheckIsAlive(Object source, ElapsedEventArgs e)
+        {
+            WhiteboardConnection connection = ((CustomTimer)source).connection;
+            DateTime lastMessage = DateTime.MinValue;
+            lastTimestamps.TryGetValue(connection, out lastMessage);
+            if (DateTime.Now.Subtract(lastMessage).TotalMilliseconds > waitTime)
+            {//No response from client
+                connection.Client.Close();
+                whiteboards.TryGetValue(connection.Room, out Whiteboard whiteboard);
+                whiteboard?.RemoveConnection(connection);
+                ((CustomTimer)source).Stop();
+                return;
+            }
+                byte[] data = new WhiteboardIsAliveMessage(new byte[0]).Serialize();
+                NetworkStream stream = connection.Client.GetStream();
+                stream.Write(data, 0, data.Length);
+
+            SendMessageWithCheck(connection.Client, stream, connection, (System.Timers.Timer)source, data);
+        }
+
         private void ClientLoop(object? state)
         {
             TcpClient client = (TcpClient)state;
@@ -78,6 +111,10 @@
             WhiteboardMessage wMessage;
             int i;
             State connState = State.NewConnection;
+            WhiteboardConnection wConn = null;
+
+
+            System.Timers.Timer isAliveTimer = null;
             
             while ((i = stream.Read(sentMessage, 0, sentMessage.Length)) != 0)
             {
@@ -94,8 +131,8 @@
                         if (wMessage.MessageType != MessageType.Authentication || AuthenticateMessage((WhiteboardAuthenticationMessage)wMessage))
                         {
                             //if it's not a successful authentication message
-                            //TODO send denied message
-                            new WhiteboardDeniedMessage(new byte[0]).Serialize();
+                            byte[] wbm = new WhiteboardDeniedMessage(new byte[0]).Serialize();
+                            SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
                         }
                         else
                         {
@@ -107,19 +144,39 @@
                                 whiteboards.TryAdd(auth.Chatroom, new Whiteboard(auth.Chatroom));
                                 Whiteboard board;
                                 whiteboards.TryGetValue(auth.Chatroom, out board);
-                                board?.AddConnection(new WhiteboardConnection(auth.Username, auth.Chatroom, client));
-                                //TODO send OK message
-                                new WhiteboardOKMessage(new byte[0]).Serialize();
+                                wConn =  new WhiteboardConnection(auth.Username, auth.Chatroom, client);
+                                board?.AddConnection(wConn);
+                                byte[] wbm = new WhiteboardOKMessage(new byte[0]).Serialize();
+                                SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
                                 connState = State.Authenticated;
+
+
+                                isAliveTimer = new CustomTimer
+                                {
+                                    Interval = waitTime,
+                                    connection = wConn
+                                };
+
+                                isAliveTimer.Elapsed += CheckIsAlive;
+                                isAliveTimer.AutoReset = true;
+                                isAliveTimer.Enabled = true;
+                                isAliveTimer.Start();
                             }
                         }
                         break;
                     case State.Authenticated:
                         if (wMessage.MessageType != MessageType.Event)
                         {
-                            //incorrect message type
-                            //TODO send denied message
-                            new WhiteboardDeniedMessage(new byte[0]).Serialize();
+                            if (wMessage.MessageType == MessageType.OK)
+                            {
+                                lastTimestamps.AddOrUpdate(wConn, DateTime.Now, (key, oldValue) => DateTime.Now);
+                            }
+                            else
+                            {
+                                //incorrect message type
+                                byte[] wbm = new WhiteboardDeniedMessage(new byte[0]).Serialize();
+                                SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
+                            }
                         }
                         else
                         {
@@ -129,22 +186,31 @@
                             //sending changes to whiteboard of this message
                             board?.AddEvents(evMessage.GetEvents());
                         }
-                        /** TODO
-                    pár másodpercenként IsAlive küldése
-                    ha hiba/nem kap választ: kapcsolat megszakadt, takarítás, ha nincs kapcsolat a chatroomhoz akkor azt ki kell írni fileba*/
                         break;
                     default:
                         break;
                 }
-
-                byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                // Send back a response.
-                stream.Write(msg, 0, msg.Length);
-                Console.WriteLine("Sent: {0}", data);
             }
 
             throw new NotImplementedException();
+        }
+
+        private bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
+        {
+            try
+            {
+                stream.Write(wbm, 0, wbm.Length);
+                return true;
+            }
+            catch (Exception)
+            {
+                client?.Close();
+                whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
+                whiteboard?.RemoveConnection(wConn);
+                isAliveTimer?.Stop();
+                throw;
+            }
+            return false;
         }
 
         private void ListeningLoop(TcpListener server)
@@ -160,7 +226,6 @@
                     // Perform a blocking call to accept requests.
                     // You could also user server.AcceptSocket() here.
                     TcpClient client = await server.AcceptTcpClientAsync();
-                    //new Thread(client)...{
                     ThreadPool.QueueUserWorkItem(ClientLoop, client);
                     /*new Thread(client)...{
                      * NetworkStream stream = client.GetStream();
@@ -182,35 +247,6 @@
                                     
                         }
                     }*/
-
-                    Console.WriteLine("Connected!");
-                    //TODO  check authentication with state machine
-                    data = null;
-
-                    // Get a stream object for reading and writing
-                    NetworkStream stream = client.GetStream();
-
-                    int i;
-
-                    // Loop to receive all the data sent by the client.
-                    while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
-                    {
-                        // Translate data sentMessage to a ASCII string.
-                        data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                        Console.WriteLine("Received: {0}", data);
-
-                        // Process the data sent by the client.
-                        data = data.ToUpper();
-
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(data);
-
-                        // Send back a response.
-                        stream.Write(msg, 0, msg.Length);
-                        Console.WriteLine("Sent: {0}", data);
-                    }
-
-                    // Shutdown and end connection
-                    client.Close();
                 }
             });
         }

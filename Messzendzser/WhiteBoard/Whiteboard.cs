@@ -26,6 +26,15 @@ namespace Messzendzser.WhiteBoard
             }
         }
 
+        public void RemoveConnection(WhiteboardConnection connection)
+        {
+            connections.TryRemove(connection.Username, out _);
+            if (connections.Count == 0)
+            {
+                //TODO save image to file
+            }
+        }
+
         private void Draw(WhiteboardEvent e)
         {
             //draw the event onto image
