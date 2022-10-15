@@ -37,12 +37,11 @@ namespace Messzendzser.WhiteBoard
 
         private void Draw(WhiteboardEvent e)
         {
-            //draw the event onto image
+            //TODO draw the event onto image
         }
         
         public void AddEvents(LinkedList<WhiteboardEvent> newEvents)
         {
-            //events.AddRange(newEvents);
             foreach (var e in newEvents)
             {
                 Draw(e);

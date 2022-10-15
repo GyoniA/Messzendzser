@@ -192,8 +192,11 @@
                         break;
                 }
             }
-
-            throw new NotImplementedException();
+            client?.Close();
+            whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
+            whiteboard?.RemoveConnection(wConn);
+            isAliveTimer?.Stop();
+            isAliveTimer?.Dispose();
         }
 
         private bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
@@ -209,6 +212,7 @@
                 whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
+                isAliveTimer?.Dispose();
                 //TODO CHECK IF CORRECT
                 throw;
             }
