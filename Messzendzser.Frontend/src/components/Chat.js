@@ -46,9 +46,15 @@ function Chat(){
     
     //Load messages from API
     const loadMessages = async (e) => {
+
+        function addZero(i) {
+            if (i < 10) { i = "0" + i }
+            return i;
+        }
+
         var today = new Date();
-        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var date = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
+        var time = addZero(today.getHours()) + ":" + addZero(today.getMinutes()) + ":" + addZero(today.getSeconds());
         var dateTime = date + ' ' + time;
 
         try {
