@@ -17,7 +17,7 @@ namespace Messzendzser.WhiteBoard
         {
             this.room = room;
         }
-        
+
         public void AddConnection(WhiteboardConnection connection)
         {
             if (!connections.TryAdd(connection.Username, connection))
@@ -37,9 +37,9 @@ namespace Messzendzser.WhiteBoard
 
         private void Draw(WhiteboardEvent e)
         {
-            //TODO draw the event onto image
+            image = e.Draw(image);
         }
-        
+
         public void AddEvents(LinkedList<WhiteboardEvent> newEvents)
         {
             foreach (var e in newEvents)
@@ -47,10 +47,13 @@ namespace Messzendzser.WhiteBoard
                 Draw(e);
                 events.Enqueue(e);
             }
+            var wm = new WhiteboardManager();
             foreach (var c in connections)
             {
-                //TODO send changes to clients
                 c.Value.Client.GetStream();
+                //TODO put changes into the eventMessage
+                var data = new WhiteboardEventMessage(new byte[0], room).Serialize();
+                wm.SendMessageWithCheck(c.Value.Client, c.Value.Client.GetStream(), c.Value, c.Value.IsAliveTimer, data);
             }
         }
 

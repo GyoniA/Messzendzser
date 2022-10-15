@@ -33,7 +33,7 @@
 
         private CancellationTokenSource stop = new CancellationTokenSource();
         TcpListener server;
-        
+
         public WhiteboardManager()
         {
             whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
@@ -94,9 +94,9 @@
                 ((CustomTimer)source).Stop();
                 return;
             }
-                byte[] data = new WhiteboardIsAliveMessage(new byte[0]).Serialize();
-                NetworkStream stream = connection.Client.GetStream();
-                stream.Write(data, 0, data.Length);
+            byte[] data = new WhiteboardIsAliveMessage(new byte[0]).Serialize();
+            NetworkStream stream = connection.Client.GetStream();
+            stream.Write(data, 0, data.Length);
 
             SendMessageWithCheck(connection.Client, stream, connection, (System.Timers.Timer)source, data);
         }
@@ -116,7 +116,7 @@
 
 
             System.Timers.Timer isAliveTimer = null;
-            
+
             while ((i = stream.Read(sentMessage, 0, sentMessage.Length)) != 0)
             {
                 // Translate data sentMessage to a ASCII string.
@@ -125,7 +125,7 @@
                 Console.WriteLine("Received: {0}", data);
 
                 wMessage = new WhiteboardMessage(sentMessage);
-                
+
                 switch (connState)
                 {
                     case State.NewConnection:
@@ -145,7 +145,7 @@
                                 whiteboards.TryAdd(auth.Chatroom, new Whiteboard(auth.Chatroom));
                                 Whiteboard board;
                                 whiteboards.TryGetValue(auth.Chatroom, out board);
-                                wConn =  new WhiteboardConnection(auth.Username, auth.Chatroom, client);
+                                wConn = new WhiteboardConnection(auth.Username, auth.Chatroom, client);
                                 board?.AddConnection(wConn);
                                 byte[] wbm = new WhiteboardOKMessage(new byte[0]).Serialize();
                                 SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
@@ -162,6 +162,7 @@
                                 isAliveTimer.AutoReset = true;
                                 isAliveTimer.Enabled = true;
                                 isAliveTimer.Start();
+                                wConn.IsAliveTimer = isAliveTimer;
                             }
                         }
                         break;
@@ -199,7 +200,7 @@
             isAliveTimer?.Dispose();
         }
 
-        private bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
+        public bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
         {
             try
             {
