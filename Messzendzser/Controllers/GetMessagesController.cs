@@ -37,7 +37,7 @@ namespace Messzendzser.Controllers
 
         // POST api/Login
         [HttpGet()]
-        public ResponseMessage<IReadOnlyList<ISerializeableMessage>> Get( [FromHeader(Name = "chatroomId")] string? chatroom, [FromHeader(Name = "count")] string? count, [FromHeader(Name = "time")] string? time,[FromHeader(Name = "dir")] string? dir)
+        public ResponseMessage<IReadOnlyList<object>> Get( [FromHeader(Name = "chatroomId")] string? chatroom, [FromHeader(Name = "count")] string? count, [FromHeader(Name = "time")] string? time,[FromHeader(Name = "dir")] string? dir)
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
@@ -46,7 +46,7 @@ namespace Messzendzser.Controllers
             return FetchMessages(chatroom,count,time,dir,userToken, messageManager, userManager);
         }
         [NonAction]
-        public ResponseMessage<IReadOnlyList<ISerializeableMessage>> FetchMessages(string? chatroom,string? count, string? time, string? dir,string? usertoken, IMessageManager messageManager,IUserManager userManager)
+        public ResponseMessage<IReadOnlyList<object>> FetchMessages(string? chatroom,string? count, string? time, string? dir,string? usertoken, IMessageManager messageManager,IUserManager userManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -153,8 +153,8 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    IReadOnlyList<ISerializeableMessage> messages = messageManager.Update(chatroomId, messageCount, dateTime, timeDirecton);
-                    return ResponseMessage<IReadOnlyList<ISerializeableMessage>>.CreateOkMessage(messages);
+                    IReadOnlyList<Message> messages = messageManager.Update(chatroomId, messageCount, dateTime, timeDirecton);
+                    return ResponseMessage<IReadOnlyList<object>>.CreateOkMessage(messages.Select(x=> (object)x).ToList());
                 }
                 catch (Exception ex) // Other exception
                 {
@@ -162,7 +162,7 @@ namespace Messzendzser.Controllers
                 }
             }
             // Error count has to be greater than 0
-            return ResponseMessage<IReadOnlyList<ISerializeableMessage>>.CreateErrorMessage(1, "Invalid parameters", errors);
+            return ResponseMessage<IReadOnlyList<object>>.CreateErrorMessage(1, "Invalid parameters", errors);
             
         }
     }

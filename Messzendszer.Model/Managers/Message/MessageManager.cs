@@ -41,7 +41,7 @@ namespace Messzendzser.Model.Managers.Message
             throw new NotImplementedException();
         }
 
-        public IReadOnlyList<ISerializeableMessage> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton direction)
+        public IReadOnlyList<Message> Update(int chatroomId, int count, DateTime time, IDataSource.TimeDirecton direction)
         {
             IReadOnlyList<TextChatMessage> texts = dataSource.GetTextChatMessages(chatroomId, count, time, direction);
             IReadOnlyList<ImageChatMessage> images = dataSource.GetImageChatMessages(chatroomId, count, time, direction);
@@ -61,7 +61,7 @@ namespace Messzendzser.Model.Managers.Message
             combined.AddRange(Voices);
             combined = combined.OrderBy(x => x.Time).ToList();
             
-            List<ISerializeableMessage> parentList = combined.Take(count).Cast<ISerializeableMessage>().ToList();
+            List<Message> parentList = combined.Take(count).Cast<Message>().ToList();
             return parentList;
         }
     }

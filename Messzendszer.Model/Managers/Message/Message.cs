@@ -27,12 +27,12 @@ namespace Messzendzser.Model.Managers.Message
             ChatroomId = chatroomId;
             Time = time;
         }
-        /*
-        public byte[] Serialize() {
-            byte[] jsonUTF8 = JsonSerializer.SerializeToUtf8Bytes(this, this.GetType());
-            return jsonUTF8;
+        
+        public string Serialize() {
+            string json = JsonSerializer.Serialize(this, this.GetType());
+            return json;
         }
-
+        /*
         public abstract ISerializeableMessage Deserialize(byte[] jsonUTF8);*/
     }
 }
