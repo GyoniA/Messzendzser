@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import recordAudio from './recordAudio';
 
 
 function Chat() {
+
+    //For navigation
     let navigate = useNavigate();
 
+    //States 
     const [chatroomId, setChatroomId] = useState("");
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
@@ -14,6 +17,41 @@ function Chat() {
     var userId;
 
     const messageNum = 20;
+
+
+
+
+    //Sen Image to API
+    let imageSent = async (e) => {
+
+        try {
+            let res = await fetch("https://localhost:7043/api/SendImage", {
+                method: "POST",
+                mode: 'cors',
+
+                data: new FormData(document.getElementById("uploadImg")),
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                   
+                    chatroomId: chatroomId,
+                },
+
+
+            });
+            let resJson = await res.json();
+
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+
+                }
+            }
+        } catch (err) {
+            console.log(err);
+
+        }
+
+    };
+
 
     //Send message to API
     let messageSent = async (e) => {
@@ -81,6 +119,14 @@ function Chat() {
         }
     };
 
+    /*const record = async () => {
+        const recorder = await recordAudio();
+        recorder.start();
+        await sleep(3000);
+        const audio = await recorder.stop();
+        audio.play();
+    };*/
+
     //Load chatrooms from API
     const loadChatrooms = async (e) => {
 
@@ -123,9 +169,10 @@ function Chat() {
         let decoded = atob(token);
         decoded = (decoded.split(',')[0]).split(':')[1];
         userId = parseInt(decoded);
-    
+
     }
 
+    //Display messages in correct form
     const displayMessages = () => {
         return messages.map((msg) => {
             userIdSet();
@@ -168,7 +215,7 @@ function Chat() {
                 }
 
             } else {
-                if (msg.userId == userId ){
+                if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
                             <img src="localhost:7043/api/GetImage?image=msg.token">
@@ -184,13 +231,19 @@ function Chat() {
                     )
                 }
 
-                
+
             }
         })
     }
 
+    //When the button is clicked it will trigger the input field
+    const hiddenFileInput = React.useRef(null);
+    const handleClick = event => {
+        event.preventDefault();
+        hiddenFileInput.current.click();
+    };
 
-
+    //FUnction to display only the names
     const Chatrooms = () => {
         return chatrooms.map((cr) => {
             return <option key={cr.id} value={cr.id}>{cr.name}
@@ -200,7 +253,7 @@ function Chat() {
 
     return (
 
-        
+
         <div className='chatapp'>
             <div className='upper_row'>
 
@@ -227,7 +280,7 @@ function Chat() {
 
             </div>
 
-            
+
 
             <ul>
                 {displayMessages()}
@@ -252,17 +305,32 @@ function Chat() {
                 </input>
 
 
-                <button className='microphone'>
+                <button className='microphone'
+                //onClick={recordAudio()}
+                >
                     <img src="/images/microphone.png" ></img>
                 </button>
 
-                <button className='picture'>
-                    <img src="/images/picture.png" ></img>
-                </button>
+
+
+                <form className="imageSend" id="uploadImg" >
+                    <input type="file"
+                        ref={hiddenFileInput}
+                        onChange={imageSent}
+                       
+                        style={{ display: 'none' }} />
+
+                    <button className='picture' onClick={handleClick}>
+                        <img src="/images/picture.png" ></img>
+                    </button>
+
+                </form>
+
+
 
             </div>
 
-        </div>
+        </div >
     )
 
 }
