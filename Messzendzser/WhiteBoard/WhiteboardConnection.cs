@@ -11,13 +11,13 @@
     {
         public TcpClient Client { get; set; }
         public string Username { get; set; }
-        public Chatroom Room { get; set; }
+        public int RoomId { get; set; }
         public System.Timers.Timer IsAliveTimer { get; set; } = null;
 
-        public WhiteboardConnection(string username, Chatroom room, TcpClient client)
+        public WhiteboardConnection(string username, int room, TcpClient client)
         {
             Username = username;
-            Room = room;
+            RoomId = room;
             Client = client;
         }
     }

@@ -1,26 +1,38 @@
 ﻿using Messzendzser.Model.DB.Models;
+using System.Text.Json;
 
 namespace Messzendzser.WhiteBoard
 {
     public class WhiteboardEventMessage : WhiteboardMessage
     {
 
-        private LinkedList<WhiteboardEvent> events = new LinkedList<WhiteboardEvent>();
-        public Chatroom Chatroom { get; set; }
+        public LinkedList<WhiteboardEvent> Events { get; set; }
+        public int ChatroomId { get; set; }
         
-        public WhiteboardEventMessage(byte[] message, Chatroom chatroom) : base(message)
+        public WhiteboardEventMessage(int chatroom) : base(MessageType.Event)
         {
-            Chatroom = chatroom;
+            Events = new LinkedList<WhiteboardEvent>();
+            ChatroomId = chatroom;
+        }
+
+        public WhiteboardEventMessage() : base(MessageType.Event)
+        {
+            Events = new LinkedList<WhiteboardEvent>();
         }
 
         public void AddEvent(WhiteboardEvent e)
         {
-            events.AddLast(e);
+            Events.AddLast(e);
         }
         
         public LinkedList<WhiteboardEvent> GetEvents()
         {
-            return events;
+            return Events;
+        }
+
+        public override WhiteboardMessage DeSerialize(byte[] message)
+        {
+            return JsonSerializer.Deserialize<WhiteboardEventMessage>(message);
         }
     }
 }

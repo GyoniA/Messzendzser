@@ -64,7 +64,7 @@ namespace Messzendzser.Controllers
             #region Chatroom Id verification
             if (chatroomId == null)
             {
-                errors.Add("chatroomId", "Chatroom id cannot be empty");
+                errors.Add("chatroomId", "ChatroomId id cannot be empty");
             }
             else
             {
@@ -74,7 +74,7 @@ namespace Messzendzser.Controllers
                 }
                 catch (Exception ex)
                 {
-                    errors.Add("chatroomId", "Chatroom id must be a number");
+                    errors.Add("chatroomId", "ChatroomId id must be a number");
                 }
             }
             #endregion

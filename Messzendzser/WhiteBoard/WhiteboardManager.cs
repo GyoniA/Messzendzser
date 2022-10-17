@@ -23,11 +23,10 @@
         }
 
         private int waitTime = 5000;
-
-        //TODO szálbiztos lista kapcsolatokra ellenőrzése
+        
         //stores each chatrooms whiteboard
-        private ConcurrentDictionary<Chatroom, Whiteboard> whiteboards;
-
+        private static ConcurrentDictionary<int, Whiteboard> whiteboards;
+        
 
         private ConcurrentDictionary<WhiteboardConnection, DateTime> lastTimestamps;
 
@@ -36,7 +35,7 @@
 
         public WhiteboardManager()
         {
-            whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
+            whiteboards = new ConcurrentDictionary<int, Whiteboard>();
             lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();
             try
             {
@@ -68,12 +67,11 @@
         }
         public static bool AuthenticateMessage(WhiteboardAuthenticationMessage wm)
         {
-            throw new NotImplementedException();
             //TODO implement authentication
             /*authenticate with:
                 private string username;
                 private string password;
-                private Chatroom chatroom;*/
+                private ChatroomId chatroom;*/
             return true;
         }
 
@@ -89,12 +87,12 @@
             if (DateTime.Now.Subtract(lastMessage).TotalMilliseconds > waitTime)
             {//No response from client
                 connection.Client.Close();
-                whiteboards.TryGetValue(connection.Room, out Whiteboard whiteboard);
+                whiteboards.TryGetValue(connection.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(connection);
                 ((CustomTimer)source).Stop();
                 return;
             }
-            byte[] data = new WhiteboardIsAliveMessage(new byte[0]).Serialize();
+            byte[] data = new WhiteboardIsAliveMessage().Serialize();
             NetworkStream stream = connection.Client.GetStream();
             stream.Write(data, 0, data.Length);
 
@@ -124,15 +122,17 @@
                 data = System.Text.Encoding.ASCII.GetString(sentMessage, 0, i);
                 Console.WriteLine("Received: {0}", data);
 
-                wMessage = new WhiteboardMessage(sentMessage);
+                MessageType type = WhiteboardMessage.GetMessageType(sentMessage);
+                wMessage = WhiteboardMessage.GetMessageFromType(type);
+                wMessage = wMessage.DeSerialize(sentMessage);
 
                 switch (connState)
                 {
                     case State.NewConnection:
-                        if (wMessage.MessageType != MessageType.Authentication || AuthenticateMessage((WhiteboardAuthenticationMessage)wMessage))
+                        if (wMessage.Type != MessageType.Authentication || AuthenticateMessage((WhiteboardAuthenticationMessage)wMessage))
                         {
                             //if it's not a successful authentication message
-                            byte[] wbm = new WhiteboardDeniedMessage(new byte[0]).Serialize();
+                            byte[] wbm = new WhiteboardDeniedMessage().Serialize();
                             SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
                         }
                         else
@@ -142,12 +142,12 @@
                             bool authenticated = true;
                             if (authenticated)
                             {
-                                whiteboards.TryAdd(auth.Chatroom, new Whiteboard(auth.Chatroom));
+                                whiteboards.TryAdd(auth.ChatroomId, new Whiteboard(auth.ChatroomId));
                                 Whiteboard board;
-                                whiteboards.TryGetValue(auth.Chatroom, out board);
-                                wConn = new WhiteboardConnection(auth.Username, auth.Chatroom, client);
+                                whiteboards.TryGetValue(auth.ChatroomId, out board);
+                                wConn = new WhiteboardConnection(auth.Username, auth.ChatroomId, client);
                                 board?.AddConnection(wConn);
-                                byte[] wbm = new WhiteboardOKMessage(new byte[0]).Serialize();
+                                byte[] wbm = new WhiteboardOKMessage().Serialize();
                                 SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
                                 connState = State.Authenticated;
 
@@ -167,16 +167,16 @@
                         }
                         break;
                     case State.Authenticated:
-                        if (wMessage.MessageType != MessageType.Event)
+                        if (wMessage.Type != MessageType.Event)
                         {
-                            if (wMessage.MessageType == MessageType.OK)
+                            if (wMessage.Type == MessageType.OK)
                             {
                                 lastTimestamps.AddOrUpdate(wConn, DateTime.Now, (key, oldValue) => DateTime.Now);
                             }
                             else
                             {
                                 //incorrect message type
-                                byte[] wbm = new WhiteboardDeniedMessage(new byte[0]).Serialize();
+                                byte[] wbm = new WhiteboardDeniedMessage().Serialize();
                                 SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
                             }
                         }
@@ -184,7 +184,7 @@
                         {
                             WhiteboardEventMessage evMessage = (WhiteboardEventMessage)wMessage;
                             Whiteboard board;
-                            whiteboards.TryGetValue(evMessage.Chatroom, out board);
+                            whiteboards.TryGetValue(evMessage.ChatroomId, out board);
                             //sending changes to whiteboard of this message
                             board?.AddEvents(evMessage.GetEvents());
                         }
@@ -194,13 +194,13 @@
                 }
             }
             client?.Close();
-            whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
+            whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
             whiteboard?.RemoveConnection(wConn);
             isAliveTimer?.Stop();
             isAliveTimer?.Dispose();
         }
 
-        public bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
+        public static bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
         {
             try
             {
@@ -210,12 +210,10 @@
             catch (Exception)
             {
                 client?.Close();
-                whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
+                whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
                 isAliveTimer?.Dispose();
-                //TODO CHECK IF CORRECT
-                throw;
             }
             return false;
         }
@@ -260,7 +258,7 @@
             //return this.whiteboard.GetData();
         }
 
-        public byte[] GetWhiteboardData(Chatroom chatroom)
+        public byte[] GetWhiteboardData(int chatroom)
         {
             whiteboards.TryGetValue(chatroom, out Whiteboard whiteboard);
             return whiteboard?.GetData();
@@ -271,10 +269,24 @@
             throw new NotImplementedException();
             //this.whiteboard.AddMessage(new WhiteboardMessage(sentMessage));
         }
-        public void UpdateWhiteboard(Chatroom chatroom, LinkedList<WhiteboardEvent> newEvents)
+        public void UpdateWhiteboard(int chatroom, LinkedList<WhiteboardEvent> newEvents)
         {
             whiteboards.TryGetValue(chatroom, out Whiteboard whiteboard);
             whiteboard?.AddEvents(newEvents);
+        }
+        
+        public void JsonTest()
+        {
+            WhiteboardOKMessage wbokm = new WhiteboardOKMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbokm.Serialize()));
+            WhiteboardIsAliveMessage wbiam = new WhiteboardIsAliveMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbiam.Serialize()));
+            WhiteboardDeniedMessage wbdm = new WhiteboardDeniedMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbdm.Serialize()));
+            WhiteboardEventMessage wbem = new WhiteboardEventMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));
+            WhiteboardAuthenticationMessage wbaum = new WhiteboardAuthenticationMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbaum.Serialize()));
         }
     }
 }
