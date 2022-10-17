@@ -1,40 +1,46 @@
+class WhiteboardManager {
 
-try {
-    
-} catch (e) {
-    console.log("websocket error: "+e)
-}
-c = document.getElementById("whiteboardCanvas")
-WhiteboardManager(c, "wss://localhost:7043/ws","token",10)
+    state = "new";
+    sendAuthMessage = function() {
+        var auth = { "Type": 0, "Username": "Hello", "Password": "World", "ChatroomId": chatroomId };
+        var json = JSON.stringify(auth);
+        this.socket.send(json);
+    }
 
 
-class WhiteboardManager{
+    handleMessage = function (data) {
+        if (state == "new") {
+            if (data.Type == 2) {
+                console.log("authentication succcessful")
+                this.state = "auth"
+            }
+        } else if (this.state == "authenticated") {
 
-    state = "new"
-
-    constructor(canvas, websocketURI, token,chatroomId) {
+        }
+    }
+    constructor(canvas, websocketURI, token, chatroomId) {
         this.token = token
         this.canvas = canvas
         this.chatroomId = chatroomId
         this.socket = new WebSocket(websocketURI);
-        socket.onopen = function (event) {
+        this.socket.onopen = function (event) {
             console.log("Whiteboard connection established")
+            this.sendAuthMessage()
         };
-        socket.onclose = function (event) {
+        this.socket.onclose = function (event) {
             console.log("Whiteboard connection disconnected")
         };
-        socket.onmessage = function (event) {
-            console.log("Message received: "+event.Data)
-            handleMessage(JSON.parse(event.Data))
+        this.socket.onmessage = function (event) {
+            console.log("Message received: " + event.Data)
+            this.handleMessage(JSON.parse(event.Data))
         };
     }
 
 
-    handleMessage(data) {
-        if (state == "new") {
-            data.Type == Ok
-        } else if (state == "authenticated") {
-
-        }
-    }
+    
 }
+
+c = document.getElementById("whiteboardCanvas")
+let wbMan = new WhiteboardManager(c, "wss://localhost:7043/ws/whiteboard","token",10)
+
+

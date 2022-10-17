@@ -107,7 +107,7 @@
                 switch (connState)
                 {
                     case State.NewConnection:
-                        if (wMessage.Type != MessageType.Authentication || AuthenticateMessage((WhiteboardAuthenticationMessage)wMessage))
+                        if (wMessage.Type != MessageType.Authentication || !AuthenticateMessage((WhiteboardAuthenticationMessage)wMessage))
                         {
                             //if it's not a successful authentication message
                             byte[] wbm = new WhiteboardDeniedMessage().Serialize();
@@ -117,31 +117,28 @@
                         {
                             //if it is a successful authentication message
                             WhiteboardAuthenticationMessage auth = (WhiteboardAuthenticationMessage)wMessage;
-                            bool authenticated = true;
-                            if (authenticated)
+                            whiteboards.TryAdd(auth.ChatroomId, new Whiteboard(auth.ChatroomId));
+                            Whiteboard board;
+                            whiteboards.TryGetValue(auth.ChatroomId, out board);
+                            wConn = new WhiteboardConnection(auth.Username, auth.ChatroomId, client);
+                            board?.AddConnection(wConn);
+                            byte[] wbm = new WhiteboardOKMessage().Serialize();
+                            await SendMessageWithCheck(client, wConn, isAliveTimer, wbm);
+                            connState = State.Authenticated;
+
+
+                            isAliveTimer = new CustomTimer
                             {
-                                whiteboards.TryAdd(auth.ChatroomId, new Whiteboard(auth.ChatroomId));
-                                Whiteboard board;
-                                whiteboards.TryGetValue(auth.ChatroomId, out board);
-                                wConn = new WhiteboardConnection(auth.Username, auth.ChatroomId, client);
-                                board?.AddConnection(wConn);
-                                byte[] wbm = new WhiteboardOKMessage().Serialize();
-                                await SendMessageWithCheck(client, wConn, isAliveTimer, wbm);
-                                connState = State.Authenticated;
+                                Interval = waitTime,
+                                connection = wConn
+                            };
 
-
-                                isAliveTimer = new CustomTimer
-                                {
-                                    Interval = waitTime,
-                                    connection = wConn
-                                };
-
-                                isAliveTimer.Elapsed += CheckIsAlive;
-                                isAliveTimer.AutoReset = true;
-                                isAliveTimer.Enabled = true;
-                                isAliveTimer.Start();
-                                wConn.IsAliveTimer = isAliveTimer;
-                            }
+                            isAliveTimer.Elapsed += CheckIsAlive;
+                            isAliveTimer.AutoReset = true;
+                            isAliveTimer.Enabled = true;
+                            isAliveTimer.Start();
+                            wConn.IsAliveTimer = isAliveTimer;
+                            
                         }
                         break;
                     case State.Authenticated:
