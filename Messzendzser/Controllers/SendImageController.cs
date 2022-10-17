@@ -34,8 +34,9 @@ namespace Messzendzser.Controllers
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
+
             IFormFile? file = Request.Form.Files.GetFile("image");
-            return SendImage(file,chatroomId,userToken,new MessageManager(dataSource), null);
+            return SendImage(file,chatroomId,userToken,new MessageManager(dataSource),new MediaManager());
         }
 
         [NonAction]

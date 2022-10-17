@@ -37,7 +37,7 @@ namespace Messzendzser.Controllers
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
             IFormFile? file = Request.Form.Files.GetFile("voice");
-            return SendVoice(file, format, chatroomId,length, userToken, new MessageManager(dataSource), null);
+            return SendVoice(file, format, chatroomId,length, userToken, new MessageManager(dataSource), new MediaManager());
         }
 
         [NonAction]

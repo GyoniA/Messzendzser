@@ -32,7 +32,7 @@ namespace Messzendzser.Controllers
         [HttpGet()]
         public IActionResult Get( [FromQuery(Name = "voice")] string? voice)
         {            
-            IMediaManager mediaManager = null; // TODO
+            IMediaManager mediaManager = new MediaManager(); // TODO
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
             Utils.FileResult result = LoadSound(voice,userToken,mediaManager);
