@@ -317,7 +317,7 @@ function Chat() {
                     <input type="file"
                         ref={hiddenFileInput}
                         onChange={imageSent}
-                       
+                        name=""
                         style={{ display: 'none' }} />
 
                     <button className='picture' onClick={handleClick}>
