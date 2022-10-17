@@ -28,7 +28,7 @@ namespace Messzendzser.WhiteBoard
         public override SKCanvas Draw(SKCanvas canvas)
         {
             MediaManager mm = new MediaManager();
-            byte[] data = mm.LoadWhiteboard(Board.Room.Id);
+            byte[] data = mm.LoadWhiteboard(Board.RoomId);
 
             var ms = new MemoryStream(data);
 

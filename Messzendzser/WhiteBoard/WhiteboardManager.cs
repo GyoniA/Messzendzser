@@ -25,8 +25,8 @@
         private int waitTime = 5000;
         
         //stores each chatrooms whiteboard
-        private static ConcurrentDictionary<Chatroom, Whiteboard> whiteboards;
-
+        private static ConcurrentDictionary<int, Whiteboard> whiteboards;
+        
 
         private ConcurrentDictionary<WhiteboardConnection, DateTime> lastTimestamps;
 
@@ -35,7 +35,7 @@
 
         public WhiteboardManager()
         {
-            whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
+            whiteboards = new ConcurrentDictionary<int, Whiteboard>();
             lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();
             try
             {
@@ -71,7 +71,7 @@
             /*authenticate with:
                 private string username;
                 private string password;
-                private Chatroom chatroom;*/
+                private ChatroomId chatroom;*/
             return true;
         }
 
@@ -87,7 +87,7 @@
             if (DateTime.Now.Subtract(lastMessage).TotalMilliseconds > waitTime)
             {//No response from client
                 connection.Client.Close();
-                whiteboards.TryGetValue(connection.Room, out Whiteboard whiteboard);
+                whiteboards.TryGetValue(connection.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(connection);
                 ((CustomTimer)source).Stop();
                 return;
@@ -142,10 +142,10 @@
                             bool authenticated = true;
                             if (authenticated)
                             {
-                                whiteboards.TryAdd(auth.Chatroom, new Whiteboard(auth.Chatroom));
+                                whiteboards.TryAdd(auth.ChatroomId, new Whiteboard(auth.ChatroomId));
                                 Whiteboard board;
-                                whiteboards.TryGetValue(auth.Chatroom, out board);
-                                wConn = new WhiteboardConnection(auth.Username, auth.Chatroom, client);
+                                whiteboards.TryGetValue(auth.ChatroomId, out board);
+                                wConn = new WhiteboardConnection(auth.Username, auth.ChatroomId, client);
                                 board?.AddConnection(wConn);
                                 byte[] wbm = new WhiteboardOKMessage().Serialize();
                                 SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
@@ -184,7 +184,7 @@
                         {
                             WhiteboardEventMessage evMessage = (WhiteboardEventMessage)wMessage;
                             Whiteboard board;
-                            whiteboards.TryGetValue(evMessage.Chatroom, out board);
+                            whiteboards.TryGetValue(evMessage.ChatroomId, out board);
                             //sending changes to whiteboard of this message
                             board?.AddEvents(evMessage.GetEvents());
                         }
@@ -194,7 +194,7 @@
                 }
             }
             client?.Close();
-            whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
+            whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
             whiteboard?.RemoveConnection(wConn);
             isAliveTimer?.Stop();
             isAliveTimer?.Dispose();
@@ -210,7 +210,7 @@
             catch (Exception)
             {
                 client?.Close();
-                whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
+                whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
                 isAliveTimer?.Dispose();
@@ -258,7 +258,7 @@
             //return this.whiteboard.GetData();
         }
 
-        public byte[] GetWhiteboardData(Chatroom chatroom)
+        public byte[] GetWhiteboardData(int chatroom)
         {
             whiteboards.TryGetValue(chatroom, out Whiteboard whiteboard);
             return whiteboard?.GetData();
@@ -269,7 +269,7 @@
             throw new NotImplementedException();
             //this.whiteboard.AddMessage(new WhiteboardMessage(sentMessage));
         }
-        public void UpdateWhiteboard(Chatroom chatroom, LinkedList<WhiteboardEvent> newEvents)
+        public void UpdateWhiteboard(int chatroom, LinkedList<WhiteboardEvent> newEvents)
         {
             whiteboards.TryGetValue(chatroom, out Whiteboard whiteboard);
             whiteboard?.AddEvents(newEvents);

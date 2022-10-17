@@ -7,12 +7,12 @@ namespace Messzendzser.WhiteBoard
     {
 
         public LinkedList<WhiteboardEvent> Events { get; set; }
-        public Chatroom Chatroom { get; set; }
+        public int ChatroomId { get; set; }
         
-        public WhiteboardEventMessage(Chatroom chatroom) : base(MessageType.Event)
+        public WhiteboardEventMessage(int chatroom) : base(MessageType.Event)
         {
             Events = new LinkedList<WhiteboardEvent>();
-            Chatroom = chatroom;
+            ChatroomId = chatroom;
         }
 
         public WhiteboardEventMessage() : base(MessageType.Event)

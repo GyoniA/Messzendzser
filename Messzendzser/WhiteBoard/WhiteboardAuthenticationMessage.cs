@@ -7,20 +7,20 @@ namespace Messzendzser.WhiteBoard
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public Chatroom Chatroom { get; set; }
-
-        public WhiteboardAuthenticationMessage(string username, string password, Chatroom chatroom) : base(MessageType.Authentication)
+        public int ChatroomId { get; set; }
+        
+        public WhiteboardAuthenticationMessage(string username, string password, int chatroom) : base(MessageType.Authentication)
         {
             Username = username;
             Password = password;
-            Chatroom = chatroom;
+            ChatroomId = chatroom;
         }
 
         public WhiteboardAuthenticationMessage() : base(MessageType.Authentication)
         {
             Username = "";
             Password = "";
-            Chatroom = null;
+            ChatroomId = -1;
         }
 
         public override WhiteboardMessage DeSerialize(byte[] message)

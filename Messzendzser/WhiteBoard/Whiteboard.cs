@@ -9,16 +9,16 @@ namespace Messzendzser.WhiteBoard
 {
     public class Whiteboard
     {
-        public Chatroom Room { get; set; }
+        public int RoomId { get; set; }
         private ConcurrentDictionary<String, WhiteboardConnection> connections = new ConcurrentDictionary<string, WhiteboardConnection>();
         private ConcurrentQueue<WhiteboardEvent> events = new ConcurrentQueue<WhiteboardEvent>();
         private SKImageInfo imageInfo;
         private SKSurface surface;
         public SKCanvas Canvas { get; private set; }
 
-        public Whiteboard(Chatroom room)
+        public Whiteboard(int room)
         {
-            this.Room = room;
+            this.RoomId = room;
             imageInfo = new SKImageInfo(width: 1920,
                                         height: 1080,
                                         colorType: SKColorType.Rgba8888,
@@ -44,7 +44,7 @@ namespace Messzendzser.WhiteBoard
             connections.TryRemove(connection.Username, out _);
             if (connections.Count == 0)
             {
-                new MediaManager().StoreWhiteboard(GetData(), Room.Id);
+                new MediaManager().StoreWhiteboard(GetData(), RoomId);
             }
         }
 
@@ -60,7 +60,7 @@ namespace Messzendzser.WhiteBoard
                 Draw(e);
                 events.Enqueue(e);
             }
-            WhiteboardEventMessage wem = new WhiteboardEventMessage(Room);
+            WhiteboardEventMessage wem = new WhiteboardEventMessage(RoomId);
             wem.Events = newEvents;
             foreach (var c in connections)
             {
