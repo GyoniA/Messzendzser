@@ -78,8 +78,6 @@
                 ((CustomTimer)source).Dispose();
                 return;
             }
-            data = new WhiteboardIsAliveMessage().Serialize();
-            await SendMessageWithCheck(connection.Client, connection, (System.Timers.Timer)source, data);
         }
 
         private async Task ClientLoop(WebSocket client)
@@ -163,6 +161,7 @@
                         }
                         else
                         {
+                            //TODO check if casting works
                             WhiteboardEventMessage evMessage = (WhiteboardEventMessage)wMessage;
                             Whiteboard board;
                             whiteboards.TryGetValue(evMessage.ChatroomId, out board);
