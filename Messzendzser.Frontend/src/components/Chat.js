@@ -23,12 +23,15 @@ function Chat() {
 
     //Sen Image to API
     let imageSent = async (e) => {
-
+        var data = new FormData(document.getElementById("uploadImg"));
+        if (data != null) {
+            console.log("ok");
+        }
         try {
             let res = await fetch("https://localhost:7043/api/SendImage", {
                 method: "POST",
                 mode: 'cors',
-
+                data,
                 data: new FormData(document.getElementById("uploadImg")),
                 headers: {
                     'Access-Control-Allow-Origin': '*',
@@ -317,7 +320,7 @@ function Chat() {
                     <input type="file"
                         ref={hiddenFileInput}
                         onChange={imageSent}
-                        name=""
+                        name="image"
                         style={{ display: 'none' }} />
 
                     <button className='picture' onClick={handleClick}>
