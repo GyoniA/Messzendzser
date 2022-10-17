@@ -68,7 +68,6 @@
         }
         public static bool AuthenticateMessage(WhiteboardAuthenticationMessage wm)
         {
-            throw new NotImplementedException();
             //TODO implement authentication
             /*authenticate with:
                 private string username;
@@ -214,8 +213,6 @@
                 whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
                 isAliveTimer?.Dispose();
-                //TODO CHECK IF CORRECT
-                throw;
             }
             return false;
         }
