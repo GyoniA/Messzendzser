@@ -1,21 +1,37 @@
 ﻿using Messzendzser.Model.DB.Models;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
+using SkiaSharp;
+using SIPSorcery.Media;
+using Messzendzser.Model.Managers.Media;
 
 namespace Messzendzser.WhiteBoard
 {
     public class Whiteboard
     {
-        private Chatroom room;
+        public Chatroom Room { get; set; }
         //private ImmutableList<WhiteboardConnection> connections = ImmutableList<WhiteboardConnection>.Empty;
         private ConcurrentDictionary<String, WhiteboardConnection> connections = new ConcurrentDictionary<string, WhiteboardConnection>();
         //private ImmutableList<WhiteboardEvent> events = ImmutableList<WhiteboardEvent>.Empty;
         private ConcurrentQueue<WhiteboardEvent> events = new ConcurrentQueue<WhiteboardEvent>();
-        private byte[] image = new byte[0];
+        //private byte[] image = new byte[0];
+        private SKImageInfo imageInfo;
+        private SKSurface surface;
+        public SKCanvas Canvas { get; private set; }
 
         public Whiteboard(Chatroom room)
         {
-            this.room = room;
+            this.Room = room;
+            imageInfo = new SKImageInfo(width: 1920,
+                                        height: 1080,
+                                        colorType: SKColorType.Rgba8888,
+                                        alphaType: SKAlphaType.Premul);
+
+            surface = SKSurface.Create(imageInfo);
+
+            Canvas = surface.Canvas;
+
+            Canvas.Clear(SKColor.Parse("#FFFFFF"));
         }
 
         public void AddConnection(WhiteboardConnection connection)
@@ -31,13 +47,13 @@ namespace Messzendzser.WhiteBoard
             connections.TryRemove(connection.Username, out _);
             if (connections.Count == 0)
             {
-                //TODO save image to file
+                new MediaManager().StoreWhiteboard(GetData(), Room.Id);
             }
         }
 
         private void Draw(WhiteboardEvent e)
         {
-            image = e.Draw(image);
+            Canvas = e.Draw(Canvas);
         }
 
         public void AddEvents(LinkedList<WhiteboardEvent> newEvents)
@@ -52,14 +68,19 @@ namespace Messzendzser.WhiteBoard
             {
                 c.Value.Client.GetStream();
                 //TODO put changes into the eventMessage
-                var data = new WhiteboardEventMessage(new byte[0], room).Serialize();
+                var data = new WhiteboardEventMessage(new byte[0], Room).Serialize();
                 wm.SendMessageWithCheck(c.Value.Client, c.Value.Client.GetStream(), c.Value, c.Value.IsAliveTimer, data);
             }
         }
 
         public byte[] GetData()
         {
-            return image;
+            using (var image = surface.Snapshot())
+            using (var data = image.Encode(SKEncodedImageFormat.Png, 80))
+            {
+                // save the data to a stream
+                return data.ToArray();
+            }
         }
     }
 }

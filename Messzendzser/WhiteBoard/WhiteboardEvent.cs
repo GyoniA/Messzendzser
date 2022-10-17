@@ -1,14 +1,15 @@
 ﻿using Org.BouncyCastle.Crypto.Paddings;
 using System.Text.Json;
+using SkiaSharp;
 
 namespace Messzendzser.WhiteBoard
 {
     public abstract class WhiteboardEvent
     {
-        public byte[] Draw(byte[] image)
+        public virtual SKCanvas Draw(SKCanvas canvas)
         {
             //TODO draw the event onto image
-            return image;
+            return canvas;
         }
 
         public string Serialize() {

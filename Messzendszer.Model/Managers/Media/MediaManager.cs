@@ -8,7 +8,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Messzendzser.Model.Managers.Media
 {
-    internal class MediaManager : IMediaManager
+    public class MediaManager : IMediaManager
     {
         public byte[] LoadImage(string token, out string format)
         {
