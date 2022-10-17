@@ -1,4 +1,5 @@
 ﻿using Messzendzser.Model.DB.Models;
+using System.Text.Json;
 
 namespace Messzendzser.WhiteBoard
 {
@@ -22,6 +23,11 @@ namespace Messzendzser.WhiteBoard
         public LinkedList<WhiteboardEvent> GetEvents()
         {
             return Events;
+        }
+
+        public override WhiteboardMessage DeSerialize(byte[] message)
+        {
+            return JsonSerializer.Deserialize<WhiteboardEventMessage>(message);
         }
     }
 }

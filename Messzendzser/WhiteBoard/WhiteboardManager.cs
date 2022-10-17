@@ -25,7 +25,7 @@
         private int waitTime = 5000;
         
         //stores each chatrooms whiteboard
-        private static ConcurrentDictionary<Chatroom, Whiteboard> whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
+        private static ConcurrentDictionary<Chatroom, Whiteboard> whiteboards;
 
 
         private ConcurrentDictionary<WhiteboardConnection, DateTime> lastTimestamps;
@@ -35,6 +35,7 @@
 
         public WhiteboardManager()
         {
+            whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
             lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();
             try
             {

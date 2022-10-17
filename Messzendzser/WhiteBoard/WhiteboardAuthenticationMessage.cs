@@ -1,4 +1,5 @@
 ﻿using Messzendzser.Model.DB.Models;
+using System.Text.Json;
 
 namespace Messzendzser.WhiteBoard
 {
@@ -13,6 +14,11 @@ namespace Messzendzser.WhiteBoard
             Username = username;
             Password = password;
             Chatroom = chatroom;
+        }
+
+        public override WhiteboardMessage DeSerialize(byte[] message)
+        {
+            return JsonSerializer.Deserialize<WhiteboardAuthenticationMessage>(message);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Messzendzser.WhiteBoard
+﻿using System.Text.Json;
+
+namespace Messzendzser.WhiteBoard
 {
     public enum MessageType
         {
@@ -8,7 +10,7 @@
             IsAlive,
             Event
         }
-    public class WhiteboardMessage
+    public abstract class WhiteboardMessage
     {
         public MessageType MessageType { get; set; }
 
@@ -24,13 +26,10 @@
         }
 
         public byte[] Serialize() {
-            throw new NotImplementedException();
+            byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(this, this.GetType());
+            return jsonUtf8Bytes;
         }
 
-        public WhiteboardMessage DeSerialize(byte[] message)
-        {
-            //return new WhiteboardMessage(MessageType.Authentication);
-            throw new NotImplementedException();
-        }
+        public abstract WhiteboardMessage DeSerialize(byte[] message);
     }
 }
