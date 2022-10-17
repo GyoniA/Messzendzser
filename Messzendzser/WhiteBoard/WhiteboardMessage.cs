@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Text.Json;
 
 namespace Messzendzser.WhiteBoard
 {
@@ -48,9 +49,19 @@ namespace Messzendzser.WhiteBoard
 
         public static MessageType GetMessageType(byte[] message)
         {
-            System.Text.Encoding.UTF8.GetString(message);
-            dynamic tmp = JsonSerializer.Deserialize<object>(message);
-            return (MessageType)tmp.Type;
+            try
+            {
+                using var jDoc = JsonDocument.Parse(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0'));
+                var myClass = jDoc.RootElement.GetProperty("Type").Deserialize<MessageType>();
+
+
+                return myClass;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"\n\nError in GetMessageType: {e.Message}\n\n");
+                throw;
+            }
         }
     }
 }
