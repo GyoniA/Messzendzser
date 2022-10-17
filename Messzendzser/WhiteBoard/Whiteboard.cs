@@ -50,10 +50,9 @@ namespace Messzendzser.WhiteBoard
             var wm = new WhiteboardManager();
             foreach (var c in connections)
             {
-                c.Value.Client.GetStream();
                 //TODO put changes into the eventMessage
                 var data = new WhiteboardEventMessage(new byte[0], room).Serialize();
-                wm.SendMessageWithCheck(c.Value.Client, c.Value.Client.GetStream(), c.Value, c.Value.IsAliveTimer, data);
+                wm.SendMessageWithCheck(c.Value.Client, c.Value, c.Value.IsAliveTimer, data);
             }
         }
 

@@ -1,5 +1,6 @@
 using Messzendzser.Model.DB;
 using Messzendzser.Voip;
+using Messzendzser.WhiteBoard;
 using System.Net;
 
 
@@ -28,6 +29,8 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
 
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<WhiteboardManager>();
 
 var app = builder.Build();
 

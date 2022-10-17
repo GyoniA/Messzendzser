@@ -9,6 +9,7 @@
     using System.IO;
     using System.Net;
     using System.Net.Sockets;
+    using System.Net.WebSockets;
     using System.Text;
     using System.Threading;
     using System.Timers;
@@ -32,39 +33,16 @@
         private ConcurrentDictionary<WhiteboardConnection, DateTime> lastTimestamps;
 
         private CancellationTokenSource stop = new CancellationTokenSource();
-        TcpListener server;
+
+        public async Task AcceptConnection(WebSocket socket)
+        {
+            await ClientLoop(socket);
+        }
 
         public WhiteboardManager()
         {
             whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
-            lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();
-            try
-            {
-                // Set the TcpListener on port 13000.
-                Int32 port = 13000;
-                IPAddress localAddr = IPAddress.Parse("127.0.0.1");
-
-                // TcpListener server = new TcpListener(port);
-                server = new TcpListener(localAddr, port);
-
-                // Start listening for client requests.
-                server.Start();
-
-                // Enter the listening loop.
-                ListeningLoop(server);
-            }
-            catch (SocketException e)
-            {
-                Console.WriteLine("SocketException: {0}", e);
-            }
-            finally
-            {
-                // Stop listening for new clients.
-                server?.Stop();
-            }
-
-            Console.WriteLine("\nHit enter to continue...");
-            Console.Read();
+            lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();            
         }
         public static bool AuthenticateMessage(WhiteboardAuthenticationMessage wm)
         {
@@ -80,33 +58,28 @@
         {
             public WhiteboardConnection connection;
         }
-        private void CheckIsAlive(Object source, ElapsedEventArgs e)
+        private async void CheckIsAlive(Object source, ElapsedEventArgs e)
         {
             WhiteboardConnection connection = ((CustomTimer)source).connection;
             DateTime lastMessage = DateTime.MinValue;
             lastTimestamps.TryGetValue(connection, out lastMessage);
             if (DateTime.Now.Subtract(lastMessage).TotalMilliseconds > waitTime)
             {//No response from client
-                connection.Client.Close();
                 whiteboards.TryGetValue(connection.Room, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(connection);
                 ((CustomTimer)source).Stop();
                 return;
             }
             byte[] data = new WhiteboardIsAliveMessage(new byte[0]).Serialize();
-            NetworkStream stream = connection.Client.GetStream();
-            stream.Write(data, 0, data.Length);
 
-            SendMessageWithCheck(connection.Client, stream, connection, (System.Timers.Timer)source, data);
+            await SendMessageWithCheck(connection.Client, connection, (System.Timers.Timer)source, data);
         }
 
-        private void ClientLoop(object? state)
+        private async Task ClientLoop(WebSocket client)
         {
-            TcpClient client = (TcpClient)state;
-            NetworkStream stream = client.GetStream();
 
             // Buffer for reading data
-            Byte[] sentMessage = new Byte[256];
+            Byte[] sentMessage = new Byte[1024 * 4];
             String data = null;
             WhiteboardMessage wMessage;
             int i;
@@ -116,11 +89,14 @@
 
             System.Timers.Timer isAliveTimer = null;
 
-            while ((i = stream.Read(sentMessage, 0, sentMessage.Length)) != 0)
+
+            WebSocketReceiveResult receiveResult = await client.ReceiveAsync(sentMessage, CancellationToken.None);
+
+            while (!receiveResult.CloseStatus.HasValue)
             {
                 // Translate data sentMessage to a ASCII string.
                 //TODO take this out after testing
-                data = System.Text.Encoding.ASCII.GetString(sentMessage, 0, i);
+                data = System.Text.Encoding.ASCII.GetString(sentMessage, 0, receiveResult.Count);
                 Console.WriteLine("Received: {0}", data);
 
                 wMessage = new WhiteboardMessage(sentMessage);
@@ -132,7 +108,7 @@
                         {
                             //if it's not a successful authentication message
                             byte[] wbm = new WhiteboardDeniedMessage(new byte[0]).Serialize();
-                            SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
+                            await SendMessageWithCheck(client, wConn, isAliveTimer, wbm);
                         }
                         else
                         {
@@ -147,7 +123,7 @@
                                 wConn = new WhiteboardConnection(auth.Username, auth.Chatroom, client);
                                 board?.AddConnection(wConn);
                                 byte[] wbm = new WhiteboardOKMessage(new byte[0]).Serialize();
-                                SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
+                                await SendMessageWithCheck(client, wConn, isAliveTimer, wbm);
                                 connState = State.Authenticated;
 
 
@@ -176,7 +152,7 @@
                             {
                                 //incorrect message type
                                 byte[] wbm = new WhiteboardDeniedMessage(new byte[0]).Serialize();
-                                SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
+                                await SendMessageWithCheck(client, wConn, isAliveTimer, wbm);
                             }
                         }
                         else
@@ -192,63 +168,27 @@
                         break;
                 }
             }
-            client?.Close();
             whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
             whiteboard?.RemoveConnection(wConn);
             isAliveTimer?.Stop();
             isAliveTimer?.Dispose();
         }
 
-        public bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
+        public async Task<bool> SendMessageWithCheck(WebSocket client, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
         {
             try
             {
-                stream.Write(wbm, 0, wbm.Length);
+                await client.SendAsync(wbm, WebSocketMessageType.Text, true, CancellationToken.None);
                 return true;
             }
             catch (Exception)
             {
-                client?.Close();
                 whiteboards.TryGetValue(wConn.Room, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
                 isAliveTimer?.Dispose();
             }
             return false;
-        }
-
-        private void ListeningLoop(TcpListener server)
-        {
-            _ = Task.Run(async () =>
-            {
-                while (!stop.IsCancellationRequested)
-                {
-                    // Perform a blocking call to accept requests.
-                    // You could also user server.AcceptSocket() here.
-                    TcpClient client = await server.AcceptTcpClientAsync();
-                    ThreadPool.QueueUserWorkItem(ClientLoop, client);
-                    /*new Thread(client)...{
-                     * NetworkStream stream = client.GetStream();
-                     * while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)...
-                     * byte[] message
-                       state machine(new connection, authenticated)
-                        switch(state){
-                            newConnection:
-                                message feldoozása (legyen authenticate typusú) mint WhiteboardAuthenticationMessage
-                                ha elfogadjuk Ok küldése és authenticated állapotba rakni ha nem Denied küldése
-                                WhiteboardImageEvent küldése, hol tart éppen a rajzolgatás
-                                kapcsolat felvétele new WhiteboadConnection(chatrommid,client...)
-                            authenticated:
-                                message feldolgozása amúgy
-                                új event message érkezik:
-                                    kikeressük az összes chatroomhoz tartozó WhiteboadConnection, összesnek elküldeni, hogy mi változott
-                            pár másodpercenként IsAlive küldése
-                            ha hiba/nem kap választ: kapcsolat megszakadt, takarítás, ha nincs kapcsolat a chatroomhoz akkor azt ki kell írni fileba
-                                    
-                        }
-                    }*/
-                }
-            });
         }
 
         public byte[] GetWhiteboardData()
