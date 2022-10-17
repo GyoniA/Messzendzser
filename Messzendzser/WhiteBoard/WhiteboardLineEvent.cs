@@ -9,7 +9,14 @@ namespace Messzendzser.WhiteBoard
         public SKPoint End { get; set; }
         public uint Color { get; set; }
 
-        public WhiteboardLineEvent(SKPoint start, SKPoint end, uint color)
+        public WhiteboardLineEvent() : base(EventType.Line)
+        {
+            Start = new SKPoint(0, 0);
+            End = new SKPoint(0, 0);
+            Color = 0;
+        }
+
+        public WhiteboardLineEvent(SKPoint start, SKPoint end, uint color) : base(EventType.Line)
         {
             Start = start;
             End = end;

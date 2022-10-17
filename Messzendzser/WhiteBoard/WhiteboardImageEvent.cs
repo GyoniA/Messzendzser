@@ -7,6 +7,10 @@ namespace Messzendzser.WhiteBoard
 {
     public class WhiteboardImageEvent : WhiteboardEvent
     {
+        public WhiteboardImageEvent() : base(EventType.Image)
+        {
+        }
+
         public Whiteboard Board { get; set; }
 
         public override WhiteboardEvent Deserialize(string data)

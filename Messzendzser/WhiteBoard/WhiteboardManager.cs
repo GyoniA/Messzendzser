@@ -62,17 +62,23 @@
         private async void CheckIsAlive(Object source, ElapsedEventArgs e)
         {
             WhiteboardConnection connection = ((CustomTimer)source).connection;
+
+            byte[] data = new WhiteboardIsAliveMessage().Serialize();
+            await SendMessageWithCheck(connection.Client, connection, (System.Timers.Timer)source, data);
+
             DateTime lastMessage = DateTime.MinValue;
             lastTimestamps.TryGetValue(connection, out lastMessage);
             if (DateTime.Now.Subtract(lastMessage).TotalMilliseconds > waitTime)
             {//No response from client
+
                 whiteboards.TryGetValue(connection.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(connection);
+                await connection.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
                 ((CustomTimer)source).Stop();
+                ((CustomTimer)source).Dispose();
                 return;
             }
-            byte[] data = new WhiteboardIsAliveMessage().Serialize();
-
+            data = new WhiteboardIsAliveMessage().Serialize();
             await SendMessageWithCheck(connection.Client, connection, (System.Timers.Timer)source, data);
         }
 
