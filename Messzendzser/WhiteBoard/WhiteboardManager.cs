@@ -168,8 +168,11 @@
                         break;
                 }
             }
-            whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
-            whiteboard?.RemoveConnection(wConn);
+            if (wConn != null)
+            {
+                whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
+                whiteboard?.RemoveConnection(wConn);
+            }
             isAliveTimer?.Stop();
             isAliveTimer?.Dispose();
         }
