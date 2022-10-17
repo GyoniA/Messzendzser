@@ -167,6 +167,7 @@
                     default:
                         break;
                 }
+                receiveResult = await client.ReceiveAsync(sentMessage, CancellationToken.None);
             }
             if (wConn != null)
             {
