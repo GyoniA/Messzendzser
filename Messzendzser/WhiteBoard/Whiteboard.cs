@@ -10,11 +10,8 @@ namespace Messzendzser.WhiteBoard
     public class Whiteboard
     {
         public Chatroom Room { get; set; }
-        //private ImmutableList<WhiteboardConnection> connections = ImmutableList<WhiteboardConnection>.Empty;
         private ConcurrentDictionary<String, WhiteboardConnection> connections = new ConcurrentDictionary<string, WhiteboardConnection>();
-        //private ImmutableList<WhiteboardEvent> events = ImmutableList<WhiteboardEvent>.Empty;
         private ConcurrentQueue<WhiteboardEvent> events = new ConcurrentQueue<WhiteboardEvent>();
-        //private byte[] image = new byte[0];
         private SKImageInfo imageInfo;
         private SKSurface surface;
         public SKCanvas Canvas { get; private set; }

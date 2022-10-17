@@ -23,8 +23,7 @@
         }
 
         private int waitTime = 5000;
-
-        //TODO szálbiztos lista kapcsolatokra ellenőrzése
+        
         //stores each chatrooms whiteboard
         private ConcurrentDictionary<Chatroom, Whiteboard> whiteboards;
 
