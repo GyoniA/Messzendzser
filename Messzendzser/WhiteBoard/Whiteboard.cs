@@ -60,13 +60,12 @@ namespace Messzendzser.WhiteBoard
                 Draw(e);
                 events.Enqueue(e);
             }
-            var wm = new WhiteboardManager();
+            WhiteboardEventMessage wem = new WhiteboardEventMessage(new byte[0], Room);
+            wem.Events = newEvents;
             foreach (var c in connections)
             {
-                c.Value.Client.GetStream();
-                //TODO put changes into the eventMessage
-                var data = new WhiteboardEventMessage(new byte[0], Room).Serialize();
-                wm.SendMessageWithCheck(c.Value.Client, c.Value.Client.GetStream(), c.Value, c.Value.IsAliveTimer, data);
+                var data = wem.Serialize();
+                WhiteboardManager.SendMessageWithCheck(c.Value.Client, c.Value.Client.GetStream(), c.Value, c.Value.IsAliveTimer, data);
             }
         }
 

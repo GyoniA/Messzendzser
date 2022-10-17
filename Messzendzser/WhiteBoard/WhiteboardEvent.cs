@@ -6,11 +6,7 @@ namespace Messzendzser.WhiteBoard
 {
     public abstract class WhiteboardEvent
     {
-        public virtual SKCanvas Draw(SKCanvas canvas)
-        {
-            //TODO draw the event onto image
-            return canvas;
-        }
+        public abstract SKCanvas Draw(SKCanvas canvas);
 
         public string Serialize() {
             //TODO check if correct

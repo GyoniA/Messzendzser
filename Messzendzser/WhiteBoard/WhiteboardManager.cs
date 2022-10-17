@@ -25,7 +25,7 @@
         private int waitTime = 5000;
         
         //stores each chatrooms whiteboard
-        private ConcurrentDictionary<Chatroom, Whiteboard> whiteboards;
+        private static ConcurrentDictionary<Chatroom, Whiteboard> whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
 
 
         private ConcurrentDictionary<WhiteboardConnection, DateTime> lastTimestamps;
@@ -35,7 +35,6 @@
 
         public WhiteboardManager()
         {
-            whiteboards = new ConcurrentDictionary<Chatroom, Whiteboard>();
             lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();
             try
             {
@@ -198,7 +197,7 @@
             isAliveTimer?.Dispose();
         }
 
-        public bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
+        public static bool SendMessageWithCheck(TcpClient client, NetworkStream stream, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
         {
             try
             {
