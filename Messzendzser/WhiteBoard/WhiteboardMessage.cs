@@ -4,11 +4,11 @@ namespace Messzendzser.WhiteBoard
 {
     public enum MessageType
         {
-            Authentication,
-            Denied,
-            OK,
-            IsAlive,
-            Event
+            Authentication = 0,
+            Denied = 1,
+            OK = 2,
+            IsAlive = 3,
+            Event = 4
         }
     public abstract class WhiteboardMessage
     {

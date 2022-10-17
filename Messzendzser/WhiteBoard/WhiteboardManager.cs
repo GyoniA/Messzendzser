@@ -206,15 +206,18 @@
             return whiteboard?.GetData();
         }
 
-        public void UpdateWhiteboard(byte[] message)
+        public static void JsonTest()
         {
-            throw new NotImplementedException();
-            //this.whiteboard.AddMessage(new WhiteboardMessage(sentMessage));
-        }
-        public void UpdateWhiteboard(int chatroom, LinkedList<WhiteboardEvent> newEvents)
-        {
-            whiteboards.TryGetValue(chatroom, out Whiteboard whiteboard);
-            whiteboard?.AddEvents(newEvents,this);
+            WhiteboardOKMessage wbokm = new WhiteboardOKMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbokm.Serialize()));
+            WhiteboardIsAliveMessage wbiam = new WhiteboardIsAliveMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbiam.Serialize()));
+            WhiteboardDeniedMessage wbdm = new WhiteboardDeniedMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbdm.Serialize()));
+            WhiteboardEventMessage wbem = new WhiteboardEventMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));
+            WhiteboardAuthenticationMessage wbaum = new WhiteboardAuthenticationMessage();
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbaum.Serialize()));
         }
     }
 }

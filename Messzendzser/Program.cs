@@ -30,6 +30,8 @@ builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
 
 builder.Services.AddSwaggerGen();
 
+WhiteboardManager.JsonTest();
+
 builder.Services.AddScoped<WhiteboardManager>();
 
 var app = builder.Build();
