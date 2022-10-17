@@ -222,14 +222,14 @@ function Chat() {
                 if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
-                            <img src="localhost:7043/api/GetImage?image=msg.token">
+                            <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent( msg.token)}>
                             </img>
                         </li>
                     )
                 } else {
                     return (
                         <li className="msg_from_other">
-                            <img src="localhost:7043/api/GetImage?image=msg.token">
+                            <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)}>
                             </img>
                         </li>
                     )

@@ -15,7 +15,7 @@ namespace Messzendzser.Model.Managers.Media
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Mediamanager\Images\", token + "*");
             FileInfo fi = new FileInfo(files[0]);
             format = fi.Extension;
-            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Images\" + files[0];
+            string filepath = files[0];
             using (var reader = new BinaryReader(new FileStream(filepath, FileMode.Open, FileAccess.Read)))
             {
                 return reader.ReadBytes((int)reader.BaseStream.Length);
@@ -27,7 +27,7 @@ namespace Messzendzser.Model.Managers.Media
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory() + @"\Mediamanager\Sounds\", token + "*");
             FileInfo fi = new FileInfo(files[0]);
             format = fi.Extension;
-            string filepath = Directory.GetCurrentDirectory() + @"\Mediamanager\Sounds\" + files[0];
+            string filepath = files[0];
             using (var reader = new BinaryReader(new FileStream(filepath, FileMode.Open, FileAccess.Read)))
             {
                 return reader.ReadBytes((int)reader.BaseStream.Length);
