@@ -25,8 +25,7 @@
         }
 
         private int waitTime = 5000;
-
-        //TODO szálbiztos lista kapcsolatokra ellenőrzése
+        
         //stores each chatrooms whiteboard
         private ConcurrentDictionary<int, Whiteboard> whiteboards;
 
@@ -198,12 +197,6 @@
                 isAliveTimer?.Dispose();
             }
             return false;
-        }
-
-        public byte[] GetWhiteboardData()
-        {
-            throw new NotImplementedException();
-            //return this.whiteboard.GetData();
         }
 
         public byte[] GetWhiteboardData(int chatroom)
