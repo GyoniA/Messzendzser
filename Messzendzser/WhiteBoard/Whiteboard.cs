@@ -73,7 +73,7 @@ namespace Messzendzser.WhiteBoard
             using (var image = surface.Snapshot())
             using (var data = image.Encode(SKEncodedImageFormat.Png, 80))
             {
-                // save the data to a stream
+                // return the image as a byte array
                 return data.ToArray();
             }
         }

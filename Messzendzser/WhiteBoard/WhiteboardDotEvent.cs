@@ -9,8 +9,12 @@ namespace Messzendzser.WhiteBoard
     {
         public SKPoint Position { get; set; }
         public uint Color { get; set; }
-
-        public WhiteboardDotEvent(SKPoint position, uint color)
+        public WhiteboardDotEvent() : base(EventType.Dot)
+        {
+            Position = new SKPoint(0, 0);
+            Color = 0;
+        }
+        public WhiteboardDotEvent(SKPoint position, uint color) : base(EventType.Dot)
         {
             Position = position;
             Color = color;

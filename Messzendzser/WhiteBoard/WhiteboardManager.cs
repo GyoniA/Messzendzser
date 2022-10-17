@@ -25,8 +25,7 @@
         }
 
         private int waitTime = 5000;
-
-        //TODO szálbiztos lista kapcsolatokra ellenőrzése
+        
         //stores each chatrooms whiteboard
         private ConcurrentDictionary<int, Whiteboard> whiteboards;
 
@@ -62,18 +61,22 @@
         private async void CheckIsAlive(Object source, ElapsedEventArgs e)
         {
             WhiteboardConnection connection = ((CustomTimer)source).connection;
+
+            byte[] data = new WhiteboardIsAliveMessage().Serialize();
+            await SendMessageWithCheck(connection.Client, connection, (System.Timers.Timer)source, data);
+
             DateTime lastMessage = DateTime.MinValue;
             lastTimestamps.TryGetValue(connection, out lastMessage);
             if (DateTime.Now.Subtract(lastMessage).TotalMilliseconds > waitTime)
             {//No response from client
+
                 whiteboards.TryGetValue(connection.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(connection);
+                await connection.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
                 ((CustomTimer)source).Stop();
+                ((CustomTimer)source).Dispose();
                 return;
             }
-            byte[] data = new WhiteboardIsAliveMessage().Serialize();
-
-            await SendMessageWithCheck(connection.Client, connection, (System.Timers.Timer)source, data);
         }
 
         private async Task ClientLoop(WebSocket client)
@@ -157,6 +160,7 @@
                         }
                         else
                         {
+                            //TODO check if casting works
                             WhiteboardEventMessage evMessage = (WhiteboardEventMessage)wMessage;
                             Whiteboard board;
                             whiteboards.TryGetValue(evMessage.ChatroomId, out board);
@@ -193,12 +197,6 @@
                 isAliveTimer?.Dispose();
             }
             return false;
-        }
-
-        public byte[] GetWhiteboardData()
-        {
-            throw new NotImplementedException();
-            //return this.whiteboard.GetData();
         }
 
         public byte[] GetWhiteboardData(int chatroom)
