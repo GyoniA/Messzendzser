@@ -25,7 +25,7 @@ namespace Messzendzser.WhiteBoard
 
         public override WhiteboardMessage DeSerialize(byte[] message)
         {
-            return JsonSerializer.Deserialize<WhiteboardAuthenticationMessage>(message);
+            return JsonSerializer.Deserialize<WhiteboardAuthenticationMessage>(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0'));
         }
     }
 }

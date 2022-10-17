@@ -1,5 +1,6 @@
 using Messzendzser.Model.DB;
 using Messzendzser.Voip;
+using Messzendzser.WhiteBoard;
 using System.Net;
 
 
@@ -29,6 +30,10 @@ builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
 
 builder.Services.AddSwaggerGen();
 
+WhiteboardManager.JsonTest();
+
+builder.Services.AddScoped<WhiteboardManager>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,6 +48,17 @@ app.UseCors(x => x
                     .AllowAnyHeader()
                     .SetIsOriginAllowed(origin => true) // allow any origin
                     .AllowCredentials()); // allow credentials
+
+// Websockets
+
+var webSocketOptions = new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2)
+};
+
+app.UseWebSockets(webSocketOptions);
+
+// Websockets
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

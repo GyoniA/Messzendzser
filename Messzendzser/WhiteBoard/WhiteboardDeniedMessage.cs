@@ -10,7 +10,7 @@ namespace Messzendzser.WhiteBoard
 
         public override WhiteboardMessage DeSerialize(byte[] message)
         {
-            return JsonSerializer.Deserialize<WhiteboardDeniedMessage>(message);
+            return JsonSerializer.Deserialize<WhiteboardDeniedMessage>(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0'));
         }
     }
 }

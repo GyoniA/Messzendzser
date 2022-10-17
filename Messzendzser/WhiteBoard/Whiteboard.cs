@@ -1,9 +1,8 @@
 ﻿using Messzendzser.Model.DB.Models;
+using Messzendzser.Model.Managers.Media;
+using SkiaSharp;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using SkiaSharp;
-using SIPSorcery.Media;
-using Messzendzser.Model.Managers.Media;
 
 namespace Messzendzser.WhiteBoard
 {
@@ -53,7 +52,7 @@ namespace Messzendzser.WhiteBoard
             Canvas = e.Draw(Canvas);
         }
 
-        public void AddEvents(LinkedList<WhiteboardEvent> newEvents)
+        public async Task AddEvents(LinkedList<WhiteboardEvent> newEvents,WhiteboardManager whiteboardManager)
         {
             foreach (var e in newEvents)
             {
@@ -65,7 +64,7 @@ namespace Messzendzser.WhiteBoard
             foreach (var c in connections)
             {
                 var data = wem.Serialize();
-                WhiteboardManager.SendMessageWithCheck(c.Value.Client, c.Value.Client.GetStream(), c.Value, c.Value.IsAliveTimer, data);
+                await whiteboardManager.SendMessageWithCheck(c.Value.Client, c.Value, c.Value.IsAliveTimer, data);
             }
         }
 
