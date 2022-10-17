@@ -9,11 +9,18 @@ namespace Messzendzser.WhiteBoard
         public string Password { get; set; }
         public Chatroom Chatroom { get; set; }
 
-        public WhiteboardAuthenticationMessage(byte[] message, string username, string password, Chatroom chatroom) : base(message)
+        public WhiteboardAuthenticationMessage(string username, string password, Chatroom chatroom) : base(MessageType.Authentication)
         {
             Username = username;
             Password = password;
             Chatroom = chatroom;
+        }
+
+        public WhiteboardAuthenticationMessage() : base(MessageType.Authentication)
+        {
+            Username = "";
+            Password = "";
+            Chatroom = null;
         }
 
         public override WhiteboardMessage DeSerialize(byte[] message)

@@ -60,7 +60,7 @@ namespace Messzendzser.WhiteBoard
                 Draw(e);
                 events.Enqueue(e);
             }
-            WhiteboardEventMessage wem = new WhiteboardEventMessage(new byte[0], Room);
+            WhiteboardEventMessage wem = new WhiteboardEventMessage(Room);
             wem.Events = newEvents;
             foreach (var c in connections)
             {

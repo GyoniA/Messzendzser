@@ -92,7 +92,7 @@
                 ((CustomTimer)source).Stop();
                 return;
             }
-            byte[] data = new WhiteboardIsAliveMessage(new byte[0]).Serialize();
+            byte[] data = new WhiteboardIsAliveMessage().Serialize();
             NetworkStream stream = connection.Client.GetStream();
             stream.Write(data, 0, data.Length);
 
@@ -122,15 +122,17 @@
                 data = System.Text.Encoding.ASCII.GetString(sentMessage, 0, i);
                 Console.WriteLine("Received: {0}", data);
 
-                wMessage = new WhiteboardMessage(sentMessage);
+                MessageType type = WhiteboardMessage.GetMessageType(sentMessage);
+                wMessage = WhiteboardMessage.GetMessageFromType(type);
+                wMessage = wMessage.DeSerialize(sentMessage);
 
                 switch (connState)
                 {
                     case State.NewConnection:
-                        if (wMessage.MessageType != MessageType.Authentication || AuthenticateMessage((WhiteboardAuthenticationMessage)wMessage))
+                        if (wMessage.Type != MessageType.Authentication || AuthenticateMessage((WhiteboardAuthenticationMessage)wMessage))
                         {
                             //if it's not a successful authentication message
-                            byte[] wbm = new WhiteboardDeniedMessage(new byte[0]).Serialize();
+                            byte[] wbm = new WhiteboardDeniedMessage().Serialize();
                             SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
                         }
                         else
@@ -145,7 +147,7 @@
                                 whiteboards.TryGetValue(auth.Chatroom, out board);
                                 wConn = new WhiteboardConnection(auth.Username, auth.Chatroom, client);
                                 board?.AddConnection(wConn);
-                                byte[] wbm = new WhiteboardOKMessage(new byte[0]).Serialize();
+                                byte[] wbm = new WhiteboardOKMessage().Serialize();
                                 SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
                                 connState = State.Authenticated;
 
@@ -165,16 +167,16 @@
                         }
                         break;
                     case State.Authenticated:
-                        if (wMessage.MessageType != MessageType.Event)
+                        if (wMessage.Type != MessageType.Event)
                         {
-                            if (wMessage.MessageType == MessageType.OK)
+                            if (wMessage.Type == MessageType.OK)
                             {
                                 lastTimestamps.AddOrUpdate(wConn, DateTime.Now, (key, oldValue) => DateTime.Now);
                             }
                             else
                             {
                                 //incorrect message type
-                                byte[] wbm = new WhiteboardDeniedMessage(new byte[0]).Serialize();
+                                byte[] wbm = new WhiteboardDeniedMessage().Serialize();
                                 SendMessageWithCheck(client, stream, wConn, isAliveTimer, wbm);
                             }
                         }
