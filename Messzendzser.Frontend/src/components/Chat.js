@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import recordAudio from './recordAudio';
 
@@ -31,13 +31,14 @@ function Chat() {
             let res = await fetch("https://localhost:7043/api/SendImage", {
                 method: "POST",
                 mode: 'cors',
-                data,
-                data: new FormData(document.getElementById("uploadImg")),
+                credentials: "include",
+                
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                    
                     chatroomId: chatroomId,
                 },
+                body: data,
 
 
             });
