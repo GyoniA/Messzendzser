@@ -44,6 +44,17 @@ app.UseCors(x => x
                     .SetIsOriginAllowed(origin => true) // allow any origin
                     .AllowCredentials()); // allow credentials
 
+// Websockets
+
+var webSocketOptions = new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromMinutes(2)
+};
+
+app.UseWebSockets(webSocketOptions);
+
+// Websockets
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
