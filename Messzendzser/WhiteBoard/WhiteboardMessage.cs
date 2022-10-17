@@ -1,4 +1,6 @@
-﻿namespace Messzendzser.WhiteBoard
+﻿using System.Text.Json;
+
+namespace Messzendzser.WhiteBoard
 {
     public enum MessageType
         {
@@ -8,29 +10,47 @@
             IsAlive,
             Event
         }
-    public class WhiteboardMessage
+    public abstract class WhiteboardMessage
     {
-        public MessageType MessageType { get; set; }
+        public MessageType Type { get; set; }
 
-        public WhiteboardMessage(byte[] message)
+        public WhiteboardMessage(MessageType type)
         {
-            WhiteboardMessage wm = DeSerialize(message);
-            MessageType = wm.MessageType;
+            Type = type;
         }
 
-        public WhiteboardMessage(MessageType messageType)
+
+        public static WhiteboardMessage GetMessageFromType(MessageType type)
         {
-            MessageType = messageType;
+            switch (type)
+            {
+                case MessageType.Authentication:
+                    return new WhiteboardAuthenticationMessage();
+                case MessageType.Denied:
+                    return new WhiteboardDeniedMessage();
+                case MessageType.OK:
+                    return new WhiteboardOKMessage();
+                case MessageType.IsAlive:
+                    return new WhiteboardIsAliveMessage();
+                case MessageType.Event:
+                    return new WhiteboardEventMessage();
+                default:
+                    return null;
+            }
         }
 
         public byte[] Serialize() {
-            throw new NotImplementedException();
+            byte[] jsonUtf8Bytes = JsonSerializer.SerializeToUtf8Bytes(this, this.GetType());
+            return jsonUtf8Bytes;
         }
 
-        public WhiteboardMessage DeSerialize(byte[] message)
+        public abstract WhiteboardMessage DeSerialize(byte[] message);
+
+        public static MessageType GetMessageType(byte[] message)
         {
-            //return new WhiteboardMessage(MessageType.Authentication);
-            throw new NotImplementedException();
+            System.Text.Encoding.UTF8.GetString(message);
+            dynamic tmp = JsonSerializer.Deserialize<object>(message);
+            return (MessageType)tmp.Type;
         }
     }
 }

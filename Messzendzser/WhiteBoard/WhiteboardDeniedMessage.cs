@@ -1,9 +1,16 @@
-﻿namespace Messzendzser.WhiteBoard
+﻿using System.Text.Json;
+
+namespace Messzendzser.WhiteBoard
 {
     public class WhiteboardDeniedMessage : WhiteboardMessage
     {
-        public WhiteboardDeniedMessage(byte[] message) : base(message)
+        public WhiteboardDeniedMessage() : base(MessageType.Denied)
         {
+        }
+
+        public override WhiteboardMessage DeSerialize(byte[] message)
+        {
+            return JsonSerializer.Deserialize<WhiteboardDeniedMessage>(message);
         }
     }
 }
