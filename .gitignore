@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+/Messzendzser/Mediamanager/Whiteboards
+/Messzendzser/Mediamanager/Sounds
+/Messzendzser/Mediamanager/Images
