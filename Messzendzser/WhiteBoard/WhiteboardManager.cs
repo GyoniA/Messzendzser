@@ -3,6 +3,7 @@
     using Messzendzser.Model.DB.Models;
     using Microsoft.Extensions.Logging;
     using Org.BouncyCastle.Utilities;
+    using SkiaSharp;
     using System;
     using System.Collections;
     using System.Collections.Concurrent;
@@ -217,6 +218,14 @@
             Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));
             WhiteboardAuthenticationMessage wbaum = new WhiteboardAuthenticationMessage();
             Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbaum.Serialize()));
+        }
+        public static void JsonMessageEventTest()
+        {
+            WhiteboardLineEvent wbLine = new WhiteboardLineEvent(new SKPoint(1,1), new SKPoint(20, 20), 242);
+            LinkedList<WhiteboardEvent> wbEvents = new LinkedList<WhiteboardEvent>();
+            wbEvents.AddLast(wbLine);
+            WhiteboardEventMessage wbem = new WhiteboardEventMessage(10, wbEvents);
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));
         }
     }
 }

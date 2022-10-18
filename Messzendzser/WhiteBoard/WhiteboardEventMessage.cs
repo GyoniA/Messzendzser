@@ -15,9 +15,16 @@ namespace Messzendzser.WhiteBoard
             ChatroomId = chatroom;
         }
 
+        public WhiteboardEventMessage(int chatroom, LinkedList<WhiteboardEvent> events) : base(MessageType.Event)
+        {
+            Events = events;
+            ChatroomId = chatroom;
+        }
+
         public WhiteboardEventMessage() : base(MessageType.Event)
         {
             Events = new LinkedList<WhiteboardEvent>();
+            ChatroomId = -1;
         }
 
         public void AddEvent(WhiteboardEvent e)
