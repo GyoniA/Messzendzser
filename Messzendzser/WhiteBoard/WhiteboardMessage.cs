@@ -51,7 +51,8 @@ namespace Messzendzser.WhiteBoard
         {
             try
             {
-                using var jDoc = JsonDocument.Parse(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0'));
+                string json = System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0');
+                using var jDoc = JsonDocument.Parse(json);
                 var myClass = jDoc.RootElement.GetProperty("Type").Deserialize<MessageType>();
 
 
