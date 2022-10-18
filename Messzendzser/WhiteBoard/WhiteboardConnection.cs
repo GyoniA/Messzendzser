@@ -21,5 +21,12 @@
             RoomId = room;
             Client = client;
         }
+
+        public WhiteboardConnection(WebSocket client)
+        {
+            Username = "";
+            RoomId = -1;
+            Client = client;
+        }
     }
 }

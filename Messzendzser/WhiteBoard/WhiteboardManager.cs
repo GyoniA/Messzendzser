@@ -89,7 +89,7 @@
             WhiteboardMessage wMessage;
             int i;
             State connState = State.NewConnection;
-            WhiteboardConnection wConn = null;
+            WhiteboardConnection wConn = new WhiteboardConnection(client);
 
 
             System.Timers.Timer isAliveTimer = null;
@@ -164,7 +164,7 @@
                             //TODO check if casting works
                             WhiteboardEventMessage evMessage = (WhiteboardEventMessage)wMessage;
                             Whiteboard board;
-                            whiteboards.TryGetValue(evMessage.ChatroomId, out board);
+                            whiteboards.TryGetValue(wConn.RoomId, out board);
                             //sending changes to whiteboard of this message
                             board?.AddEvents(evMessage.GetEvents(),this);
                         }
@@ -183,7 +183,7 @@
             isAliveTimer?.Dispose();
         }
 
-        public async Task<bool> SendMessageWithCheck(WebSocket client, WhiteboardConnection wConn, System.Timers.Timer isAliveTimer, byte[] wbm)
+        public async Task<bool> SendMessageWithCheck(WebSocket client, WhiteboardConnection wConn, System.Timers.Timer? isAliveTimer, byte[] wbm)
         {
             try
             {
@@ -192,6 +192,7 @@
             }
             catch (Exception)
             {
+                await wConn.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
                 whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
@@ -221,7 +222,7 @@
         }
         public static void JsonMessageEventTest()
         {
-            WhiteboardLineEvent wbLine = new WhiteboardLineEvent(new SKPoint(1,1), new SKPoint(20, 20), 242);
+            WhiteboardLineEvent wbLine = new WhiteboardLineEvent(new SKPoint(1,1), new SKPoint(20, 20), 0xFF000000);
             LinkedList<WhiteboardEvent> wbEvents = new LinkedList<WhiteboardEvent>();
             wbEvents.AddLast(wbLine);
             WhiteboardEventMessage wbem = new WhiteboardEventMessage(10, wbEvents);
