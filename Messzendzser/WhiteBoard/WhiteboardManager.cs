@@ -73,7 +73,8 @@
 
                 whiteboards.TryGetValue(connection.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(connection);
-                await connection.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
+                if(connection.Client.State!=WebSocketState.Closed)
+                    await connection.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
                 ((CustomTimer)source).Stop();
                 ((CustomTimer)source).Dispose();
                 return;
@@ -172,6 +173,7 @@
                     default:
                         break;
                 }
+                sentMessage = new Byte[1024 * 4];
                 receiveResult = await client.ReceiveAsync(sentMessage, CancellationToken.None);
             }
             if (wConn != null)
