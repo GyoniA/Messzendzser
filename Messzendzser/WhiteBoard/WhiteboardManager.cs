@@ -194,7 +194,8 @@
             }
             catch (Exception)
             {
-                await wConn.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
+                if (wConn.Client.State != WebSocketState.Closed)
+                    await wConn.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
                 whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
                 whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
