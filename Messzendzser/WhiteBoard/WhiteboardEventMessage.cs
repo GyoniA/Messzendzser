@@ -1,92 +1,78 @@
-﻿using Messzendzser.Model.DB.Models;
+﻿using Google.Protobuf.WellKnownTypes;
+using Messzendzser.Model.DB.Models;
+using Messzendzser.Model.Managers.Message;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static LumiSoft.Net.MIME.MIME_MediaTypes;
 
 namespace Messzendzser.WhiteBoard
 {
     public class WhiteboardEventMessage : WhiteboardMessage
     {
-        private class DictionaryEnumConverterInner<TKey, TValue> :
-                JsonConverter<Dictionary<TKey, TValue>> where TKey : struct, Enum
+        /*
+        private class WhiteboardEventListConverter :
+                JsonConverter<LinkedList<object>>
         {
-            private readonly JsonConverter<TValue> _valueConverter;
-            private readonly Type _keyType;
-            private readonly Type _valueType;
-
-            public DictionaryEnumConverterInner(JsonSerializerOptions options)
-            {
-                // For performance, use the existing converter.
-                _valueConverter = (JsonConverter<TValue>)options
-                    .GetConverter(typeof(TValue));
-
-                // Cache the key and value types.
-                _keyType = typeof(TKey);
-                _valueType = typeof(TValue);
-            }
-
-            public override Dictionary<TKey, TValue> Read(
-                ref Utf8JsonReader reader,
-                Type typeToConvert,
-                JsonSerializerOptions options)
+            private readonly JsonConverter<WhiteboardEvent> valueConverter;
+            private readonly EventType Type;
+            public override LinkedList<object>? Read(ref Utf8JsonReader reader, System.Type typeToConvert, JsonSerializerOptions options)
             {
                 if (reader.TokenType != JsonTokenType.StartObject)
                 {
                     throw new JsonException();
                 }
 
-                var dictionary = new Dictionary<TKey, TValue>();
-
+                var list = new LinkedList<WhiteboardEvent>();
                 while (reader.Read())
                 {
                     if (reader.TokenType == JsonTokenType.EndObject)
                     {
-                        return dictionary;
-                    }
-
-                    // Get the key.
-                    if (reader.TokenType != JsonTokenType.PropertyName)
-                    {
-                        throw new JsonException();
-                    }
-
-                    string? propertyName = reader.GetString();
-
-                    // For performance, parse with ignoreCase:false first.
-                    if (!Enum.TryParse(propertyName, ignoreCase: false, out TKey key) &&
-                        !Enum.TryParse(propertyName, ignoreCase: true, out key))
-                    {
-                        throw new JsonException(
-                            $"Unable to convert \"{propertyName}\" to Enum \"{_keyType}\".");
+                        return (LinkedList<object>?)list.Cast<LinkedList<object>>();
                     }
 
                     // Get the value.
-                    reader.Read();
-                    TValue value = _valueConverter.Read(ref reader, _valueType, options)!;
+                    
+                    JsonSerializer.Deserialize<WhiteboardDotEvent>(reader);
+                    try
+                    {
+                        string json = System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0');
+                        using var jDoc = JsonDocument.Parse(json);
+                        var myClass = jDoc.RootElement.GetProperty("Type").Deserialize<MessageType>();
 
-                    // Add to dictionary.
-                    dictionary.Add(key, value);
+
+                        return myClass;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"\n\nError in GetMessageType: {e.Message}\n\n");
+                        throw;
+                    }
+
+                    WhiteboardEvent wEvent = WhiteboardEvent.GetEventFromType(key);
+                    wEvent = wEvent.Deserialize(reader);
+                    reader.Read();
+                    WhiteboardEvent value = _valueConverter.Read(ref reader, _valueType, options)!;
+                    
+                    list.AddLast(value);
                 }
 
                 throw new JsonException();
             }
 
-            public override void Write(
-                Utf8JsonWriter writer,
-                Dictionary<TKey, TValue> dictionary,
-                JsonSerializerOptions options)
+            public override void Write(Utf8JsonWriter writer, LinkedList<object> value, JsonSerializerOptions options)
             {
                 writer.WriteStartObject();
-
-                foreach ((TKey key, TValue value) in dictionary)
+                
+                foreach (WhiteboardEvent we in value)
                 {
-                    var propertyName = key.ToString();
-                    writer.WritePropertyName
-                        (options.PropertyNamingPolicy?.ConvertName(propertyName) ?? propertyName);
-
-                    _valueConverter.Write(writer, value, options);
+                    string json = JsonSerializer.Serialize(we, we.GetType());
+                    writer.WriteRawValue(json);
                 }
 
                 writer.WriteEndObject();
@@ -94,6 +80,8 @@ namespace Messzendzser.WhiteBoard
         }
 
 
+
+        [JsonConverter(typeof(WhiteboardEventListConverter))]*/
         public LinkedList<WhiteboardEvent> Events { get; set; }
         
         public WhiteboardEventMessage(int chatroom) : base(MessageType.Event)
