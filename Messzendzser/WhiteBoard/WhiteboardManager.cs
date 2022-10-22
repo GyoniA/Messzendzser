@@ -222,14 +222,17 @@
             Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));
             WhiteboardAuthenticationMessage wbaum = new WhiteboardAuthenticationMessage();
             Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbaum.Serialize()));
+            Console.WriteLine("\nend of jsontest\n\n");
         }
         public static void JsonMessageEventTest()
         {
-            WhiteboardLineEvent wbLine = new WhiteboardLineEvent(new SKPoint(1,1), new SKPoint(20, 20), 0xFF000000);
+            WhiteboardLineEvent wbLine = new WhiteboardLineEvent(new Point(1,1), new Point(20, 20), 0xFF000000);
             LinkedList<WhiteboardEvent> wbEvents = new LinkedList<WhiteboardEvent>();
             wbEvents.AddLast(wbLine);
             WhiteboardEventMessage wbem = new WhiteboardEventMessage(10, wbEvents);
+            Console.Write("Event message with a line event: ");
             Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));
+            Console.WriteLine("\nend of json message event test\n\n");
         }
     }
 }

@@ -22,10 +22,10 @@ namespace Messzendzser.WhiteBoard
             Password = "";
             ChatroomId = -1;
         }
-
+        /*
         public override WhiteboardMessage DeSerialize(byte[] message)
         {
             return JsonSerializer.Deserialize<WhiteboardAuthenticationMessage>(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0'));
-        }
+        }*/
     }
 }

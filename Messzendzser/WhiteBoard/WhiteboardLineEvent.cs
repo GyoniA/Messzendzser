@@ -5,18 +5,18 @@ namespace Messzendzser.WhiteBoard
 {
     public class WhiteboardLineEvent : WhiteboardEvent
     {
-        public SKPoint Start { get; set; }
-        public SKPoint End { get; set; }
+        public Point Start { get; set; }
+        public Point End { get; set; }
         public uint Color { get; set; }
 
         public WhiteboardLineEvent() : base(EventType.Line)
         {
-            Start = new SKPoint(0, 0);
-            End = new SKPoint(0, 0);
+            Start = new Point(0, 0);
+            End = new Point(0, 0);
             Color = 0;
         }
 
-        public WhiteboardLineEvent(SKPoint start, SKPoint end, uint color) : base(EventType.Line)
+        public WhiteboardLineEvent(Point start, Point end, uint color) : base(EventType.Line)
         {
             Start = start;
             End = end;
@@ -30,7 +30,7 @@ namespace Messzendzser.WhiteBoard
 
         public override SKCanvas Draw(SKCanvas canvas)
         {
-            canvas.DrawLine(Start, End, new SKPaint() { Color = new SKColor(Color) });
+            canvas.DrawLine(Start.X, Start.Y, End.X, End.Y, new SKPaint() { Color = new SKColor(Color) });
             return canvas;
         }
 

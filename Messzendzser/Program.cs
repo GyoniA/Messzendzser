@@ -32,6 +32,8 @@ builder.Services.AddSwaggerGen();
 
 WhiteboardManager.JsonTest();
 
+WhiteboardManager.JsonMessageEventTest();
+
 builder.Services.AddScoped<WhiteboardManager>();
 
 var app = builder.Build();

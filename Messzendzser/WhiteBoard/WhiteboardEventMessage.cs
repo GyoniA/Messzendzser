@@ -2,11 +2,13 @@
 using Messzendzser.Model.DB.Models;
 using Messzendzser.Model.Managers.Message;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static LumiSoft.Net.MIME.MIME_MediaTypes;
@@ -14,74 +16,7 @@ using static LumiSoft.Net.MIME.MIME_MediaTypes;
 namespace Messzendzser.WhiteBoard
 {
     public class WhiteboardEventMessage : WhiteboardMessage
-    {
-        /*
-        private class WhiteboardEventListConverter :
-                JsonConverter<LinkedList<object>>
-        {
-            private readonly JsonConverter<WhiteboardEvent> valueConverter;
-            private readonly EventType Type;
-            public override LinkedList<object>? Read(ref Utf8JsonReader reader, System.Type typeToConvert, JsonSerializerOptions options)
-            {
-                if (reader.TokenType != JsonTokenType.StartObject)
-                {
-                    throw new JsonException();
-                }
-
-                var list = new LinkedList<WhiteboardEvent>();
-                while (reader.Read())
-                {
-                    if (reader.TokenType == JsonTokenType.EndObject)
-                    {
-                        return (LinkedList<object>?)list.Cast<LinkedList<object>>();
-                    }
-
-                    // Get the value.
-                    
-                    JsonSerializer.Deserialize<WhiteboardDotEvent>(reader);
-                    try
-                    {
-                        string json = System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0');
-                        using var jDoc = JsonDocument.Parse(json);
-                        var myClass = jDoc.RootElement.GetProperty("Type").Deserialize<MessageType>();
-
-
-                        return myClass;
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine($"\n\nError in GetMessageType: {e.Message}\n\n");
-                        throw;
-                    }
-
-                    WhiteboardEvent wEvent = WhiteboardEvent.GetEventFromType(key);
-                    wEvent = wEvent.Deserialize(reader);
-                    reader.Read();
-                    WhiteboardEvent value = _valueConverter.Read(ref reader, _valueType, options)!;
-                    
-                    list.AddLast(value);
-                }
-
-                throw new JsonException();
-            }
-
-            public override void Write(Utf8JsonWriter writer, LinkedList<object> value, JsonSerializerOptions options)
-            {
-                writer.WriteStartObject();
-                
-                foreach (WhiteboardEvent we in value)
-                {
-                    string json = JsonSerializer.Serialize(we, we.GetType());
-                    writer.WriteRawValue(json);
-                }
-
-                writer.WriteEndObject();
-            }
-        }
-
-
-
-        [JsonConverter(typeof(WhiteboardEventListConverter))]*/
+    {        
         public LinkedList<WhiteboardEvent> Events { get; set; }
         
         public WhiteboardEventMessage(int chatroom) : base(MessageType.Event)
@@ -109,9 +44,26 @@ namespace Messzendzser.WhiteBoard
             return Events;
         }
 
-        public override WhiteboardMessage DeSerialize(byte[] message)
+        
+
+        /*public override WhiteboardMessage DeSerialize(byte[] message)
         {
-            return JsonSerializer.Deserialize<WhiteboardEventMessage>(message);
-        }
+            
+            return System.Text.Json.JsonSerializer.Deserialize<WhiteboardEventMessage>(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0'));
+            
+            WhiteboardEventMessage models = JsonConvert.DeserializeObject<WhiteboardEventMessage>(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0')), new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+        }*/
+        /*
+        public override WhiteboardMessage DeSerialize(byte[] message)//TODO move this to descendants
+        {
+            using (var stream = new MemoryStream(message))
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return Newtonsoft.Json.JsonSerializer.Create().Deserialize(reader, typeof(WhiteboardEventMessage)) as WhiteboardEventMessage;
+            }
+        }*/
     }
 }
