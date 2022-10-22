@@ -272,7 +272,7 @@ function Chat() {
 
                 <div className='icons_up'>
 
-                    <button className='whiteboard'
+                    <button className='whiteboard_button'
                         onClick={() => { navigate("/whiteboard") }}>
                         <img src="/images/whiteboard.png" ></img>
                     </button>
