@@ -20,11 +20,6 @@ namespace Messzendzser.WhiteBoard
             Color = color;
         }
 
-        public override WhiteboardEvent Deserialize(string data)
-        {
-            return JsonSerializer.Deserialize<WhiteboardDotEvent>(data);
-        }
-
         public override SKCanvas Draw(SKCanvas canvas)
         {
             canvas.DrawPoint(Position.X, Position.Y, new SKPaint() { Color = new SKColor(Color) });

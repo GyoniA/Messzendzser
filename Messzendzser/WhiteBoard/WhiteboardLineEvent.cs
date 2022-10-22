@@ -23,16 +23,10 @@ namespace Messzendzser.WhiteBoard
             Color = color;
         }
 
-        public override WhiteboardEvent Deserialize(string data)
-        {
-            return JsonSerializer.Deserialize<WhiteboardLineEvent>(data);
-        }
-
         public override SKCanvas Draw(SKCanvas canvas)
         {
             canvas.DrawLine(Start.X, Start.Y, End.X, End.Y, new SKPaint() { Color = new SKColor(Color) });
             return canvas;
         }
-
     }
 }

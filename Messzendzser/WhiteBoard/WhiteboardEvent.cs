@@ -11,53 +11,7 @@ using System.ComponentModel;
 using Newtonsoft.Json.Converters;
 
 namespace Messzendzser.WhiteBoard
-{/*
-    public class WhiteboardEventSpecifiedConcreteClassConverter : DefaultContractResolver
-    {
-        protected override Newtonsoft.Json.JsonConverter ResolveContractConverter(Type objectType)
-        {
-            if (typeof(WhiteboardEvent).IsAssignableFrom(objectType) && !objectType.IsAbstract)
-                return null; // pretend TableSortRuleConvert is not specified (thus avoiding a stack overflow)
-            return base.ResolveContractConverter(objectType);
-        }
-    }
-
-    public class WhiteboardEventConverter : Newtonsoft.Json.JsonConverter
-    {
-        static JsonSerializerSettings SpecifiedSubclassConversion = new JsonSerializerSettings() { ContractResolver = new WhiteboardEventSpecifiedConcreteClassConverter() };
-
-        public override bool CanConvert(Type objectType)
-        {
-            return (objectType == typeof(WhiteboardEvent));
-        }
-
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
-        {
-            JObject jo = JObject.Load(reader);
-            switch (jo["ObjType"].Value<EventType>())
-            {
-                case EventType.Image:
-                    return JsonConvert.DeserializeObject<WhiteboardImageEvent>(jo.ToString(), SpecifiedSubclassConversion);
-                case EventType.Dot:
-                    return JsonConvert.DeserializeObject<WhiteboardDotEvent>(jo.ToString(), SpecifiedSubclassConversion);
-                case EventType.Line:
-                    return JsonConvert.DeserializeObject<WhiteboardLineEvent>(jo.ToString(), SpecifiedSubclassConversion);
-                default:
-                    throw new Exception();
-            }
-            throw new NotImplementedException();
-        }
-
-        public override bool CanWrite
-        {
-            get { return false; }
-        }
-
-        public override void WriteJson(JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
-        {
-            throw new NotImplementedException(); // won't be called because CanWrite returns false
-        }
-    }*/
+{
     public struct Point
     {
         public float X { get; set; }
@@ -127,13 +81,5 @@ namespace Messzendzser.WhiteBoard
                     return null;
             }
         }
-
-        public string Serialize() {
-            //TODO check if correct
-            string json = System.Text.Json.JsonSerializer.Serialize(this, this.GetType());
-            return json;
-        }
-
-        public abstract WhiteboardEvent Deserialize(string data);
     }
 }

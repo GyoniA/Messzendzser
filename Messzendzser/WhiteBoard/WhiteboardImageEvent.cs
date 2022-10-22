@@ -13,11 +13,6 @@ namespace Messzendzser.WhiteBoard
 
         public Whiteboard Board { get; set; }
 
-        public override WhiteboardEvent Deserialize(string data)
-        {
-            return JsonSerializer.Deserialize<WhiteboardImageEvent>(data);
-        }
-
         private SKBitmap HighlightWord(byte[] bytes)
         {
             var ms = new MemoryStream(bytes);
