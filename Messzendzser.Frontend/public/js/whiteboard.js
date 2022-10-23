@@ -56,6 +56,14 @@ class WhiteboardOkMessage {
     }
 }
 
+var started = false;
+
+function startIfNotStarted(canvas,uri,token,chatroomId) {
+    if (!started) {
+        started = true;
+        let wbMan = new WhiteboardManager(canvas, uri, token, chatroomId);
+    }
+}
 
 class WhiteboardManager {
     constructor(canvas, websocketURI, token, chatroomId) {
@@ -82,7 +90,6 @@ class WhiteboardManager {
         this.drawImage = function (b64) {
             var image = new Image();
             image.src = 'data:image/png;base64,' + b64;
-            document.body.appendChild(image);
             setTimeout(function () { self.canvasContext.drawImage(image, 0, 0) }, 100);
             
         }
