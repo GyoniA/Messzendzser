@@ -32,14 +32,12 @@ namespace Messzendzser.WhiteBoard
 
         public async Task AddConnectionAsync(WhiteboardConnection connection, WhiteboardManager whiteboardManager)
         {
+            new MediaManager().StoreWhiteboard(GetData(), RoomId);
+            events.Clear();
             if (!connections.TryAdd(connection.Username, connection))
             {
                 connections[connection.Username] = connection;
             }
-            WhiteboardEventMessage wem = new WhiteboardEventMessage(RoomId);
-            wem.Events = new LinkedList<WhiteboardEvent>(events.ToImmutableList());
-            var data = wem.Serialize();
-            await whiteboardManager.SendMessageWithCheck(connection.Client, connection, connection.IsAliveTimer, data);
         }
 
         public void RemoveConnection(WhiteboardConnection connection)
