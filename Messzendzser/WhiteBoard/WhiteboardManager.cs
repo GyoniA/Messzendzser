@@ -24,6 +24,7 @@
             Authenticated
         }
 
+        private const int bufferSize = 1024 * 40;
         private int waitTime = 5000;
         
         //stores each chatrooms whiteboard
@@ -84,7 +85,7 @@
         {
 
             // Buffer for reading data
-            Byte[] sentMessage = new Byte[1024 * 40];
+            Byte[] sentMessage = new Byte[bufferSize];
             String data = null;
             WhiteboardMessage wMessage;
             int i;
@@ -176,7 +177,7 @@
                     default:
                         break;
                 }
-                sentMessage = new Byte[1024 * 40];
+                sentMessage = new Byte[bufferSize];
                 receiveResult = await client.ReceiveAsync(sentMessage, CancellationToken.None);
             }
             if (wConn != null)
