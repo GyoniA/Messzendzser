@@ -7,11 +7,12 @@ namespace Messzendzser.Controllers
 
     public class WebSocketController : ControllerBase
     {
-        WhiteboardManager whiteboardManager;
+        static WhiteboardManager whiteboardManager = null;
         [HttpGet("/ws/whiteboard")]
-        public async Task Get(WhiteboardManager whiteboardManager)
+        public async Task Get()
         {
-            this.whiteboardManager = whiteboardManager;
+            if(whiteboardManager == null)
+                whiteboardManager = new WhiteboardManager();            
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
