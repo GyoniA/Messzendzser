@@ -10,8 +10,10 @@
     <canvas id="whiteboardCanvas" width="1000" height="1000" style="border:1px solid #000000;"></canvas>
 
     <script>
+        setTimeout(function () { 
         let c = document.getElementById("whiteboardCanvas")
-        startIfNotStarted(c, "wss://localhost:7043/ws/whiteboard", 'bsd', 10)
+            startIfNotStarted(c, "wss://localhost:7043/ws/whiteboard", 'bsd', 10)
+        }, 100);
     </script>
 </body>
 </html>
