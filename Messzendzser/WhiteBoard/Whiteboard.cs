@@ -35,11 +35,11 @@ namespace Messzendzser.WhiteBoard
             if (!connections.TryAdd(connection.Username, connection))
             {
                 connections[connection.Username] = connection;
-                WhiteboardEventMessage wem = new WhiteboardEventMessage(RoomId);
-                wem.Events = new LinkedList<WhiteboardEvent>(events.ToImmutableList());
-                var data = wem.Serialize();
-                await whiteboardManager.SendMessageWithCheck(connection.Client, connection, connection.IsAliveTimer, data);
             }
+            WhiteboardEventMessage wem = new WhiteboardEventMessage(RoomId);
+            wem.Events = new LinkedList<WhiteboardEvent>(events.ToImmutableList());
+            var data = wem.Serialize();
+            await whiteboardManager.SendMessageWithCheck(connection.Client, connection, connection.IsAliveTimer, data);
         }
 
         public void RemoveConnection(WhiteboardConnection connection)
