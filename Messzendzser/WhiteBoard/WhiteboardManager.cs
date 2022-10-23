@@ -84,7 +84,7 @@
         {
 
             // Buffer for reading data
-            Byte[] sentMessage = new Byte[1024 * 4];
+            Byte[] sentMessage = new Byte[1024 * 40];
             String data = null;
             WhiteboardMessage wMessage;
             int i;
@@ -176,7 +176,7 @@
                     default:
                         break;
                 }
-                sentMessage = new Byte[1024 * 4];
+                sentMessage = new Byte[1024 * 40];
                 receiveResult = await client.ReceiveAsync(sentMessage, CancellationToken.None);
             }
             if (wConn != null)
