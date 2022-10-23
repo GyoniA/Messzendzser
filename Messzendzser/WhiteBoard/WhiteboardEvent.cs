@@ -41,6 +41,8 @@ namespace Messzendzser.WhiteBoard
                     return new WhiteboardDotEvent();
                 case EventType.Line:
                     return new WhiteboardLineEvent();
+                case EventType.Clear:
+                    return new WhiteboardClearEvent();
                 default:
                     throw new NotImplementedException();
             }
@@ -51,7 +53,8 @@ namespace Messzendzser.WhiteBoard
     {
         Image = 0,
         Dot = 1,
-        Line = 2
+        Line = 2 ,
+        Clear = 3
     }
     [Newtonsoft.Json.JsonConverter(typeof(WhiteboardEventConverter))]
     public abstract class WhiteboardEvent
@@ -75,6 +78,8 @@ namespace Messzendzser.WhiteBoard
                     return new WhiteboardDotEvent();
                 case EventType.Line:
                     return new WhiteboardLineEvent();
+                case EventType.Clear:
+                    return new WhiteboardClearEvent();
                 default:
                     return null;
             }
