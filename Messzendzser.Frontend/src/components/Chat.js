@@ -16,12 +16,12 @@ function Chat() {
 
     const [isRecording, setIsRecording] = useState(false);
     const [blobURL, setBlobURL] = useState("");
-    const [duration, setDuration] = useState("");
     const [Mp3Recorder, setMp3Recorder] = useState(
         new MicRecorder({ bitRate: 128 })
     );
 
     var userId;
+    var voiceData;
 
 
     const messageNum = 20;
@@ -62,8 +62,8 @@ function Chat() {
 
     //Send Voice to API
     let voiceSent = async (e) => {
-        var data = blobURL;
-        
+        var data = new FormData(voiceData);
+
         try {
             let res = await fetch("https://localhost:7043/api/SendVoice", {
                 method: "POST",
@@ -72,11 +72,12 @@ function Chat() {
 
                 headers: {
                     'Access-Control-Allow-Origin': '*',
-                 
+                    format: 'MP3',
                     chatroomId: chatroomId,
+                    length: 200,
                 },
                 body: data,
-                
+
 
 
             });
@@ -290,11 +291,12 @@ function Chat() {
     const btnManager = () => {
         if (!isRecording) {
 
-             startRecording();
-           
+            startRecording();
+
         } else {
 
             stopRecording();
+            voiceSent();
 
         }
     }
@@ -304,9 +306,9 @@ function Chat() {
         Mp3Recorder
             .start()
             .then(() => {
-                
+
                 setIsRecording(true);
-                
+
             }).catch((e) => console.error(e));
 
     };
@@ -316,13 +318,16 @@ function Chat() {
             .stop()
             .getMp3()
             .then(([buffer, blob]) => {
-                
+
+                voiceData = new FormData();
+                voiceData.append("blob", blob);
+
                 const blobURL = URL.createObjectURL(blob);
                 setBlobURL(blobURL);
-                
+
                 setIsRecording(false);
-                
-                voiceSent();
+
+
             }).catch((e) => console.log(e));
     };
 
@@ -381,13 +386,16 @@ function Chat() {
                 </input>
 
 
-                <audio src={blobURL} controls="controls" />
+                <form className="voiceSend" id="voice" >
+                    <audio src={blobURL} controls="controls" />
 
-                <button className='microphone'
-                    onClick={btnManager}>
-                    <img src="/images/microphone.png" ></img>
-                </button>
 
+                    <button className='microphone'
+                        onClick={btnManager}
+                        name="voice">
+                        <img src="/images/microphone.png" ></img>
+                    </button>
+                </form>
 
 
                 <form className="imageSend" id="uploadImg" >
