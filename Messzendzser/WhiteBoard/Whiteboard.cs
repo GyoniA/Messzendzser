@@ -30,11 +30,15 @@ namespace Messzendzser.WhiteBoard
             Canvas.Clear(SKColor.Parse("#FFFFFF"));
         }
 
-        public void AddConnection(WhiteboardConnection connection)
+        public async Task AddConnectionAsync(WhiteboardConnection connection, WhiteboardManager whiteboardManager)
         {
             if (!connections.TryAdd(connection.Username, connection))
             {
                 connections[connection.Username] = connection;
+                WhiteboardEventMessage wem = new WhiteboardEventMessage(RoomId);
+                wem.Events = new LinkedList<WhiteboardEvent>(events.ToImmutableList());
+                var data = wem.Serialize();
+                await whiteboardManager.SendMessageWithCheck(connection.Client, connection, connection.IsAliveTimer, data);
             }
         }
 
@@ -44,6 +48,7 @@ namespace Messzendzser.WhiteBoard
             if (connections.Count == 0)
             {
                 new MediaManager().StoreWhiteboard(GetData(), RoomId);
+                events.Clear();
             }
         }
 
