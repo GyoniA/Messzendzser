@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import recordAudio from './recordAudio';
+import MicRecorder from 'mic-recorder-to-mp3';
 
 
 function Chat() {
@@ -14,31 +14,69 @@ function Chat() {
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
 
+    const [isRecording, setIsRecording] = useState(false);
+    const [blobURL, setBlobURL] = useState("");
+    const [duration, setDuration] = useState("");
+    const [Mp3Recorder, setMp3Recorder] = useState(
+        new MicRecorder({ bitRate: 128 })
+    );
+
     var userId;
+
 
     const messageNum = 20;
 
 
 
-
-    //Sen Image to API
+    //Send Image to API
     let imageSent = async (e) => {
         var data = new FormData(document.getElementById("uploadImg"));
-        if (data != null) {
-            console.log("ok");
-        }
         try {
             let res = await fetch("https://localhost:7043/api/SendImage", {
                 method: "POST",
                 mode: 'cors',
                 credentials: "include",
-                
+
                 headers: {
                     'Access-Control-Allow-Origin': '*',
-                   
+
                     chatroomId: chatroomId,
                 },
                 body: data,
+
+
+            });
+            let resJson = await res.json();
+
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+
+                }
+            }
+        } catch (err) {
+            console.log(err);
+
+        }
+
+    };
+
+    //Send Voice to API
+    let voiceSent = async (e) => {
+        var data = blobURL;
+        
+        try {
+            let res = await fetch("https://localhost:7043/api/SendVoice", {
+                method: "POST",
+                mode: 'cors',
+                credentials: "include",
+
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                 
+                    chatroomId: chatroomId,
+                },
+                body: data,
+                
 
 
             });
@@ -123,13 +161,7 @@ function Chat() {
         }
     };
 
-    /*const record = async () => {
-        const recorder = await recordAudio();
-        recorder.start();
-        await sleep(3000);
-        const audio = await recorder.stop();
-        audio.play();
-    };*/
+
 
     //Load chatrooms from API
     const loadChatrooms = async (e) => {
@@ -222,7 +254,7 @@ function Chat() {
                 if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
-                            <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent( msg.token)}>
+                            <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)}>
                             </img>
                         </li>
                     )
@@ -254,6 +286,46 @@ function Chat() {
             </option>;
         });
     };
+
+    const btnManager = () => {
+        if (!isRecording) {
+
+             startRecording();
+           
+        } else {
+
+            stopRecording();
+
+        }
+    }
+
+    const startRecording = () => {
+
+        Mp3Recorder
+            .start()
+            .then(() => {
+                
+                setIsRecording(true);
+                
+            }).catch((e) => console.error(e));
+
+    };
+
+    const stopRecording = () => {
+        Mp3Recorder
+            .stop()
+            .getMp3()
+            .then(([buffer, blob]) => {
+                
+                const blobURL = URL.createObjectURL(blob);
+                setBlobURL(blobURL);
+                
+                setIsRecording(false);
+                
+                voiceSent();
+            }).catch((e) => console.log(e));
+    };
+
 
     return (
 
@@ -309,9 +381,10 @@ function Chat() {
                 </input>
 
 
+                <audio src={blobURL} controls="controls" />
+
                 <button className='microphone'
-                //onClick={recordAudio()}
-                >
+                    onClick={btnManager}>
                     <img src="/images/microphone.png" ></img>
                 </button>
 
