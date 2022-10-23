@@ -179,7 +179,7 @@
                     default:
                         break;
                 }
-                sentMessage = Array.Empty<byte>();
+                sentMessage = new byte[bufferSize];
                 receiveResult = await client.ReceiveAsync(sentMessage, CancellationToken.None);
             }
             if (wConn != null)
