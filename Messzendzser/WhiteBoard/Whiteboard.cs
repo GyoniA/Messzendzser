@@ -30,23 +30,30 @@ namespace Messzendzser.WhiteBoard
             Canvas.Clear(SKColor.Parse("#FFFFFF"));
         }
 
-        public async Task AddConnectionAsync(WhiteboardConnection connection, WhiteboardManager whiteboardManager)
+        public void SaveDataToFile()
         {
             new MediaManager().StoreWhiteboard(GetData(), RoomId);
             events.Clear();
+        }
+        
+        public async Task AddConnectionAsync(WhiteboardConnection connection)
+        {
+            if (connections.Count > 0)
+            {
+                SaveDataToFile();
+            }
             if (!connections.TryAdd(connection.Username, connection))
             {
                 connections[connection.Username] = connection;
             }
         }
 
-        public void RemoveConnection(WhiteboardConnection connection)
+        public void RemoveConnectionAsync(WhiteboardConnection connection)
         {
             connections.TryRemove(connection.Username, out _);
             if (connections.Count == 0)
             {
-                new MediaManager().StoreWhiteboard(GetData(), RoomId);
-                events.Clear();
+                SaveDataToFile();
             }
         }
 
