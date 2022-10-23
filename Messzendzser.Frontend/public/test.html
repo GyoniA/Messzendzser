@@ -4,17 +4,15 @@
 <head>
     <script src="js/whiteboard.js"></script>
     <script>
-        connect = function (name) {
+        window.onload = function () {
             let c = document.getElementById("whiteboardCanvas")
-            let wbMan = new WhiteboardManager(c, "wss://localhost:7043/ws/whiteboard", name, 10)
+            let wbMan = new WhiteboardManager(c, "wss://localhost:7043/ws/whiteboard", 'asd', 10)
         };
     </script>
     <meta charset="utf-8" />
     <title></title>
 </head>
 <body>
-    <input type="text" id="name" />
-    <input type="button" value="Connect" onclick="connect('asd')" />
     <canvas id="whiteboardCanvas" width="1000" height="1000" style="border:1px solid #000000;"></canvas>
 
 </body>
