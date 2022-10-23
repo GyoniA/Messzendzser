@@ -12,7 +12,6 @@
     using System.Net;
     using System.Net.Sockets;
     using System.Net.WebSockets;
-    using System.Text;
     using System.Threading;
     using System.Timers;
     using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -104,10 +103,8 @@
                 //TODO take this out after testing
                 data = System.Text.Encoding.ASCII.GetString(sentMessage, 0, receiveResult.Count);
                 Console.WriteLine("Received: {0}", data);
-
-                MessageType type = WhiteboardMessage.GetMessageType(sentMessage);
-                wMessage = WhiteboardMessage.GetMessageFromType(type);
-                wMessage = wMessage.DeSerialize(sentMessage);
+                
+                wMessage = WhiteboardMessage.DeSerialize(sentMessage);
 
                 switch (connState)
                 {

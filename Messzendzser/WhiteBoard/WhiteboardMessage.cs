@@ -1,11 +1,42 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Utilities;
 using System.Text;
-using System.Text.Json;
 
 namespace Messzendzser.WhiteBoard
 {
+    public class WhiteboardMessageConverter : CustomCreationConverter<WhiteboardMessage>
+    {
+        private MessageType _currentObjectType;
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        {
+            var jobj = JObject.ReadFrom(reader);
+            _currentObjectType = jobj["Type"].ToObject<MessageType>();
+            return base.ReadJson(jobj.CreateReader(), objectType, existingValue, serializer);
+        }
+
+        public override WhiteboardMessage Create(Type objectType)
+        {
+            switch (_currentObjectType)
+            {
+                case MessageType.Authentication:
+                    return new WhiteboardAuthenticationMessage();
+                case MessageType.Denied:
+                    return new WhiteboardDeniedMessage();
+                case MessageType.OK:
+                    return new WhiteboardOKMessage();
+                case MessageType.IsAlive:
+                    return new WhiteboardIsAliveMessage();
+                case MessageType.Event:
+                    return new WhiteboardEventMessage();
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+    }
     public enum MessageType
         {
             Authentication = 0,
@@ -14,6 +45,7 @@ namespace Messzendzser.WhiteBoard
             IsAlive = 3,
             Event = 4
         }
+    [Newtonsoft.Json.JsonConverter(typeof(WhiteboardMessageConverter))]
     public abstract class WhiteboardMessage
     {
         public MessageType Type { get; set; }
@@ -53,31 +85,13 @@ namespace Messzendzser.WhiteBoard
             return Encoding.UTF8.GetBytes(stringData);
         }
         
-        public WhiteboardMessage DeSerialize(byte[] message)//TODO move this to descendants
+        public static WhiteboardMessage DeSerialize(byte[] message)//TODO move this to descendants
         {
             WhiteboardMessage wbmessage = JsonConvert.DeserializeObject<WhiteboardMessage>(Encoding.ASCII.GetString(message), new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Auto
             });
             return wbmessage;
-        }
-
-        public static MessageType GetMessageType(byte[] message)
-        {
-            try
-            {
-                string json = System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0');
-                using var jDoc = JsonDocument.Parse(json);
-                var myClass = jDoc.RootElement.GetProperty("Type").Deserialize<MessageType>();
-
-
-                return myClass;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"\n\nError in GetMessageType: {e.Message}\n\n");
-                throw;
-            }
         }
     }
 }
