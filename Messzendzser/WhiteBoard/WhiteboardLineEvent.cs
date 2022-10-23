@@ -25,7 +25,7 @@ namespace Messzendzser.WhiteBoard
 
         public override SKCanvas Draw(SKCanvas canvas)
         {
-            canvas.DrawLine(Start.X, Start.Y, End.X, End.Y, new SKPaint() { Color = new SKColor(Color) });
+            canvas.DrawLine(Start.X, Start.Y, End.X, End.Y, new SKPaint() { Color = new SKColor(Color), StrokeWidth = 3 });
             return canvas;
         }
     }

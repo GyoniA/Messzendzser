@@ -22,7 +22,7 @@ namespace Messzendzser.WhiteBoard
 
         public override SKCanvas Draw(SKCanvas canvas)
         {
-            canvas.DrawPoint(Position.X, Position.Y, new SKPaint() { Color = new SKColor(Color) });
+            canvas.DrawPoint(Position.X, Position.Y, new SKPaint() { Color = new SKColor(Color), StrokeWidth = 3 });
             return canvas;
         }
     }
