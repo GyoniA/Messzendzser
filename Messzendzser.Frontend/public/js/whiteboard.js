@@ -12,12 +12,10 @@ class Point {
 }
 
 class WhiteboardImageEvent extends WhiteboardEvent {
-    constructor(X, Y, color) {
+    constructor() {
         super();
         this.$type = "Messzendzser.WhiteBoard.WhiteboardImageEvent, Messzendzser";
         this.Type = 0;
-        this.Position = new Point(X, Y);
-        this.Color = color;
     }
 }
 
@@ -70,6 +68,12 @@ class WhiteboardManager {
         self.mousedown = false;
         self.events = [];
 
+        this.color = 4294901760;//4278190080; // Black color with 255 Alpha
+
+        this.setColor = function (newColor) {
+            self.color = newColor;
+        }
+
         this.sendMessage = function (json) {
             console.log('Sending data: ' + json);
             self.socket.send(json)
@@ -77,19 +81,25 @@ class WhiteboardManager {
 
         this.drawImage = function (b64) {
             var image = new Image();
-            image.src = 'data:image/png;base64,'+b64;
-            self.canvasContext.drawImage(image,0,0)
+            image.src = 'data:image/png;base64,' + b64;
+            document.body.appendChild(image);
+            setTimeout(function () { self.canvasContext.drawImage(image, 0, 0) }, 100);
+            
         }
 
         this.drawDot = function (x, y, color) {
             //self.canvasContext.fillStyle = color
             // todo set color
+            var c = '#' + color.toString(16).substring(2);
+            self.canvasContext.fillStyle = c;
             self.canvasContext.fillRect(x, y, 3, 3);
         }
 
         this.handleEvent = function (event) {
             if (event.Type == 1) { // Dot event
                 self.drawDot(event.Position.X, event.Position.Y, event.Color);
+            } else if (event.Type == 0) {
+                self.drawImage(event.Image)
             }
         }
 
@@ -126,8 +136,8 @@ class WhiteboardManager {
 
                 var x = e.offsetX == undefined ? e.layerX : e.offsetX;
                 var y = e.offsetY == undefined ? e.layerY : e.offsetY;
-                self.drawDot(x, y, 0xFF000000);
-                self.events.push(new WhiteboardDotEvent(x,y,0xFF000000));
+                self.drawDot(x, y, self.color);
+                self.events.push(new WhiteboardDotEvent(x,y,self.color));
             }
         });
 
