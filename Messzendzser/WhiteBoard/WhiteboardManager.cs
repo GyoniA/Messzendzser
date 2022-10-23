@@ -67,7 +67,7 @@
 
             DateTime lastMessage = DateTime.MinValue;
             lastTimestamps.TryGetValue(connection, out lastMessage);
-            if (DateTime.Now.Subtract(lastMessage).TotalMilliseconds > waitTime)
+            if (DateTime.Now.Subtract(lastMessage).TotalMilliseconds > waitTime*2)
             {//No response from client
 
                 whiteboards.TryGetValue(connection.RoomId, out Whiteboard whiteboard);
@@ -134,7 +134,9 @@
                                 Interval = waitTime,
                                 connection = wConn
                             };
-
+                            lastTimestamps.AddOrUpdate(wConn, DateTime.Now, (key, oldValue) => DateTime.Now);
+                            byte[] wbiam = new WhiteboardIsAliveMessage().Serialize();
+                            await SendMessageWithCheck(client, wConn, isAliveTimer, wbiam);
                             isAliveTimer.Elapsed += CheckIsAlive;
                             isAliveTimer.AutoReset = true;
                             isAliveTimer.Enabled = true;
