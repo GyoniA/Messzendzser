@@ -3,6 +3,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <script src="js/whiteboard.js"></script>
+    <script>
+        window.onload = function () {
+            let c = document.getElementById("whiteboardCanvas")
+            let wbMan = new WhiteboardManager(c, "wss://localhost:7043/ws/whiteboard", "token", 10)
+        };
+    </script>
     <meta charset="utf-8" />
     <title></title>
 </head>

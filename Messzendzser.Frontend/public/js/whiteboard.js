@@ -86,18 +86,27 @@ class WhiteboardManager {
             self.canvasContext.fillRect(x, y, 3, 3);
         }
 
+        this.handleEvent = function (event) {
+            if (event.Type == 1) { // Dot event
+                self.drawDot(event.Position.X, event.Position.Y, event.Color);
+            }
+        }
+
+
         this.handleMessage = function (data) {
             if (self.state == "new") {
                 if (data.Type == 2) {
                     console.log("authentication succcessful")
                     self.state = "authenticated"
-                    setInterval(self.sendEvents, 500, null);
+                    setInterval(self.sendEvents, 50, null);
                 }
             } else if (this.state == "authenticated") {
                 if (data.Type == 3) {
                     var alive = new WhiteboardOkMessage();
                     var json = JSON.stringify(alive);
                     self.sendMessage(json);
+                } else if (data.Type == 4) { // Event
+                    data.Events.forEach((event, index) => { self.handleEvent(event) });
                 }
             }
         }
@@ -149,14 +158,7 @@ class WhiteboardManager {
             self.handleMessage(JSON.parse(event.data))
         };
     }
-
-
-    
 }
 
-window.onload = function () {
-    let c = document.getElementById("whiteboardCanvas")
-    let wbMan = new WhiteboardManager(c, "wss://localhost:7043/ws/whiteboard", "token", 10)
-};
 
 
