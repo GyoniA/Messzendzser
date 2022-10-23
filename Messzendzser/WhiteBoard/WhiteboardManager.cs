@@ -143,6 +143,10 @@
                             isAliveTimer.Start();
                             wConn.IsAliveTimer = isAliveTimer;
                             
+                            WhiteboardEventMessage wbim = new WhiteboardEventMessage();
+                            wbim.AddEvent(new WhiteboardImageEvent(wConn.RoomId));
+                            byte[] imageMessage = new WhiteboardEventMessage().Serialize();
+                            await SendMessageWithCheck(client, wConn, isAliveTimer, imageMessage);
                         }
                         break;
                     case State.Authenticated:

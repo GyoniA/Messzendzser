@@ -7,27 +7,20 @@ namespace Messzendzser.WhiteBoard
 {
     public class WhiteboardImageEvent : WhiteboardEvent
     {
+        public int RoomId { get; set; }
         public WhiteboardImageEvent() : base(EventType.Image)
         {
+            RoomId = -1;
         }
-
-        public Whiteboard Board { get; set; }
-
-        private SKBitmap HighlightWord(byte[] bytes)
+        public WhiteboardImageEvent(int id) : base(EventType.Image)
         {
-            var ms = new MemoryStream(bytes);
-
-            SKBitmap bitmap = SKBitmap.Decode(ms);
-            var canvas = new SKCanvas(bitmap);
-            
-
-            return bitmap;
+            RoomId = id;
         }
 
         public override SKCanvas Draw(SKCanvas canvas)
         {
             MediaManager mm = new MediaManager();
-            byte[] data = mm.LoadWhiteboard(Board.RoomId);
+            byte[] data = mm.LoadWhiteboard(RoomId);
 
             var ms = new MemoryStream(data);
 
