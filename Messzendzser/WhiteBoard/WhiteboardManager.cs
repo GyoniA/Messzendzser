@@ -147,7 +147,7 @@
                             
                             WhiteboardEventMessage wbim = new WhiteboardEventMessage();
                             wbim.AddEvent(new WhiteboardImageEvent(wConn.RoomId));
-                            byte[] imageMessage = new WhiteboardEventMessage().Serialize();
+                            byte[] imageMessage = wbim.Serialize();
                             await SendMessageWithCheck(client, wConn, isAliveTimer, imageMessage);
                         }
                         break;
@@ -238,7 +238,7 @@
             WhiteboardEventMessage wbem = new WhiteboardEventMessage(10, wbEvents);
             Console.Write("Event message with a line event: ");
             Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));
-            /*//clutters console so only use if testing
+            /*// clutters console so only use if testing
             WhiteboardImageEvent wbImage = new WhiteboardImageEvent(10);
             wbEvents.AddLast(wbImage);
             wbem = new WhiteboardEventMessage(10, wbEvents);
