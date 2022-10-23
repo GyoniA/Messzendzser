@@ -17,6 +17,7 @@ class WhiteboardDotEvent extends WhiteboardEvent {
         super();
         this.Position = new Point(X, Y);
         this.Color = color
+        this.$type = "WhiteboardDotEvent"
     }
 }
 
@@ -26,6 +27,8 @@ class WhiteboardLineEvent extends WhiteboardEvent {
         this.Start = new Point(startX, startY);
         this.End = new Point(endX, endY);
 
+        this.$type = "WhiteboardLineEvent"
+
         this.Position.Color = color
     }
 }
@@ -34,6 +37,7 @@ class WhiteboardEventMessage {
     constructor(events) {
         this.Type = 4;
         this.Events = events;
+        this.$type = "WhiteboardEventMessage"
     }
 }
 
@@ -70,7 +74,7 @@ class WhiteboardManager {
 
 
         this.sendAuthMessage = function () {
-            var auth = { "Type": 0, "Username": "Hello", "Password": "World", "ChatroomId": chatroomId };
+            var auth = { "$type": "WhiteboardAuthenticationMessage", "Type": 0, "Username": "Hello", "Password": "World", "ChatroomId": chatroomId };
             var json = JSON.stringify(auth);
             self.sendMessage(json);
         }
