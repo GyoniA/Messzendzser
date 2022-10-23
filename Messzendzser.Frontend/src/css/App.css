@@ -187,11 +187,11 @@ nav {
 }
 
 .whiteboard {
-    background-color: white;
+    background-color: black;
     height: calc(100vh - 2rem);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    
 }
 
 .options {
@@ -281,6 +281,20 @@ nav {
     cursor: pointer;
 }
 
+.canvas {
+
+    margin-top: 5rem;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 1000px;
+    height: 800px;
+}
+
+.wCanvas {
+    background-color: white;
+    
+}
 
 .chatapp {
     height: calc(100vh - 2rem);

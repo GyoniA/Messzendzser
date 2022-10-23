@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import MicRecorder from 'mic-recorder-to-mp3';
+import './WhiteBoard.js';
 
 
 function Chat() {
@@ -16,12 +17,13 @@ function Chat() {
 
     const [isRecording, setIsRecording] = useState(false);
     const [blobURL, setBlobURL] = useState("");
+    const [voiceData, setVoiceData] = useState("");
     const [Mp3Recorder, setMp3Recorder] = useState(
         new MicRecorder({ bitRate: 128 })
     );
 
     var userId;
-    var voiceData;
+   
 
 
     const messageNum = 20;
@@ -62,6 +64,9 @@ function Chat() {
 
     //Send Voice to API
     let voiceSent = async (e) => {
+        if (voiceData == null) {
+            console.log("ures");
+        }
         var data = new FormData(voiceData);
 
         try {
@@ -319,8 +324,10 @@ function Chat() {
             .getMp3()
             .then(([buffer, blob]) => {
 
-                voiceData = new FormData();
-                voiceData.append("blob", blob);
+                var vData = new FormData();
+                vData.append("blob", blob);
+
+                setVoiceData(vData);
 
                 const blobURL = URL.createObjectURL(blob);
                 setBlobURL(blobURL);
@@ -350,9 +357,17 @@ function Chat() {
                 <div className='icons_up'>
 
                     <button className='whiteboard_button'
-                        onClick={() => { navigate("/whiteboard") }}>
+                        onClick={() => {
+                            navigate("/whiteboard", {
+                                state: {
+                                    chatroomId: chatroomId,
+                                    token: document.cookie,
+                                }
+                            }) }}>
                         <img src="/images/whiteboard.png" ></img>
                     </button>
+
+
 
                     <button className='phone'>
                         <img src="/images/phone.png" ></img>
