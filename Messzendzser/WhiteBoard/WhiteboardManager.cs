@@ -73,7 +73,7 @@
             {//No response from client
 
                 whiteboards.TryGetValue(connection.RoomId, out Whiteboard whiteboard);
-                whiteboard?.RemoveConnectionAsync(connection);
+                whiteboard?.RemoveConnection(connection);
                 if(connection.Client.State!=WebSocketState.Closed)
                     await connection.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
                 ((CustomTimer)source).Stop();
@@ -125,7 +125,7 @@
                             Whiteboard board;
                             whiteboards.TryGetValue(auth.ChatroomId, out board);
                             wConn = new WhiteboardConnection(auth.Username, auth.ChatroomId, client);
-                            board?.AddConnectionAsync(wConn);
+                            board?.AddConnection(wConn);
                             byte[] wbm = new WhiteboardOKMessage().Serialize();
                             await SendMessageWithCheck(client, wConn, isAliveTimer, wbm);
                             connState = State.Authenticated;
@@ -185,7 +185,7 @@
             if (wConn != null)
             {
                 whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
-                whiteboard?.RemoveConnectionAsync(wConn);
+                whiteboard?.RemoveConnection(wConn);
             }
             isAliveTimer?.Stop();
             isAliveTimer?.Dispose();
@@ -203,7 +203,7 @@
                 if (wConn.Client.State != WebSocketState.Closed)
                     await wConn.Client.CloseAsync(WebSocketCloseStatus.NormalClosure, "No response from client", CancellationToken.None);
                 whiteboards.TryGetValue(wConn.RoomId, out Whiteboard whiteboard);
-                whiteboard?.RemoveConnectionAsync(wConn);
+                whiteboard?.RemoveConnection(wConn);
                 isAliveTimer?.Stop();
                 isAliveTimer?.Dispose();
             }

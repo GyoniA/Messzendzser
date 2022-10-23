@@ -36,7 +36,7 @@ namespace Messzendzser.WhiteBoard
             events.Clear();
         }
         
-        public async Task AddConnectionAsync(WhiteboardConnection connection)
+        public void AddConnection(WhiteboardConnection connection)
         {
             if (connections.Count > 0)
             {
@@ -48,7 +48,7 @@ namespace Messzendzser.WhiteBoard
             }
         }
 
-        public void RemoveConnectionAsync(WhiteboardConnection connection)
+        public void RemoveConnection(WhiteboardConnection connection)
         {
             connections.TryRemove(connection.Username, out _);
             if (connections.Count == 0)
