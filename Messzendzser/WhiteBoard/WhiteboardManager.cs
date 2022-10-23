@@ -2,6 +2,7 @@
 {
     using Messzendzser.Model.DB.Models;
     using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json.Linq;
     using Org.BouncyCastle.Utilities;
     using SkiaSharp;
     using System;
@@ -171,13 +172,14 @@
                             Whiteboard board;
                             whiteboards.TryGetValue(wConn.RoomId, out board);
                             //sending changes to whiteboard of this message
-                            board?.AddEvents(evMessage.GetEvents(),this);
+                            
+                            board?.AddEvents(evMessage.GetEvents(),this, wConn);
                         }
                         break;
                     default:
                         break;
                 }
-                sentMessage = new Byte[bufferSize];
+                sentMessage = Array.Empty<byte>();
                 receiveResult = await client.ReceiveAsync(sentMessage, CancellationToken.None);
             }
             if (wConn != null)
@@ -236,6 +238,13 @@
             WhiteboardEventMessage wbem = new WhiteboardEventMessage(10, wbEvents);
             Console.Write("Event message with a line event: ");
             Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));
+            /*clutters console so only use if testing
+            WhiteboardImageEvent wbImage = new WhiteboardImageEvent(10);
+            wbEvents.AddLast(wbImage);
+            wbem = new WhiteboardEventMessage(10, wbEvents);
+            Console.Write("Event message with a line and image event: ");
+            Console.WriteLine(System.Text.Encoding.UTF8.GetString(wbem.Serialize()));*/
+
             Console.WriteLine("\nend of json message event test\n\n");
         }
     }

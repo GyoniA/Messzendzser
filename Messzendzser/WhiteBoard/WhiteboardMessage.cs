@@ -85,7 +85,7 @@ namespace Messzendzser.WhiteBoard
             return Encoding.UTF8.GetBytes(stringData);
         }
         
-        public static WhiteboardMessage DeSerialize(byte[] message)//TODO move this to descendants
+        public static WhiteboardMessage DeSerialize(byte[] message)
         {
             WhiteboardMessage wbmessage = JsonConvert.DeserializeObject<WhiteboardMessage>(Encoding.ASCII.GetString(message), new JsonSerializerSettings
             {

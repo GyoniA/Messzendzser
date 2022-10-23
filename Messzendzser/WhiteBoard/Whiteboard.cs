@@ -52,7 +52,7 @@ namespace Messzendzser.WhiteBoard
             Canvas = e.Draw(Canvas);
         }
 
-        public async Task AddEvents(LinkedList<WhiteboardEvent> newEvents,WhiteboardManager whiteboardManager)
+        public async Task AddEvents(LinkedList<WhiteboardEvent> newEvents,WhiteboardManager whiteboardManager, WhiteboardConnection sender)
         {
             foreach (var e in newEvents)
             {
@@ -63,8 +63,11 @@ namespace Messzendzser.WhiteBoard
             wem.Events = newEvents;
             foreach (var c in connections)
             {
-                var data = wem.Serialize();
-                await whiteboardManager.SendMessageWithCheck(c.Value.Client, c.Value, c.Value.IsAliveTimer, data);
+                if (c.Value != sender)
+                {
+                    var data = wem.Serialize();
+                    await whiteboardManager.SendMessageWithCheck(c.Value.Client, c.Value, c.Value.IsAliveTimer, data);
+                }
             }
         }
 
