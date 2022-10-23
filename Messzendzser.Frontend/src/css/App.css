@@ -26,6 +26,9 @@ body {
     all:initial;
 }
 
+.voiceSend {
+    all: initial;
+}
 
 .register, .login, .home {
     position: absolute;
