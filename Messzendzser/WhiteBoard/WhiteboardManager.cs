@@ -125,7 +125,7 @@
                             Whiteboard board;
                             whiteboards.TryGetValue(auth.ChatroomId, out board);
                             wConn = new WhiteboardConnection(auth.Username, auth.ChatroomId, client);
-                            board?.AddConnectionAsync(wConn, this);
+                            board?.AddConnection(wConn);
                             byte[] wbm = new WhiteboardOKMessage().Serialize();
                             await SendMessageWithCheck(client, wConn, isAliveTimer, wbm);
                             connState = State.Authenticated;
