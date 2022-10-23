@@ -66,6 +66,7 @@ class WhiteboardManager {
         this.socket = new WebSocket(websocketURI);
         this.canvas = canvas;
         self.canvasContext = canvas.getContext("2d");
+        self.token = token;
         self.mousedown = false;
         self.events = [];
 
@@ -113,7 +114,7 @@ class WhiteboardManager {
 
 
         this.sendAuthMessage = function () {
-            var auth = { "$type": "Messzendzser.WhiteBoard.WhiteboardAuthenticationMessage, Messzendzser", "Type": 0, "Username": "Hello", "Password": "World", "ChatroomId": chatroomId };
+            var auth = { "$type": "Messzendzser.WhiteBoard.WhiteboardAuthenticationMessage, Messzendzser", "Type": 0, "Username": token, "Password": "World", "ChatroomId": chatroomId };
             var json = JSON.stringify(auth);
             self.sendMessage(json);
         }
