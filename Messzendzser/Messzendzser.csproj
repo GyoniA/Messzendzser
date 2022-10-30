@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Luminet_NetStandard" Version="1.2.52" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SIPSorcery" Version="6.0.11" />
     <PackageReference Include="SkiaSharp" Version="2.88.3" />
@@ -17,6 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\lumisoft.net\Luminet_NetStandard\Luminet_NetStandard.csproj" />
+    <ProjectReference Include="..\lumisoft.net\Luminet_NetStandard\Luminet_NetStandard.csproj" />
     <ProjectReference Include="..\Messzendszer.Model\Messzendzser.Model.csproj" />
   </ItemGroup>
 
