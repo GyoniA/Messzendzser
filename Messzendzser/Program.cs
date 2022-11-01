@@ -1,3 +1,4 @@
+using Messzendzser.Controllers;
 using Messzendzser.Model.DB;
 using Messzendzser.Voip;
 using Messzendzser.WhiteBoard;
@@ -35,6 +36,8 @@ WhiteboardManager.JsonTest();
 WhiteboardManager.JsonMessageEventTest();
 
 builder.Services.AddScoped<WhiteboardManager>();
+
+builder.Services.AddScoped<MessageSenderHub>();
 
 var app = builder.Build();
 
