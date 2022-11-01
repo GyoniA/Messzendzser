@@ -30,9 +30,9 @@ builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
 
 builder.Services.AddSwaggerGen();
 
-WhiteboardManager.JsonTest();
+//WhiteboardManager.JsonTest();
 
-WhiteboardManager.JsonMessageEventTest();
+//WhiteboardManager.JsonMessageEventTest();
 
 builder.Services.AddScoped<WhiteboardManager>();
 

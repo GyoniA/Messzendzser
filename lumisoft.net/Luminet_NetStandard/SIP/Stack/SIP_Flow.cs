@@ -9,6 +9,7 @@ using LumiSoft.Net.IO;
 using LumiSoft.Net.TCP;
 using LumiSoft.Net.UDP;
 using LumiSoft.Net.SIP.Message;
+using LumiSoft.Net.WebSoclet;
 
 namespace LumiSoft.Net.SIP.Stack
 {
@@ -108,6 +109,37 @@ namespace LumiSoft.Net.SIP.Stack
 
             // Dispose flow when TCP server session closed.
             session.Disposed += new EventHandler(delegate(object s,EventArgs e){
+                Dispose();
+            });
+
+            BeginReadHeader();
+        }
+
+        internal SIP_Flow(SIP_Stack stack, WebSocket_ServerSession session)
+        {
+            if (stack == null)
+            {
+                throw new ArgumentNullException("stack");
+            }
+            if (session == null)
+            {
+                throw new ArgumentNullException("session");
+            }
+
+            m_pStack = stack;
+            m_pTcpSession = session;
+
+            m_IsServer = true;
+            m_pLocalEP = session.LocalEndPoint;
+            m_pRemoteEP = session.RemoteEndPoint;
+            m_Transport = session.IsSecureConnection ? SIP_Transport.TLS : SIP_Transport.TCP;
+            m_CreateTime = DateTime.Now;
+            m_LastActivity = DateTime.Now;
+            m_ID = m_pLocalEP.ToString() + "-" + m_pRemoteEP.ToString() + "-" + m_Transport;
+            m_pMessage = new MemoryStream();
+
+            // Dispose flow when TCP server session closed.
+            session.Disposed += new EventHandler(delegate (object s, EventArgs e) {
                 Dispose();
             });
 

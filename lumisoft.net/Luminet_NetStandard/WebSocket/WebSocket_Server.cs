@@ -7,6 +7,8 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 
 namespace LumiSoft.Net.WebSoclet
 {
@@ -97,6 +99,13 @@ namespace LumiSoft.Net.WebSoclet
                 m_pSocket = socket;
 
                 m_pTags = new Dictionary<string, object>();
+
+                Error += WebSocket_Acceptor_Error;
+            }
+
+            private void WebSocket_Acceptor_Error(object sender, ExceptionEventArgs e)
+            {
+                Console.WriteLine("Error in websocket acceptor: "+e.Exception.ToString());
             }
 
             #region method Dispose
@@ -361,6 +370,12 @@ namespace LumiSoft.Net.WebSoclet
             m_pConnectionAcceptors = new List<WebSocket_Server<T>.WebSocket_Acceptor>();
             m_pListeningPoints = new List<WebSocket_Server<T>.ListeningPoint>();
             m_pSessions = new WebSocket_SessionCollection<WebSocket_ServerSession>();
+            Error += WebSocket_Server_Error;
+        }
+
+        private void WebSocket_Server_Error(object sender, Error_EventArgs e)
+        {
+            Console.WriteLine("Error in websocket server:" + e.Exception.Message);
         }
 
         #region method Dispose
@@ -463,7 +478,7 @@ namespace LumiSoft.Net.WebSoclet
         {
             if (m_IsDisposed)
             {
-                throw new ObjectDisposedException("TCP_Server");
+                throw new ObjectDisposedException("WebSocket_Server");
             }
             if (m_IsRunning)
             {
@@ -480,7 +495,9 @@ namespace LumiSoft.Net.WebSoclet
 
             m_pTimer_IdleTimeout = new TimerEx(30000, true);
             m_pTimer_IdleTimeout.Elapsed += new System.Timers.ElapsedEventHandler(m_pTimer_IdleTimeout_Elapsed);
-            m_pTimer_IdleTimeout.Enabled = true;
+            //m_pTimer_IdleTimeout.Enabled = true;
+            // TOOD reenable timeout check
+
 
             OnStarted();
         }
@@ -605,7 +622,12 @@ namespace LumiSoft.Net.WebSoclet
                 m_pListeningPoints.Clear();
 
                 // Create new listening points and start accepting connections.
-                foreach (IPBindInfo bind in m_pBindings)
+                //TODO create proper configurability
+                
+                Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
+                IPBindInfo[] tempBinds = new IPBindInfo[] { new IPBindInfo("localhost", BindInfoProtocol.TCP, 
+                    IPAddress.Any, 5062,SslMode.TLS,new X509Certificate2(@"..\cert\messzendzser.localhost.pfx","ExportPassword")) };
+                foreach (IPBindInfo bind in tempBinds)
                 {
                     try
                     {
@@ -684,7 +706,7 @@ namespace LumiSoft.Net.WebSoclet
             try
             {
                 T session = new T();
-                session.Init(this, socket, bindInfo.HostName, bindInfo.SslMode == SslMode.SSL, bindInfo.Certificate);
+                session.Init(this, socket, bindInfo.HostName, bindInfo.SslMode , bindInfo.Certificate);
 
                 // Maximum allowed connections exceeded, reject connection.
                 if (m_MaxConnections != 0 && m_pSessions.Count > m_MaxConnections)

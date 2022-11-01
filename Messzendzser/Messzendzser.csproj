@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\lumisoft.net\Luminet_NetStandard\Luminet_NetStandard.csproj" />
     <ProjectReference Include="..\lumisoft.net\Luminet_NetStandard\Luminet_NetStandard.csproj" />
     <ProjectReference Include="..\Messzendszer.Model\Messzendzser.Model.csproj" />
   </ItemGroup>

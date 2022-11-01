@@ -17,6 +17,11 @@ namespace LumiSoft.Net
         /// <summary>
         /// UDP protocol.
         /// </summary>
-        UDP
+        UDP,
+
+        /// <summary>
+        /// WebSocket protocol
+        /// </summary>
+        WebSocket
     }
 }

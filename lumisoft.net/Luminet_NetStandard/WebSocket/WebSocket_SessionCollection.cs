@@ -2,13 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
+using LumiSoft.Net.TCP;
 
 namespace LumiSoft.Net.WebSoclet
 {
     /// <summary>
     /// This class implements TCP session collection.
     /// </summary>
-    public class WebSocket_SessionCollection<T> where T : WebSocket_Session
+    public class WebSocket_SessionCollection<T> where T : TCP_Session
     {
         private Dictionary<string,T>    m_pItems            = null;
         private Dictionary<string,long> m_pConnectionsPerIP = null;

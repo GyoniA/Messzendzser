@@ -12,7 +12,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace LumiSoft.Net.WebSoclet
 {
-    public class WebSocket_ServerSession : WebSocket_Session
+    public class WebSocket_ServerSession : TCP_Session
     {
         private bool m_IsDisposed = false;
         private bool m_IsTerminated = false;
@@ -22,13 +22,15 @@ namespace LumiSoft.Net.WebSoclet
         private string m_LocalHostName = "";
         private IPEndPoint m_pLocalEP = null;
         private IPEndPoint m_pRemoteEP = null;
-        private bool m_IsSsl = false;
+        private SslMode m_IsSsl = SslMode.None;
         private bool m_IsSecure = false;
         private X509Certificate m_pCertificate = null;
         private NetworkStream m_pRawTcpStream = null;
         private SmartStream m_pTcpStream = null;
         private object m_pTag = null;
         private Dictionary<string, object> m_pTags = null;
+
+        private SslStream sslStream = null;
 
         /// <summary>
         /// Default constructor.
@@ -106,24 +108,28 @@ namespace LumiSoft.Net.WebSoclet
         /// <param name="hostName">Local host name.</param>
         /// <param name="ssl">Specifies if session should switch to SSL.</param>
         /// <param name="certificate">SSL certificate.</param>
-        internal void Init(object server, Socket socket, string hostName, bool ssl, X509Certificate certificate)
+        internal void Init(object server, Socket socket, string hostName, SslMode ssl, X509Certificate certificate)
         {
             // NOTE: We may not raise any event here !
 
             m_pServer = server;
             m_LocalHostName = hostName;
-            m_IsSsl = ssl;
             m_ID = Guid.NewGuid().ToString();
             m_ConnectTime = DateTime.Now;
             m_pLocalEP = (IPEndPoint)socket.LocalEndPoint;
             m_pRemoteEP = (IPEndPoint)socket.RemoteEndPoint;
             m_pCertificate = certificate;
 
+            m_IsSsl = ssl;
+
             socket.ReceiveBufferSize = 32000;
             socket.SendBufferSize = 32000;
 
             m_pRawTcpStream = new NetworkStream(socket, true);
-            m_pTcpStream = new SmartStream(m_pRawTcpStream, true);
+            sslStream = new SslStream(m_pRawTcpStream);
+            sslStream.AuthenticateAsServer(certificate);
+            
+            m_pTcpStream = new SmartStream(sslStream, true);
         }
 
         #endregion
@@ -135,7 +141,7 @@ namespace LumiSoft.Net.WebSoclet
         /// </summary>
         internal void StartI()
         {
-            if (m_IsSsl)
+            if (true)//m_IsSsl == SslMode.SSL)
             {
                 // Log
                 LogAddText("Starting SSL negotiation now.");
@@ -183,6 +189,12 @@ namespace LumiSoft.Net.WebSoclet
                 {
                     switchSecureCompleted(op);
                 }
+            }else if (m_IsSsl == SslMode.TLS) {
+                LogAddText("Starting TLS negotiation now.");
+                SslStream sslStream = new SslStream(m_pRawTcpStream);
+                sslStream.BeginAuthenticateAsServer(m_pCertificate, (e) => { 
+                    Console.WriteLine("Something happened with tls");
+                },null);
             }
             else
             {
@@ -312,7 +324,11 @@ namespace LumiSoft.Net.WebSoclet
                 try
                 {
                     m_pSslStream = new SslStream(m_pTcpSession.TcpStream.SourceStream, true);
-                    m_pSslStream.BeginAuthenticateAsServer(m_pTcpSession.m_pCertificate, this.BeginAuthenticateAsServerCompleted, null);
+                    m_pSslStream.AuthenticateAsServer(m_pTcpSession.m_pCertificate);//, this.BeginAuthenticateAsServerCompleted, null);
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes("HTTP/1.1 200 OK\r\nDate: Mon, 27 Jul 2009 12:28:53 GMT\r\nServer: Apache/2.2.14 (Win32)\r\nLast-Modified: Wed, 22 Jul 2009 19:15:56 GMT\r\nContent-Length: 88\r\nContent-Type: text/html\r\nConnection: Closed\r\n\r\nHello world!");
+
+                    // Send back a response.
+                    m_pSslStream.Write(msg, 0, msg.Length);
                 }
                 catch (Exception x)
                 {

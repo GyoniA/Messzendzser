@@ -13,6 +13,7 @@ using LumiSoft.Net.SIP.Message;
 using LumiSoft.Net.UDP;
 using LumiSoft.Net.TCP;
 using LumiSoft.Net.STUN.Client;
+using LumiSoft.Net.WebSoclet;
 
 namespace LumiSoft.Net.SIP.Stack
 {
@@ -214,6 +215,37 @@ namespace LumiSoft.Net.SIP.Stack
                 }
             }
 
+            /// <summary>
+            /// Creates new flow from TCP server session.
+            /// </summary>
+            /// <param name="session">TCP server session.</param>
+            /// <returns>Returns created flow.</returns>
+            /// <exception cref="ArgumentNullException">Is raised when <b>session</b> is null reference.</exception>
+            internal SIP_Flow CreateFromWebSocketSession(WebSocket_ServerSession session)
+            {
+                if (session == null)
+                {
+                    throw new ArgumentNullException("session");
+                }
+
+                string flowID = session.LocalEndPoint.ToString() + "-" + session.RemoteEndPoint.ToString() + "-" + (session.IsSecureConnection ? SIP_Transport.TLS : SIP_Transport.TCP);
+
+                lock (m_pLock)
+                {
+                    SIP_Flow flow = new SIP_Flow(m_pOwner.Stack, session);
+                    m_pFlows.Add(flowID, flow);
+                    flow.IsDisposing += new EventHandler(delegate (object s, EventArgs e) {
+                        lock (m_pLock)
+                        {
+                            m_pFlows.Remove(flowID);
+                        }
+                    });
+                    flow.Start();
+
+                    return flow;
+                }
+            }
+
             #endregion
 
 
@@ -310,6 +342,7 @@ namespace LumiSoft.Net.SIP.Stack
         private IPBindInfo[]                  m_pBinds       = null;
         private UDP_Server                    m_pUdpServer   = null;
         private TCP_Server<TCP_ServerSession> m_pTcpServer   = null;
+        private WebSocket_Server<WebSocket_ServerSession> m_pWebSocketServer   = null;
         private SIP_FlowManager               m_pFlowManager = null;
         private string                        m_StunServer   = null;
         private CircleCollection<IPAddress>   m_pLocalIPv4   = null;
@@ -335,6 +368,9 @@ namespace LumiSoft.Net.SIP.Stack
 
             m_pTcpServer = new TCP_Server<TCP_ServerSession>();
             m_pTcpServer.SessionCreated += new EventHandler<TCP_ServerSessionEventArgs<TCP_ServerSession>>(m_pTcpServer_SessionCreated);
+
+            m_pWebSocketServer = new WebSocket_Server<WebSocket_ServerSession>();
+            m_pWebSocketServer.SessionCreated += new EventHandler<WebSocket_ServerSessionEventArgs<WebSocket_ServerSession>>(m_pWebSocketServer_SessionCreated);
 
             m_pFlowManager = new SIP_FlowManager(this);
                         
@@ -422,6 +458,11 @@ namespace LumiSoft.Net.SIP.Stack
             m_pFlowManager.CreateFromSession(e.Session);
         }
 
+        private void m_pWebSocketServer_SessionCreated(object sender, WebSocket_ServerSessionEventArgs<WebSocket_ServerSession> e)
+        {
+            m_pFlowManager.CreateFromWebSocketSession(e.Session);
+        }
+
         #endregion
 
         #endregion
@@ -442,6 +483,7 @@ namespace LumiSoft.Net.SIP.Stack
                         
             m_pUdpServer.Start();
             m_pTcpServer.Start();
+            m_pWebSocketServer.Start();
         }
                                 
         #endregion
