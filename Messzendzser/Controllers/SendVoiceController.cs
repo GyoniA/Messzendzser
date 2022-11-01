@@ -54,9 +54,10 @@ namespace Messzendzser.Controllers
             #region Format verification
             if (format == null)
                 errors.Add("format", "Format cannot be empty");
-            else
-                if (!(format == "ogg"))
+            else 
+                if (!(format == "ogg" || (format == "MP3")))
                     errors.Add("format", "Unsupported format");
+            
             #endregion
 
             #region Voice verification            

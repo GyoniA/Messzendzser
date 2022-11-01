@@ -16,8 +16,8 @@ function WhiteBoard() {
 
 
     const Load = () => {
-        //setChatroomId(location.state.chatroomId);
-        //setToken(location.state.token);
+        setChatroomId(location.state.chatroomId);
+        setToken(location.state.token);
     }
 
 
@@ -62,6 +62,9 @@ function WhiteBoard() {
                     <button className='black'>
 
                     </button>
+
+                    <p>{chatroomId}</p>
+                    <p>{token}</p>
 
                 </div>
 

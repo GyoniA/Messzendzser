@@ -15,6 +15,9 @@ function Chat() {
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
 
+
+
+
     const [isRecording, setIsRecording] = useState(false);
     const [blobURL, setBlobURL] = useState("");
     const [voiceData, setVoiceData] = useState("");
@@ -23,7 +26,7 @@ function Chat() {
     );
 
     var userId;
-   
+
 
 
     const messageNum = 20;
@@ -67,7 +70,7 @@ function Chat() {
         if (voiceData == null) {
             console.log("ures");
         }
-        var data = new FormData(voiceData);
+        var data = voiceData;
 
         try {
             let res = await fetch("https://localhost:7043/api/SendVoice", {
@@ -207,6 +210,9 @@ function Chat() {
 
     const userIdSet = () => {
         let token = document.cookie;
+
+
+
         token = token.split('.')[1].replace('-', '+').replace('_', '/');
         let decoded = atob(token);
         decoded = (decoded.split(',')[0]).split(':')[1];
@@ -325,7 +331,7 @@ function Chat() {
             .then(([buffer, blob]) => {
 
                 var vData = new FormData();
-                vData.append("blob", blob);
+                vData.append("voice", blob);
 
                 setVoiceData(vData);
 
@@ -337,6 +343,8 @@ function Chat() {
 
             }).catch((e) => console.log(e));
     };
+
+
 
 
     return (
@@ -358,12 +366,20 @@ function Chat() {
 
                     <button className='whiteboard_button'
                         onClick={() => {
+
+                            let token = document.cookie;
+                            let array = token.split("=");
+                            token = array[1];
+
+
                             navigate("/whiteboard", {
                                 state: {
                                     chatroomId: chatroomId,
-                                    token: document.cookie,
+                                    token: token,
                                 }
-                            }) }}>
+                            })
+                        }}>
+
                         <img src="/images/whiteboard.png" ></img>
                     </button>
 
@@ -401,16 +417,16 @@ function Chat() {
                 </input>
 
 
-                <form className="voiceSend" id="voice" >
-                    <audio src={blobURL} controls="controls" />
+
+                <audio src={blobURL} controls="controls" />
 
 
-                    <button className='microphone'
-                        onClick={btnManager}
-                        name="voice">
-                        <img src="/images/microphone.png" ></img>
-                    </button>
-                </form>
+                <button className='microphone'
+                    onClick={btnManager}
+                    name="voice">
+                    <img src="/images/microphone.png" ></img>
+                </button>
+
 
 
                 <form className="imageSend" id="uploadImg" >
