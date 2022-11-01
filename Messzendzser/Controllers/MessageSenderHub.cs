@@ -28,12 +28,12 @@ namespace Messzendzser.Controllers
         public async Task SendImageMessage(byte[] imageData, string format, string chatroomId, string usertoken)
         {
             await Groups.Add(Context.ConnectionId, chatroomId);
-            Clients.OthersInGroup(chatroomId).addChatMessage(usertoken, imageData, format);
+            Clients.OthersInGroup(chatroomId).addChatImageMessage(usertoken, imageData, format);
         }
         public async Task SendVoiceMessage(byte[] voiceData, string format, string chatroomId, string usertoken, int length)
         {
             await Groups.Add(Context.ConnectionId, chatroomId);
-            Clients.OthersInGroup(chatroomId).addChatMessage(usertoken, voiceData, format, length);
+            Clients.OthersInGroup(chatroomId).addChatVoiceMessage(usertoken, voiceData, format, length);
         }
     }
 }
