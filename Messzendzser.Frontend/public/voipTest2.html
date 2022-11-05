@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="js/jssip.js"></script>
+    <script src="js/md5.min.js"></script>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <script>
+        //Configuration
+        var username = 'voip';
+        var password = 'Password1!';
+        var realm = 'localhost';
+        var ha1 = md5(username + ":" + realm + ":" + password);
+        var expiryTime = 360000; //?
+
+
+        var socket = new JsSIP.WebSocketInterface('wss://localhost:5062/ws');
+        var configuration = {
+            sockets: [socket],
+            authorization_user: "voip",
+            uri: 'sip:voip@localhost',
+            password: 'Password1!',
+            register_expires: expiryTime,
+            ha1: ha1
+        };
+        var coolPhone = new JsSIP.UA(configuration);
+        coolPhone.on('connected', function (e) { console.log("connected") });
+        coolPhone.on('disconnected', function (e) { console.log("disconnected") });
+        coolPhone.on('newRTCSession', function (e) { console.log("rtc event") });
+        coolPhone.on('registered', function (e) { console.log("registered") });
+        coolPhone.on('unregistered', function (e) { console.log("unregistered") });
+        coolPhone.on('registrationFailed', function (e) { console.log("registration failed") });
+        coolPhone.start();
+    </script>
+</body>
+</html>

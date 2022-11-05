@@ -45,6 +45,7 @@ namespace Messzendzser.Voip
         public SIPServer()
         {
             stack = new SIP_Stack();
+            stack.Realm = "localhost";
             //stack.HostName = "192.168.0.104";
             stack.BindInfo = new LumiSoft.Net.IPBindInfo[] { 
                 new LumiSoft.Net.IPBindInfo("192.168.0.104",LumiSoft.Net.BindInfoProtocol.TCP, IPAddress.Any, 5060) ,
@@ -55,6 +56,7 @@ namespace Messzendzser.Voip
             proxyCore.Authenticate += ProxyCore_Authenticate;
             proxyCore.ProxyMode = SIP_ProxyMode.Statefull | SIP_ProxyMode.Registrar;
             proxyCore.AddressExists += ProxyCore_AddressExists;
+            
             stack.Start();
         }
 

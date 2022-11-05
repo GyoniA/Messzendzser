@@ -624,7 +624,6 @@ namespace LumiSoft.Net.WebSoclet
                 // Create new listening points and start accepting connections.
                 //TODO create proper configurability
                 
-                Console.WriteLine(System.IO.Directory.GetCurrentDirectory());
                 IPBindInfo[] tempBinds = new IPBindInfo[] { new IPBindInfo("localhost", BindInfoProtocol.TCP, 
                     IPAddress.Any, 5062,SslMode.TLS,new X509Certificate2(@"..\cert\messzendzser.localhost.pfx","ExportPassword")) };
                 foreach (IPBindInfo bind in tempBinds)

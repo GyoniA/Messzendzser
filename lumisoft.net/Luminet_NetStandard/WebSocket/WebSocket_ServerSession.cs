@@ -9,6 +9,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Security.Cryptography.X509Certificates;
+using System.IO;
+using Luminet_NetStandard.WebSocket;
 
 namespace LumiSoft.Net.WebSoclet
 {
@@ -97,7 +99,6 @@ namespace LumiSoft.Net.WebSoclet
 
         #endregion
 
-
         #region method Init
 
         /// <summary>
@@ -128,8 +129,11 @@ namespace LumiSoft.Net.WebSoclet
             m_pRawTcpStream = new NetworkStream(socket, true);
             sslStream = new SslStream(m_pRawTcpStream);
             sslStream.AuthenticateAsServer(certificate);
+
+            WebSocket_Stream wss = new WebSocket_Stream(sslStream);
+            wss.StartHandshakeAsServer();
             
-            m_pTcpStream = new SmartStream(sslStream, true);
+            m_pTcpStream = new SmartStream(wss, true);
         }
 
         #endregion
@@ -185,10 +189,10 @@ namespace LumiSoft.Net.WebSoclet
                     switchSecureCompleted(op);
                 };
                 // Switch to secure completed synchronously.
-                if (!SwitchToSecureAsync(op))
+                /*if (!SwitchToSecureAsync(op))
                 {
                     switchSecureCompleted(op);
-                }
+                }*/
             }else if (m_IsSsl == SslMode.TLS) {
                 LogAddText("Starting TLS negotiation now.");
                 SslStream sslStream = new SslStream(m_pRawTcpStream);
