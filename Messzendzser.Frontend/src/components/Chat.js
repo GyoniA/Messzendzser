@@ -19,7 +19,7 @@ function Chat() {
 
 
     const [isRecording, setIsRecording] = useState(false);
-    const [blobURL, setBlobURL] = useState("");
+    const [URL, setURL] = useState("");
     const [voiceData, setVoiceData] = useState("");
     const [Mp3Recorder, setMp3Recorder] = useState(
         new MicRecorder({ bitRate: 128 })
@@ -67,10 +67,10 @@ function Chat() {
 
     //Send Voice to API
     let voiceSent = async (e) => {
-        if (voiceData == null) {
+        /*if (voiceData == null) {
             console.log("ures");
         }
-        var data = voiceData;
+        var data = voiceData;*/
 
         try {
             let res = await fetch("https://localhost:7043/api/SendVoice", {
@@ -82,9 +82,10 @@ function Chat() {
                     'Access-Control-Allow-Origin': '*',
                     format: 'MP3',
                     chatroomId: chatroomId,
+                    contentType: 'application/my-binary-type',
                     length: 200,
                 },
-                body: data,
+                body: voiceData,
 
 
 
@@ -330,13 +331,20 @@ function Chat() {
             .getMp3()
             .then(([buffer, blob]) => {
 
+                //var vData = new FormData();
+                //vData.append("voice", blob);
+
+                
+
+                /*const blobURL = URL.createObjectURL(blob);
+                setURL(blobURL);
+
+                console.log(blobURL);
+
                 var vData = new FormData();
-                vData.append("voice", blob);
+                vData.append("voice", blobURL);*/
 
-                setVoiceData(vData);
-
-                const blobURL = URL.createObjectURL(blob);
-                setBlobURL(blobURL);
+                setVoiceData(blob);
 
                 setIsRecording(false);
 
@@ -418,7 +426,7 @@ function Chat() {
 
 
 
-                <audio src={blobURL} controls="controls" />
+                <audio src={URL} controls="controls" />
 
 
                 <button className='microphone'
