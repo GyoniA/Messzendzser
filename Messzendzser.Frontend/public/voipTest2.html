@@ -8,21 +8,27 @@
     <title></title>
 </head>
 <body>
+    <input type="button" onclick="call()" value="Call" />
     <script>
+
+
+
         //Configuration
-        var username = 'voip';
-        var password = 'Password1!';
+        var username = 'voip1';
+        var password = 'f08313847640f5fff5e0049349fa43d1';
         var realm = 'localhost';
         var ha1 = md5(username + ":" + realm + ":" + password);
-        var expiryTime = 360000; //?
+        var expiryTime = 360000;
 
+        // Test configuration
+        var partnerName = 'voip';
 
         var socket = new JsSIP.WebSocketInterface('wss://localhost:5062/ws');
         var configuration = {
             sockets: [socket],
-            authorization_user: "voip",
-            uri: 'sip:voip@localhost',
-            password: 'Password1!',
+            authorization_user: username,
+            uri: 'sip:' + username + '@' + realm,
+            password: password,
             register_expires: expiryTime,
             ha1: ha1
         };
@@ -34,6 +40,30 @@
         coolPhone.on('unregistered', function (e) { console.log("unregistered") });
         coolPhone.on('registrationFailed', function (e) { console.log("registration failed") });
         coolPhone.start();
+
+
+        function call() {
+            var eventHandlers = {
+                'progress': function (data) { console.log("call progress") },
+                'failed': function (data) { console.log("call failed") },
+                'confirmed': function (data) { console.log("call progress") },
+                'ended': function (data) { console.log("call ended") }
+            };
+
+            var options = {
+                'eventHandlers': eventHandlers,
+                //'extraHeaders': ['X-Foo: foo', 'X-Bar: bar'],
+                'mediaConstraints': { 'audio': true, 'video': false },
+                'pcConfig': {
+                    'iceServers': [
+                        { 'urls': ['stun:stun.l.google.com:19302'] }/*,
+                        { 'urls': 'turn:example.com', 'username': 'foo', 'credential': ' 1234' }*/
+                    ]
+                }
+            };
+            console.log("calling sip:"+partnerName + '@' + realm);
+            coolPhone.call('sip:' + partnerName + '@' + realm, options);
+        }
     </script>
 </body>
 </html>

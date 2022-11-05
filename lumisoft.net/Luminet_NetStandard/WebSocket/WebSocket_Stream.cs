@@ -115,9 +115,9 @@ namespace Luminet_NetStandard.WebSocket
             string s = Encoding.UTF8.GetString(buffer);
             if (Regex.IsMatch(s, "^GET", RegexOptions.IgnoreCase))
             {
-                Console.BackgroundColor = ConsoleColor.Green;
+                /*Console.BackgroundColor = ConsoleColor.Green;
                 Console.WriteLine(s);
-                Console.BackgroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.Black;*/
                 // 1. Obtain the value of the "Sec-WebSocket-Key" request header without any leading or trailing whitespace
                 // 2. Concatenate it with "258EAFA5-E914-47DA-95CA-C5AB0DC85B11" (a special GUID specified by RFC 6455)
                 // 3. Compute SHA-1 and Base64 hash of the new value
@@ -134,9 +134,9 @@ namespace Luminet_NetStandard.WebSocket
                     "Sec-WebSocket-Accept: " + swkaSha1Base64 + "\r\n\r\n";
                 // HTTP/1.1 defines the sequence CR LF as the end-of-line marker
                 byte[] response = Encoding.UTF8.GetBytes(responseString);
-                Console.BackgroundColor = ConsoleColor.Red;
+                /*Console.BackgroundColor = ConsoleColor.Red;
                 Console.WriteLine(responseString);
-                Console.BackgroundColor = ConsoleColor.Black;
+                Console.BackgroundColor = ConsoleColor.Black;*/
                 inner.Write(response, 0, response.Length);
             }
         }
@@ -152,7 +152,7 @@ namespace Luminet_NetStandard.WebSocket
                 decoded  = decodeMaskedMessage(encoded);
                 Array.Copy(decoded, 0, buffer, offset, decoded.Length);
                 string decodedString = Encoding.UTF8.GetString(decoded);
-                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.BackgroundColor = ConsoleColor.Green;
                 Console.WriteLine(decodedString);
                 return decoded.Length;
             }

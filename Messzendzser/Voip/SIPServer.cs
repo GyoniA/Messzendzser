@@ -76,7 +76,7 @@ namespace Messzendzser.Voip
 
         private void ProxyCore_Authenticate(SIP_AuthenticateEventArgs e)
         {
-            Console.WriteLine("Authentication request: {0}, {1}", e.AuthContext.UserName, e.AuthContext.Password);
+            
             VoipCredential voipCredential = VoipCredentialManager.GetVoipCredential(e.AuthContext.UserName);
             if (/*e.AuthContext.Password.IsNullOrEmpty() ||*/ voipCredential == null) { 
                 e.Authenticated = false;
@@ -85,13 +85,13 @@ namespace Messzendzser.Voip
             if (e.AuthContext.Authenticate(voipCredential.VoipUsername, voipCredential.VoipPassword))
             {
                 e.Authenticated = true;
-                Console.WriteLine("Successful registration: {0}", e.AuthContext.UserName);
+                
                 return;
             }
             else
             {
                 e.Authenticated = false;
-                Console.WriteLine("Unsuccessful registration: {0}", e.AuthContext.UserName);
+                
                 return;
             }
         }
