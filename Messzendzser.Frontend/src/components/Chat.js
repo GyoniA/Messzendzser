@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import MicRecorder from 'mic-recorder-to-mp3';
 import './WhiteBoard.js';
 
+import DecideCall from './DecideCall.js';
+import InCall from'./InCall.js';
+
 
 function Chat() {
 
@@ -15,7 +18,9 @@ function Chat() {
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
 
+    const [name, setName] = useState("");
 
+    const [visibility, setVisibility] = useState(false);
 
 
     const [isRecording, setIsRecording] = useState(false);
@@ -352,7 +357,11 @@ function Chat() {
             }).catch((e) => console.log(e));
     };
 
+    const popupCloseHandler = (e) => {
+        setVisibility(e);
+    };
 
+    
 
 
     return (
@@ -393,9 +402,21 @@ function Chat() {
 
 
 
-                    <button className='phone'>
+                    <button className='phone'
+                        onClick={(e) => {setVisibility(!visibility); 
+                                        
+                                    }}>
                         <img src="/images/phone.png" ></img>
                     </button>
+
+                    <InCall
+                        onClose={popupCloseHandler}
+                        show={visibility}
+                        name={name}>
+                        
+                    </InCall>
+
+
                 </div>
 
             </div>

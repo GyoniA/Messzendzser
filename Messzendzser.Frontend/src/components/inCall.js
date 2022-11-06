@@ -1,19 +1,51 @@
 import React from "react";
+import { useEffect, useState } from "react";
 
-const inCall= props => {
+import PropTypes from "prop-types";
+
+const InCall = (props) => {
+
+    const [show, setShow] = useState(false);
+
+    const closeHandler = (e) => {
+        setShow(false);
+        props.onClose(false);
+    };
+
+    useEffect(() => {
+        setShow(props.show);
+    }, [props.show]);
+
     return (
-        <div className="in-call">
-            <div className="caller">
-                <h3>{props.content}</h3>
-            </div>
-            <div className="button">
+
+        <div
+            style={{
+                visibility: show ? "visible" : "hidden",
+                opacity: show ? "1" : "0"
+            }}
+            className="overlay">
+
+            <div className="popup">
+                <h2>Hivas:</h2>
+                <h3>{props.name}</h3>
                 
-                <button className='decline' onClick={props.handleClose}>
-                    <img src = "/images/dropcall.png" ></img>
-                </button>
+                <div className="button">
+
+                    <button className='decline' onClick={closeHandler}>
+                        <img src="/images/dropcall.png" ></img>
+                    </button>
+                </div>
+                
             </div>
+            
         </div>
     );
 };
 
-export default inCall;
+InCall.propTypes = {
+    name: PropTypes.string.isRequired,
+    show: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired
+};
+
+export default InCall;
