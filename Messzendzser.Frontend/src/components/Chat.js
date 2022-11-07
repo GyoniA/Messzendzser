@@ -158,7 +158,7 @@ function Chat() {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     chatroomId: chatroomId,
-                    count: 20,
+                    count: 40,
                     time: dateTime,
                     dir: "backward",
                 },
@@ -252,7 +252,7 @@ function Chat() {
                     return (
                         <li className="msg_from_me">
                             <audio controls>
-                                <source src="localhost:7043/api/GetVoice?voice=msg.token"
+                                <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                     type="audio/ogg">
                                 </source>
                             </audio>
@@ -261,7 +261,7 @@ function Chat() {
                 } else {
                     <li className="msg_from_other">
                         <audio controls>
-                            <source src="localhost:7043/api/GetVoice?voice=msg.token"
+                            <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                 type="audio/ogg">
                             </source>
                         </audio>
