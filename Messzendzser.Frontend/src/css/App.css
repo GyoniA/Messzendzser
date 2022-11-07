@@ -110,10 +110,23 @@ h3 {
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     align-self: flex-end;
 }
+.voice_from_me {
+    background: none;
+    width: fit-content;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    align-self: flex-end;
+}
 
 .msg_from_other {
     background: border-box;
     background: white;
+    width: fit-content;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    float: right;
+}
+
+.voice_from_other {
+    background: none;
     width: fit-content;
     padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     float: right;

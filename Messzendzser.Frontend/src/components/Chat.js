@@ -24,7 +24,6 @@ function Chat() {
 
 
     const [isRecording, setIsRecording] = useState(false);
-    const [URL, setURL] = useState("");
     const [voiceData, setVoiceData] = useState("");
     const [Mp3Recorder, setMp3Recorder] = useState(
         new MicRecorder({ bitRate: 128 })
@@ -72,10 +71,6 @@ function Chat() {
 
     //Send Voice to API
     let voiceSent = async (e) => {
-        /*if (voiceData == null) {
-            console.log("ures");
-        }
-        var data = voiceData;*/
 
         try {
             let res = await fetch("https://localhost:7043/api/SendVoice", {
@@ -250,7 +245,7 @@ function Chat() {
             if (msg.hasOwnProperty('length')) {
                 if (msg.userId == userId) {
                     return (
-                        <li className="msg_from_me">
+                        <li className="voice_from_me">
                             <audio controls>
                                 <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                     type="audio/ogg">
@@ -259,7 +254,7 @@ function Chat() {
                         </li>
                     )
                 } else {
-                    <li className="msg_from_other">
+                    <li className="voice_from_other">
                         <audio controls>
                             <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                 type="audio/ogg">
@@ -309,7 +304,7 @@ function Chat() {
         if (!isRecording) {
 
             startRecording();
-
+            
         } else {
 
             stopRecording();
@@ -335,19 +330,6 @@ function Chat() {
             .stop()
             .getMp3()
             .then(([buffer, blob]) => {
-
-                //var vData = new FormData();
-                //vData.append("voice", blob);
-
-                
-
-                /*const blobURL = URL.createObjectURL(blob);
-                setURL(blobURL);
-
-                console.log(blobURL);
-
-                var vData = new FormData();
-                vData.append("voice", blobURL);*/
 
                 setVoiceData(blob);
 
@@ -444,10 +426,6 @@ function Chat() {
                     placeholder='Üzenet írása...'
                     onChange={(e) => setMessage(e.target.value)}>
                 </input>
-
-
-
-                <audio src={URL} controls="controls" />
 
 
                 <button className='microphone'
