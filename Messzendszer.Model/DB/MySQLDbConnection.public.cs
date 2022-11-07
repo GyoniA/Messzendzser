@@ -89,7 +89,9 @@ namespace Messzendzser.Model.DB
                         chatroom.Users.Add(Users.Where(u => u.Id == userId).First());
                     }
                     dbContextTransaction.Commit();
-                }catch (Exception)
+                    SaveChanges();
+                }
+                catch (Exception)
                 {
                     dbContextTransaction.Rollback();
                     throw;

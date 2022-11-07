@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
+import WhiteboardComponent from "./WhiteboardComponent";
 
 
 function WhiteBoard() {
-    const script = document.createElement("script");
-    script.src = "js/whiteboard.js";
-    script.async = false;
-    document.body.appendChild(script);
+   
 
   
 
@@ -24,14 +22,6 @@ function WhiteBoard() {
     //Run once after the initial render
     useEffect(() => {
         Load();
-        const scriptLoad = document.createElement("script");
-        scriptLoad.innerHTML =
-            `setTimeout(function () {
-                let c = document.getElementById("whiteboardCanvas")
-                startIfNotStarted(c, "wss://localhost:7043/ws/whiteboard", 'asd', 10)
-            }, 100);`
-        scriptLoad.async = false;
-        document.body.appendChild(scriptLoad);
 
     }, []);
 
@@ -95,14 +85,7 @@ function WhiteBoard() {
 
 
             </div>
-
-            <div className='canvas'>
-                <canvas className='wCanvas' id="whiteboardCanvas" width="1000" height="800"></canvas>
-            </div>
-
-
-
-
+            <WhiteboardComponent uri="wss://localhost:7043/ws/whiteboard" token={location.state.token} chatroomId={location.state.chatroomId} />
         </div>
     );
 
