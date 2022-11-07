@@ -65,32 +65,28 @@ export default function Form(){
                         <h1>Bejelentkezés</h1>
 
                         <label>Felhasználónév / e-mail:</label>
-                        <input type="text" value={username} {...register("iden", {required:true})}placeholder='Felhasználónév / e-mail'
-                        onChange={(e) => setUsername(e.target.value)}/>
-                         {errors.iden?.type ==="required" && "Azonosító megadása kötelező"}
+                    <input type="text" value={username} required maxlength="10" placeholder='Felhasználónév / e-mail'
+                        onChange={(e) => setUsername(e.target.value)} />
+                         
                         
                          
                         <label>Jelszó:</label>
-                        <input type="password" value={password} {...register("password", {required:true, maxLength:10})}placeholder='Jelszó'
+                        <input type="password" value={password}  required maxlength="10" placeholder='Jelszó'
                         onChange={(e) => setPassword(e.target.value)}/>
-                        {errors.password?.type ==="required" && "Jelszó megadása kötelező"}
-                        {errors.password?.type ==="maxLength" && "Jelszó túl hosszú"}
+                        
 
                        
                         
                     <div className='row'>
-                        <div className='remember_me'>
-                            <label className='remember'>Emlékezz rám</label>
-                            <input className='box' type="checkbox" />
-                        </div>
-                            <button className='reference' 
+                        
+                            <button type="button" className='reference' 
                                     onClick={() => {navigate("/register")}}>
                                     Regisztráció
                             </button>
 
                         </div>
 
-                        <button className='btn'>Belépés</button>
+                        <button type="submit" className='btn'>Belépés</button>
 
                         <div className="message">{message ? <p>{message}</p> : null}</div>
                     </form> 

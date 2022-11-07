@@ -353,7 +353,7 @@ function Chat() {
             <div className='upper_row'>
 
 
-                <select onChange={(e) => setChatroomId(e.target.value)}>
+                <select  onChange={(e) => setChatroomId(e.target.value)} maxMenuHeight={250}>
                     <option value="choose" disabled selected="selected">
                         Név:
                     </option>
