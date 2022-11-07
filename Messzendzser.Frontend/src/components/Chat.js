@@ -107,7 +107,7 @@ function Chat() {
 
     //Send message to API
     let messageSent = async (e) => {
-        e.preventDefault();
+
         try {
             let res = await fetch("https://localhost:7043/api/SendMessage", {
                 method: "POST",
@@ -343,7 +343,13 @@ function Chat() {
         setVisibility(e);
     };
 
-    
+    const handleEnterPressed = (event) => {
+        
+        if (event.key === 'Enter') {
+            messageSent();
+            console.log("itt");
+        }
+    };
 
 
     return (
@@ -353,7 +359,7 @@ function Chat() {
             <div className='upper_row'>
 
 
-                <select onChange={(e) => setChatroomId(e.target.value)}>
+                <select  onChange={(e) => setChatroomId(e.target.value)} >
                     <option value="choose" disabled selected="selected">
                         Név:
                     </option>
@@ -414,6 +420,8 @@ function Chat() {
 
             <div className='bottom_row'>
 
+                
+
                 <button className='send'
                     onClick={messageSent}>
                     <img src="/images/send.png" ></img>
@@ -421,6 +429,7 @@ function Chat() {
 
 
                 <input className="msg"
+                    onKeyPress={handleEnterPressed}
                     type="text"
                     value={message}
                     placeholder='Üzenet írása...'

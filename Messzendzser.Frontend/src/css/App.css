@@ -209,17 +209,22 @@ label {
     cursor: pointer;
 }
 
+
 nav {
     height: 2rem;
     background-color: rgba(255, 255, 255, 0.4);
 }
 
 .whiteboard {
-    background-color: black;
-    height: calc(100vh - 2rem);
+
+    height: calc(160vh - 2rem);
     display: flex;
     flex-direction: column;
     
+}
+
+.canvas{
+    padding-top: 1rem;
 }
 
 .options {
@@ -334,7 +339,7 @@ nav {
 .row {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    align-self: flex-end;
 }
 
 .upper_row {
@@ -367,17 +372,6 @@ nav {
     flex: 3;
 }
 
-
-
-
-.remember {
-    width: fit-content;
-    font-size: 1.2em;
-}
-
-.box {
-    font-size: 1.2em;
-}
 
 .reference {
     cursor: pointer;

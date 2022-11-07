@@ -60,25 +60,20 @@ export default function Form(){
                         <h1>Regisztráció</h1>
 
                         <label>Felhasználónév:</label>
-                        <input type="text" value={username} {...register("username", {required:true, maxLength:10})}placeholder='Felhasználónév'
+                    <input type="text" value={username} required maxlength="10" placeholder='Felhasználónév'
                         onChange={(e) => setUsername(e.target.value)}/>
-                         {errors.username?.type ==="required" && "Felhasználónév megadása kötelező"}
-                        {errors.username?.type ==="maxLength" && "Felhasználónév túl hosszú"}
                         
                         <label>E-mail:</label>
-                        <input type="text" value={email} {...register("email", {required:true,})}placeholder='E-mail' 
+                    <input type="text" value={email} required  placeholder='E-mail' 
                         onChange={(e) => setEmail(e.target.value)}/>
-                        {errors.email?.type ==="required" && "E-mail cím megadása kötelező"}
 
                         <label>Jelszó:</label>
-                        <input type="password" value={password} {...register("password", {required:true, maxLength:10})}placeholder='Jelszó'
+                    <input type="password" value={password} required maxlength="10" placeholder='Jelszó'
                         onChange={(e) => setPassword(e.target.value)}/>
-                        {errors.password?.type ==="required" && "Jelszó megadása kötelező"}
-                        {errors.password?.type ==="maxLength" && "Jelszó túl hosszú"}
 
                     
 
-                        <button className='btn'>
+                    <button type="submit" className='btn'>
                           Regisztráció</button>
                           
                           <div className="message">{message ? <p>{message}</p> : null}</div>
