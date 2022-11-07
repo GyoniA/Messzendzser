@@ -26,6 +26,8 @@ namespace Messzendzser.Controllers
     {
         private IDataSource dataSource;
 
+        private const int BUFFER_SIZE = 6000000;
+
         private MessageSenderHub messageSenderHub;
         public SendVoiceController(IDataSource dataSource, MessageSenderHub messageSenderHub)
         {
@@ -39,12 +41,13 @@ namespace Messzendzser.Controllers
         {
             string? userToken = null;
             Request.Cookies.TryGetValue("user-token", out userToken);
-            IFormFile? file = Request.Form.Files.GetFile("voice");
-            return SendVoice(file, format, chatroomId,length, userToken, new MessageManager(dataSource), new MediaManager());
+            byte[] buffer = new byte[(int)Request.ContentLength];
+            Request.Body.ReadAsync(buffer, 0, buffer.Length);
+            return SendVoice(buffer, format, chatroomId,length, userToken, new MessageManager(dataSource), new MediaManager());
         }
 
         [NonAction]
-        public ResponseMessage<object> SendVoice(IFormFile? voice,string? format, string? chatroomId,string? length, string? usertoken, IMessageManager messageManager, IMediaManager mediaManager)
+        public ResponseMessage<object> SendVoice(byte[]? voice,string? format, string? chatroomId,string? length, string? usertoken, IMessageManager messageManager, IMediaManager mediaManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -118,17 +121,7 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    byte[] voiceData;
-                    // Record message
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        using (Stream inputStream = voice.OpenReadStream())
-                        {
-                            inputStream.CopyTo(memoryStream);
-                            voiceData = memoryStream.ToArray();
-                        }
-                    }
-                    messageManager.StoreVoiceMessage(voiceData, format, ChatroomId, token.ToUser(),Length, mediaManager);
+                    messageManager.StoreVoiceMessage(voice, format, ChatroomId, token.ToUser(),Length, mediaManager);
                     //messageSenderHub.SendVoiceMessage(voiceData, format, chatroomId, usertoken, Length);
 
                 }
