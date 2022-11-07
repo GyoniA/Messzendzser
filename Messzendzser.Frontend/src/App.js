@@ -16,11 +16,11 @@ function App() {
     return (
         <Router>
             <nav>
-                <Link to="/"> Főoldal   </Link>
-                <Link to="/register"> Regisztráció   </Link>
-                <Link to="/login"> Bejelentkezés  </Link>
-                <Link to="/whiteboard"> Whiteboard  </Link>
-                <Link to="/voip"> VoIP  </Link>
+                <Link to="/" style={{ paddingLeft: 5, paddingRight: 10, textDecoration: 'none' }}> Főoldal   </Link>
+                <Link to="/register" style={{ paddingRight: 10, textDecoration: 'none' }}> Regisztráció   </Link>
+                <Link to="/login" style={{ paddingRight: 10, textDecoration: 'none' }}> Bejelentkezés  </Link>
+                <Link to="/whiteboard" style={{ paddingRight: 10, textDecoration: 'none' }}> Whiteboard  </Link>
+                <Link to="/voip" style={{ textDecoration: 'none' }}> VoIP  </Link>
             </nav>
             <Routes>
                 <Route path="/" element={<Home />} />
