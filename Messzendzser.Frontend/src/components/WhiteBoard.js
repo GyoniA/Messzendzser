@@ -53,8 +53,7 @@ function WhiteBoard() {
 
                     </button>
 
-                    <p>{chatroomId}</p>
-                    <p>{token}</p>
+
 
                 </div>
 
