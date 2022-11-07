@@ -31,7 +31,7 @@ namespace Messzendzser.Model.DB
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=localhost;port=3306;database=messzendzser;uid=root;pwd=14Jelszo14", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.14-mariadb"));
+                optionsBuilder.UseMySql("server=localhost;port=3306;database=messzendzser;uid=root;pwd=1", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.14-mariadb"));
             }
         }
 

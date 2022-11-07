@@ -21,12 +21,9 @@ namespace Messzendzser.Controllers
     public class SendMessageController : ControllerBase
     {
         private IDataSource dataSource;
-
-        private MessageSenderHub messageSenderHub;
         public SendMessageController(IDataSource dataSource, MessageSenderHub messageSenderHub)
         {
             this.dataSource = dataSource;
-            this.messageSenderHub = messageSenderHub;
         }
 
         // POST api/SendMessage
@@ -88,7 +85,6 @@ namespace Messzendzser.Controllers
                 {
                     // Record message
                     messageManager.StoreMessage(message, ChatroomId, token.ToUser());
-                    //messageSenderHub.SendMessage(message, chatroomId, usertoken);
                     
                 }
                 catch (Exception ex) // Other exception

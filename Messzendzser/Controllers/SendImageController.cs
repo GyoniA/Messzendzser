@@ -23,12 +23,9 @@ namespace Messzendzser.Controllers
     public class SendImageController : ControllerBase
     {
         private IDataSource dataSource;
-
-        private MessageSenderHub messageSenderHub;
         public SendImageController(IDataSource dataSource, MessageSenderHub messageSenderHub)
         {
             this.dataSource = dataSource;
-            this.messageSenderHub = messageSenderHub;
         }
 
         // POST api/SendImage
@@ -111,7 +108,6 @@ namespace Messzendzser.Controllers
                         }
                     }
                     messageManager.StoreImageMessage(imageData,format, ChatroomId, token.ToUser(),mediaManager);
-                    //messageSenderHub.SendImageMessage(imageData, format, chatroomId, usertoken);
 
                 }
                 catch (Exception ex) // Other exception
