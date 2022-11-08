@@ -20,14 +20,30 @@ class WhiteboardComponent extends React.Component {
             
             const scriptLoad = document.createElement("script");
             scriptLoad.innerHTML =
-                `setTimeout(function () {
+                `let manager = null;
+                setTimeout(function () {
                     let c = document.getElementById("whiteboardCanvas")
-                    let wbMan = new WhiteboardManager(c, '`+ this.props.uri + `', '` + this.props.token + `', ` + this.props.chatroomId +`);
+                    manager = new WhiteboardManager(c, '`+ this.props.uri + `', '` + this.props.token + `', ` + this.props.chatroomId +`);
                 }, 100);`
             scriptLoad.async = false;
             container.appendChild(scriptLoad);
             this.addedScript = true;
         }
+
+    }
+
+    setColor = (color) => {
+
+        //console.log(color);
+
+        
+
+        let container = document.getElementById("canvasContainer");
+        const scriptLoad = document.createElement("script");
+        scriptLoad.innerHTML =
+            `manager.setColor(`+ color+ `);`
+        scriptLoad.async = false;
+        container.appendChild(scriptLoad);
 
     }
 

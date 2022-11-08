@@ -347,7 +347,6 @@ function Chat() {
         
         if (event.key === 'Enter') {
             messageSent();
-            console.log("itt");
         }
     };
 
