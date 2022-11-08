@@ -4,8 +4,10 @@ import MicRecorder from 'mic-recorder-to-mp3';
 import './WhiteBoard.js';
 
 import DecideCall from './DecideCall.js';
-import InCall from'./InCall.js';
+import InCall from './InCall.js';
 
+
+import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 
 function Chat() {
 
@@ -17,6 +19,7 @@ function Chat() {
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
+    const [connection, setConnection] = useState < null | HubConnection > (null);
 
     const [name, setName] = useState("");
 
@@ -36,6 +39,79 @@ function Chat() {
     const messageNum = 20;
 
 
+    function addZero(i) {
+        if (i < 10) { i = "0" + i }
+        return i;
+    }
+    //Load messages from API
+    const loadMessages = async (e) => {
+
+
+        var today = new Date();
+        var date = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
+        var time = addZero(today.getHours()) + ":" + addZero(today.getMinutes()) + ":" + addZero(today.getSeconds());
+        var dateTime = date + ' ' + time;
+
+        try {
+            const res = await fetch("https://localhost:7043/api/GetMessages", {
+                method: "GET",
+                mode: 'cors',
+                credentials: "include",
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    chatroomId: chatroomId,
+                    count: 40,
+                    time: dateTime,
+                    dir: "backward",
+                },
+            });
+            let resJson = await res.json();
+
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+                    setMessages(resJson.body);
+                }
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+
+    useEffect(() => {
+        const connect = new HubConnectionBuilder()
+            .withUrl("https://localhost:7043/hubs/notifications")
+            .withAutomaticReconnect()
+            .build();
+
+        setConnection(connect);
+    }, []);
+
+    useEffect(() => {
+        if (connection) {
+            connection
+                .start()
+                .then(() => {
+                    connection.on("ReceiveMessage", () => {
+                        loadMessages(null);
+                    });
+                })
+                .catch((error) => console.log(error));
+        }
+    }, [connection]);
+
+    const joinRoom = async () => {
+        if (connection) await connection.send("JoinRoom", chatroomId);
+    };
+
+    const leaveRoom = async () => {
+        if (connection) await connection.send("LeaveRoom", chatroomId);
+    };
+
+    const sendMessage = async () => {
+        if (connection) await connection.send("SendMessage", chatroomId);
+    };
 
     //Send Image to API
     let imageSent = async (e) => {
@@ -59,7 +135,7 @@ function Chat() {
 
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
-
+                    sendMessage();
                 }
             }
         } catch (err) {
@@ -94,7 +170,7 @@ function Chat() {
 
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
-
+                    sendMessage();
                 }
             }
         } catch (err) {
@@ -126,45 +202,8 @@ function Chat() {
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setMessage("");
+                    sendMessage();
                 }
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    };
-    function addZero(i) {
-        if (i < 10) { i = "0" + i }
-        return i;
-    }
-    //Load messages from API
-    const loadMessages = async (e) => {
-
-
-        var today = new Date();
-        var date = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
-        var time = addZero(today.getHours()) + ":" + addZero(today.getMinutes()) + ":" + addZero(today.getSeconds());
-        var dateTime = date + ' ' + time;
-
-        try {
-            const res = await fetch("https://localhost:7043/api/GetMessages", {
-                method: "GET",
-                mode: 'cors',
-                credentials: "include",
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    chatroomId: chatroomId,
-                    count: 40,
-                    time: dateTime,
-                    dir: "backward",
-                },
-            });
-            let resJson = await res.json();
-
-            if (res.status === 200) {
-                if (resJson.message === "Ok") {
-                    setMessages(resJson.body);
-                }
-
             }
         } catch (err) {
             console.log(err);
@@ -304,7 +343,7 @@ function Chat() {
         if (!isRecording) {
 
             startRecording();
-            
+
         } else {
 
             stopRecording();
@@ -344,7 +383,7 @@ function Chat() {
     };
 
     const handleEnterPressed = (event) => {
-        
+
         if (event.key === 'Enter') {
             messageSent();
             console.log("itt");
@@ -359,7 +398,13 @@ function Chat() {
             <div className='upper_row'>
 
 
-                <select  onChange={(e) => setChatroomId(e.target.value)} >
+                <select onChange={(e) => {
+                    if (chatroomId != null) {
+                        leaveRoom(chatroomId)
+                    }
+                    setChatroomId(e.target.value)
+                    joinRoom(e.target.value)
+                }} >
                     <option value="choose" disabled selected="selected">
                         Név:
                     </option>
@@ -391,9 +436,10 @@ function Chat() {
 
 
                     <button className='phone'
-                        onClick={(e) => {setVisibility(!visibility); 
-                                        
-                                    }}>
+                        onClick={(e) => {
+                            setVisibility(!visibility);
+
+                        }}>
                         <img src="/images/phone.png" ></img>
                     </button>
 
@@ -401,7 +447,7 @@ function Chat() {
                         onClose={popupCloseHandler}
                         show={visibility}
                         name={name}>
-                        
+
                     </InCall>
 
 
@@ -420,7 +466,7 @@ function Chat() {
 
             <div className='bottom_row'>
 
-                
+
 
                 <button className='send'
                     onClick={messageSent}>
@@ -464,6 +510,5 @@ function Chat() {
 
         </div >
     )
-
 }
 export default Chat;
