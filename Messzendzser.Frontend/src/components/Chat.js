@@ -19,8 +19,8 @@ function Chat() {
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
-    const [connection, setConnection] = useState < null | HubConnection > (null);
-
+    //const [connection, setConnection] = useState < null | HubConnection > (null);
+    const [connection, setConnection] = useState();
     const [name, setName] = useState("");
 
     const [visibility, setVisibility] = useState(false);
@@ -34,8 +34,6 @@ function Chat() {
 
     var userId;
 
-
-
     const messageNum = 20;
 
 
@@ -45,13 +43,11 @@ function Chat() {
     }
     //Load messages from API
     const loadMessages = async (e) => {
-
-
         var today = new Date();
         var date = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
         var time = addZero(today.getHours()) + ":" + addZero(today.getMinutes()) + ":" + addZero(today.getSeconds());
         var dateTime = date + ' ' + time;
-
+        
         try {
             const res = await fetch("https://localhost:7043/api/GetMessages", {
                 method: "GET",
@@ -81,7 +77,7 @@ function Chat() {
 
     useEffect(() => {
         const connect = new HubConnectionBuilder()
-            .withUrl("https://localhost:7043/hubs/notifications")
+            .withUrl("https://localhost:7043/messageSenderHub")
             .withAutomaticReconnect()
             .build();
 
@@ -94,7 +90,7 @@ function Chat() {
                 .start()
                 .then(() => {
                     connection.on("ReceiveMessage", () => {
-                        loadMessages(null);
+                        loadMessages();
                     });
                 })
                 .catch((error) => console.log(error));
@@ -240,11 +236,11 @@ function Chat() {
     useEffect(() => {
         loadMessages();
         loadChatrooms();
-        const interval = setInterval(() => {
+        /*const interval = setInterval(() => {
             loadMessages();
             loadChatrooms();
         }, 3000);
-        return () => clearInterval(interval);
+        return () => clearInterval(interval);*/
     }, [chatroomId]);
 
 
