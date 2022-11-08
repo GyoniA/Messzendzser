@@ -8,6 +8,7 @@ import InCall from './InCall.js';
 
 
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { wait } from "@testing-library/user-event/dist/utils/index.js";
 
 function Chat() {
 
@@ -16,6 +17,9 @@ function Chat() {
 
     //States 
     const [chatroomId, setChatroomId] = useState("");
+
+    const refChatroomId = useRef("");
+
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
@@ -47,7 +51,6 @@ function Chat() {
         var date = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
         var time = addZero(today.getHours()) + ":" + addZero(today.getMinutes()) + ":" + addZero(today.getSeconds());
         var dateTime = date + ' ' + time;
-        
         try {
             const res = await fetch("https://localhost:7043/api/GetMessages", {
                 method: "GET",
@@ -55,7 +58,7 @@ function Chat() {
                 credentials: "include",
                 headers: {
                     'Access-Control-Allow-Origin': '*',
-                    chatroomId: chatroomId,
+                    chatroomId: refChatroomId.current,
                     count: 40,
                     time: dateTime,
                     dir: "backward",
@@ -98,15 +101,15 @@ function Chat() {
     }, [connection]);
 
     const joinRoom = async () => {
-        if (connection) await connection.send("JoinRoom", chatroomId);
+        if (connection) await connection.send("JoinRoom", refChatroomId.current);
     };
 
     const leaveRoom = async () => {
-        if (connection) await connection.send("LeaveRoom", chatroomId);
+        if (connection) await connection.send("LeaveRoom", refChatroomId.current);
     };
 
     const sendMessage = async () => {
-        if (connection) await connection.send("SendMessage", chatroomId);
+        if (connection) await connection.send("SendMessage", refChatroomId.current);
     };
 
     //Send Image to API
@@ -198,7 +201,9 @@ function Chat() {
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setMessage("");
+                    setTimeout(function () {
                     sendMessage();
+                    }, 2000);
                 }
             }
         } catch (err) {
@@ -398,6 +403,7 @@ function Chat() {
                     if (chatroomId != null) {
                         leaveRoom(chatroomId)
                     }
+                    refChatroomId.current = e.target.value;
                     setChatroomId(e.target.value)
                     joinRoom(e.target.value)
                 }} >
