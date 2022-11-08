@@ -60,7 +60,7 @@ export default function Form(){
                         <h1>Regisztráció</h1>
 
                         <label>Felhasználónév:</label>
-                    <input type="text" value={username} required maxlength="10" placeholder='Felhasználónév'
+                    <input type="text" value={username} required  placeholder='Felhasználónév'
                         onChange={(e) => setUsername(e.target.value)}/>
                         
                         <label>E-mail:</label>
@@ -68,7 +68,7 @@ export default function Form(){
                         onChange={(e) => setEmail(e.target.value)}/>
 
                         <label>Jelszó:</label>
-                    <input type="password" value={password} required maxlength="10" placeholder='Jelszó'
+                    <input type="password" value={password} required  placeholder='Jelszó'
                         onChange={(e) => setPassword(e.target.value)}/>
 
                     

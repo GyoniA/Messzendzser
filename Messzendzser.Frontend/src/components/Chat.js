@@ -360,7 +360,7 @@ function Chat() {
 
 
                 <select  onChange={(e) => setChatroomId(e.target.value)} >
-                    <option value="choose" disabled selected="selected">
+                    <option value="choose" disabled selected>
                         Név:
                     </option>
                     {Chatrooms()}
