@@ -3,6 +3,8 @@ using Messzendzser.Model.DB;
 using Messzendzser.Voip;
 using Messzendzser.WhiteBoard;
 using System.Net;
+using Microsoft.Owin;
+using Owin;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +38,8 @@ WhiteboardManager.JsonTest();
 WhiteboardManager.JsonMessageEventTest();
 
 builder.Services.AddScoped<WhiteboardManager>();
+
+builder.Services.AddSignalR();
 
 builder.Services.AddScoped<MessageSenderHub>();
 
@@ -73,6 +77,12 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();//TODO remove if API calls are not working
+    endpoints.MapHub<MessageSenderHub>("/messageSenderHub");
+});
 
 app.UseSwagger();
 app.UseSwaggerUI(options => {

@@ -27,12 +27,9 @@ namespace Messzendzser.Controllers
         private IDataSource dataSource;
 
         private const int BUFFER_SIZE = 6000000;
-
-        private MessageSenderHub messageSenderHub;
         public SendVoiceController(IDataSource dataSource, MessageSenderHub messageSenderHub)
         {
             this.dataSource = dataSource;
-            this.messageSenderHub = messageSenderHub;
         }
 
         // POST api/Register
@@ -122,7 +119,6 @@ namespace Messzendzser.Controllers
                 try
                 {
                     messageManager.StoreVoiceMessage(voice, format, ChatroomId, token.ToUser(),Length, mediaManager);
-                    //messageSenderHub.SendVoiceMessage(voiceData, format, chatroomId, usertoken, Length);
 
                 }
                 catch (Exception ex) // Other exception
