@@ -236,7 +236,6 @@ ClientBin/
 *.dbmdl
 *.dbproj.schemaview
 *.jfm
-*.pfx
 *.publishsettings
 orleans.codegen.cs
 
@@ -367,3 +366,4 @@ Messzendzser\Messzendzser\Mediamanager\Images/
 Messzendzser\Messzendzser\Mediamanager\Whiteboards/
 /Messzendzser/Mediamanager/Images
 /Messzendzser/Mediamanager/Whiteboards
+/Messzendzser/Mediamanager/Sounds
