@@ -26,8 +26,11 @@
         var socket = new JsSIP.WebSocketInterface('wss://localhost:5062/ws');
         var configuration = {
             sockets: [socket],
+            ws_server: 'sip:localhost:5062',
+            registar_server: 'sip:localhost:5062',
+            hack_ip_in_contact: true,
             authorization_user: username,
-            uri: 'sip:'+username+'@'+realm,
+            uri: 'sip:' + username + '@' + realm,
             password: password,
             register_expires: expiryTime,
             ha1: ha1
@@ -35,7 +38,9 @@
         var coolPhone = new JsSIP.UA(configuration);
         coolPhone.on('connected', function (e) { console.log("connected") });
         coolPhone.on('disconnected', function (e) { console.log("disconnected") });
-        coolPhone.on('newRTCSession', function (e) { console.log("rtc event") });
+        coolPhone.on('newRTCSession', function (e) {
+            console.log("rtc event")
+        });
         coolPhone.on('registered', function (e) { console.log("registered") });
         coolPhone.on('unregistered', function (e) { console.log("unregistered") });
         coolPhone.on('registrationFailed', function (e) { console.log("registration failed") });
@@ -51,15 +56,16 @@
             };
 
             var options = {
-                'eventHandlers': eventHandlers,
-                //'extraHeaders': ['X-Foo: foo', 'X-Bar: bar'],
-                'mediaConstraints': { 'audio': true, 'video': false },
-                'pcConfig': {
-                    'iceServers': [
-                        { 'urls': ['stun:stun.l.google.com:19302'] }/*,
-                        { 'urls': 'turn:example.com', 'username': 'foo', 'credential': ' 1234' }*/
-                    ]
-                }
+                sockets: [socket],
+            ws_server: 'sip:localhost:5062',
+            registar_server: 'sip:localhost:5062',
+            contact_uri: 'sip:localhost:5062',
+            use_preloaded_route: true,
+            authorization_user: username,
+            uri: 'sip:' + username + '@' + realm,
+            password: password,
+            register_expires: expiryTime,
+            ha1: ha1
             };
             console.log("calling sip:"+partnerName + '@' + realm);
             coolPhone.call('sip:'+partnerName+'@'+realm, options);
