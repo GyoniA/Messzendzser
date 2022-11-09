@@ -23,5 +23,10 @@ namespace LumiSoft.Net.SIP.Stack
         /// TCP + SSL protocol.
         /// </summary>
         public const string TLS = "TLS";
+
+        /// <summary>
+        /// TCP + SSL protocol.
+        /// </summary>
+        public const string WSS = "WSS";
     }
 }

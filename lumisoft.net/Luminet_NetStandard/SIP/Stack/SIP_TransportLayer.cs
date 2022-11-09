@@ -948,7 +948,7 @@ namespace LumiSoft.Net.SIP.Stack
 
             // Set sent-by
             SIP_t_ViaParm via = request.Via.GetTopMostValue();
-            via.ProtocolTransport = flow.Transport;
+            via.ProtocolTransport = "WSS";//flow.Transport;
             // Via sent-by is used only to send responses when request maker data flow is not active.
             // Normally this never used, so just report first local listening point as sent-by.
             HostEndPoint sentBy = null;
@@ -981,6 +981,7 @@ namespace LumiSoft.Net.SIP.Stack
                     break;
                 }
             }
+            sentBy = new HostEndPoint(flow.LocalEP.Address.ToString(), 5062); // TODO replace temporary fix
             // No local end point for sent-by, just use flow local end point for it.
             if(sentBy == null){
                 via.SentBy = new HostEndPoint(flow.LocalEP);
@@ -1695,7 +1696,8 @@ namespace LumiSoft.Net.SIP.Stack
         /// <returns>Returns Record-Route ro or null if no record route possible.</returns>
         internal string GetRecordRoute(string transport)
         {
-            foreach(IPBindInfo bind in m_pBinds){
+            return "<sip:localhost:5062;lr>"; // TODO TEMP data
+            foreach (IPBindInfo bind in m_pBinds){
                 if(!string.IsNullOrEmpty(bind.HostName)){
                     if(bind.Protocol == BindInfoProtocol.TCP && bind.SslMode != SslMode.None && transport == SIP_Transport.TLS){
                         return "<sips:" + bind.HostName + ":" + bind.Port + ";lr>";

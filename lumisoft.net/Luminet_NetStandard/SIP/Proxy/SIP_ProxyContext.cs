@@ -611,10 +611,12 @@ namespace LumiSoft.Net.SIP.Proxy
                               sender-flow = from-tag ":" flowID
                               target-flow = flowID                        
                 */
+                // TODO temporary removal
+                /*
                 if(m_AddRecordRoute && request.From.Tag != null && request.RecordRoute.GetAllValues().Length > 0){
                     string flowInfo = request.From.Tag + ":" + m_pOwner.ServerTransaction.Flow.ID + "/" + flow.ID;
                     ((SIP_Uri)request.RecordRoute.GetTopMostValue().Address.Uri).Parameters.Add("flowInfo",flowInfo);
-                }
+                }*/
 
                 /* RFC 3261 16.6 Request Forwarding.
                         Common Steps 1 - 7 are done in target Init().

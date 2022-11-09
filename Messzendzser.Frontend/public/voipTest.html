@@ -27,6 +27,7 @@
         var configuration = {
             sockets: [socket],
             ws_server: 'sip:localhost:5062',
+            display_name: username,
             registar_server: 'sip:localhost:5062',
             contact_uri: 'sip:' + username + '@' + realm,
             hack_ip_in_contact: true,
@@ -36,11 +37,15 @@
             register_expires: expiryTime,
             ha1: ha1
         };
+        //https://jssip.net/documentation/3.1.x/api/session/#method_answer
         var coolPhone = new JsSIP.UA(configuration);
         coolPhone.on('connected', function (e) { console.log("connected") });
         coolPhone.on('disconnected', function (e) { console.log("disconnected") });
         coolPhone.on('newRTCSession', function (e) {
-            console.log("rtc event")
+            if (e.originator == 'remote') {
+                console.log("Incoming call from: " + e.request.from);
+                e.session.answer();
+            }
         });
         coolPhone.on('registered', function (e) { console.log("registered") });
         coolPhone.on('unregistered', function (e) { console.log("unregistered") });

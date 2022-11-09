@@ -28,7 +28,8 @@
             sockets: [socket],
             ws_server: 'sip:localhost:5062',
             registar_server: 'sip:localhost:5062',
-            contact_uri: 'sip:'+username+'@'+realm,
+            contact_uri: 'sip:' + username + '@' + realm,
+            display_name: username,
             hack_ip_in_contact: true,
             authorization_user: username,
             uri: 'sip:' + username + '@' + realm,
@@ -40,7 +41,10 @@
         coolPhone.on('connected', function (e) { console.log("connected") });
         coolPhone.on('disconnected', function (e) { console.log("disconnected") });
         coolPhone.on('newRTCSession', function (e) {
-            console.log("rtc event")
+            if (e.originator == 'remote') {
+                console.log("Incoming call from: " + e.request.from);
+                e.session.answer();
+            }
         });
         coolPhone.on('registered', function (e) { console.log("registered") });
         coolPhone.on('unregistered', function (e) { console.log("unregistered") });

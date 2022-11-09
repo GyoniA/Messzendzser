@@ -132,7 +132,7 @@ namespace LumiSoft.Net.SIP.Stack
             m_IsServer = true;
             m_pLocalEP = session.LocalEndPoint;
             m_pRemoteEP = session.RemoteEndPoint;
-            m_Transport = session.IsSecureConnection ? SIP_Transport.TLS : SIP_Transport.TCP;
+            m_Transport = session.IsSecureConnection ? SIP_Transport.TLS : SIP_Transport.TCP; // TODO Should be changed to WSS
             m_CreateTime = DateTime.Now;
             m_LastActivity = DateTime.Now;
             m_ID = m_pLocalEP.ToString() + "-" + m_pRemoteEP.ToString() + "-" + m_Transport;

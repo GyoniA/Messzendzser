@@ -106,11 +106,12 @@ namespace LumiSoft.Net.SIP.Stack
             }
 
             // Add Via:
-            if(addVia){
+            if(addVia/*&&request.Via.Count==0*/){
                 SIP_t_ViaParm via = new SIP_t_ViaParm();
                 via.ProtocolName = "SIP";
                 via.ProtocolVersion = "2.0";
-                via.ProtocolTransport = flow.Transport;
+                //via.ProtocolTransport = flow.Transport;// REPLACED
+                via.ProtocolTransport = "WSS";
                 via.SentBy = new HostEndPoint("transport_layer_will_replace_it",-1);
                 via.Branch = SIP_t_ViaParm.CreateBranch();
                 via.RPort = 0;
