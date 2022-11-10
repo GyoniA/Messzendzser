@@ -9,6 +9,7 @@
 </head>
 <body>
     <input type="button" onclick="call()" value="Call" />
+    <audio id="remoteAudio"></audio>
     <script>
 
 
@@ -41,9 +42,23 @@
         coolPhone.on('connected', function (e) { console.log("connected") });
         coolPhone.on('disconnected', function (e) { console.log("disconnected") });
         coolPhone.on('newRTCSession', function (e) {
+            var session = e.session; // outgoing call session here
+            var dtmfSender;
             if (e.originator == 'remote') {
                 console.log("Incoming call from: " + e.request.from);
+                e.session.on("confirmed", function () {
+                    remoteAudio = document.getElementById("remoteAudio")
+                    remoteAudio.srcObject = session.connection.getRemoteStreams()[0];
+                    remoteAudio.play();
+                    console.log("call confirmed");
+                });
                 e.session.answer();
+                e.session.on('addstream', function (i) {
+                    // set remote audio stream (to listen to remote audio)
+                    // remoteAudio is <audio> element on page
+                    console.log("stream added to call");
+                    
+                });
             }
         });
         coolPhone.on('registered', function (e) { console.log("registered") });
@@ -71,7 +86,7 @@
                     ]
                 }*/
             };
-            console.log("calling sip:"+partnerName + '@' + realm);
+            console.log("calling sip:" + partnerName + '@' + realm);
             coolPhone.call('sip:' + partnerName + '@' + realm, options);
         }
     </script>

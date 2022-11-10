@@ -9,6 +9,7 @@
 </head>
 <body>
     <input type="button" onclick="call()" value="Call" />
+    <audio id="remoteAudio"></audio>
     <script>
 
         
@@ -42,9 +43,25 @@
         coolPhone.on('connected', function (e) { console.log("connected") });
         coolPhone.on('disconnected', function (e) { console.log("disconnected") });
         coolPhone.on('newRTCSession', function (e) {
+            var session = e.session; // outgoing call session here
+            var dtmfSender;
             if (e.originator == 'remote') {
                 console.log("Incoming call from: " + e.request.from);
+                e.session.on("confirmed", function () {
+                    remoteAudio = document.getElementById("remoteAudio")
+                    remoteAudio.srcObject = session.connection.getRemoteStreams()[0];
+                    remoteAudio.play();
+                    console.log("call confirmed");
+                });
                 e.session.answer();
+                e.session.on('addstream', function (i) {
+                    // set remote audio stream (to listen to remote audio)
+                    // remoteAudio is <audio> element on page
+                    console.log("stream added to call");
+                    remoteAudio = document.getElementById("remoteAudio")
+                    remoteAudio.src = window.URL.createObjectURL(i.stream);
+                    remoteAudio.play();
+                });
             }
         });
         coolPhone.on('registered', function (e) { console.log("registered") });
@@ -62,16 +79,10 @@
             };
 
             var options = {
-                sockets: [socket],
-            ws_server: 'sip:localhost:5062',
-            registar_server: 'sip:localhost:5062',
-            contact_uri: 'sip:localhost:5062',
-            use_preloaded_route: true,
-            authorization_user: username,
-            uri: 'sip:' + username + '@' + realm,
-            password: password,
-            register_expires: expiryTime,
-            ha1: ha1
+                mediaConstraints: {
+                    audio: true,
+                    video: false
+                }
             };
             console.log("calling sip:"+partnerName + '@' + realm);
             coolPhone.call('sip:'+partnerName+'@'+realm, options);
