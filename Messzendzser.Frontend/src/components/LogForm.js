@@ -65,13 +65,13 @@ export default function Form(){
                         <h1>Bejelentkezés</h1>
 
                         <label>Felhasználónév / e-mail:</label>
-                    <input type="text" value={username} required maxlength="10" placeholder='Felhasználónév / e-mail'
+                    <input type="text" value={username} required  placeholder='Felhasználónév / e-mail'
                         onChange={(e) => setUsername(e.target.value)} />
                          
                         
                          
                         <label>Jelszó:</label>
-                        <input type="password" value={password}  required maxlength="10" placeholder='Jelszó'
+                        <input type="password" value={password}  required  placeholder='Jelszó'
                         onChange={(e) => setPassword(e.target.value)}/>
                         
 
