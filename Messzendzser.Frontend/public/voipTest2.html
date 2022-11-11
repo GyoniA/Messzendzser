@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="js/jssip.js"></script>
+    <script src="js/md5.min.js"></script>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <input type="button" onclick="call()" value="Call" />
+    <audio id="remoteAudio"></audio>
+    <script>
+
+
+
+        //Configuration
+        var username = 'voip1';
+        var password = 'f08313847640f5fff5e0049349fa43d1';
+        var realm = 'localhost';
+        var ha1 = md5(username + ":" + realm + ":" + password);
+        var expiryTime = 360000;
+
+        // Test configuration
+        var partnerName = 'voip';
+
+        var socket = new JsSIP.WebSocketInterface('wss://localhost:5062/ws');
+        var configuration = {
+            sockets: [socket],
+            ws_server: 'sip:localhost:5062',
+            registar_server: 'sip:localhost:5062',
+            contact_uri: 'sip:' + username + '@' + realm,
+            display_name: username,
+            hack_ip_in_contact: true,
+            authorization_user: username,
+            uri: 'sip:' + username + '@' + realm,
+            password: password,
+            register_expires: expiryTime,
+            ha1: ha1
+        };
+        var coolPhone = new JsSIP.UA(configuration);
+        coolPhone.on('connected', function (e) { console.log("connected") });
+        coolPhone.on('disconnected', function (e) { console.log("disconnected") });
+        coolPhone.on('newRTCSession', function (e) {
+            var session = e.session; // outgoing call session here
+            var dtmfSender;
+            if (e.originator == 'remote') {
+                console.log("Incoming call from: " + e.request.from);
+                e.session.on("confirmed", function () {
+                    remoteAudio = document.getElementById("remoteAudio")
+                    remoteAudio.srcObject = session.connection.getRemoteStreams()[0];
+                    remoteAudio.play();
+                    console.log("call confirmed");
+                });
+                e.session.answer();
+                e.session.on('addstream', function (i) {
+                    // set remote audio stream (to listen to remote audio)
+                    // remoteAudio is <audio> element on page
+                    console.log("stream added to call");
+                    
+                });
+            }
+        });
+        coolPhone.on('registered', function (e) { console.log("registered") });
+        coolPhone.on('unregistered', function (e) { console.log("unregistered") });
+        coolPhone.on('registrationFailed', function (e) { console.log("registration failed") });
+        coolPhone.start();
+
+
+        function call() {
+            var eventHandlers = {
+                'progress': function (data) { console.log("call progress") },
+                'failed': function (data) { console.log("call failed") },
+                'confirmed': function (data) { console.log("call progress") },
+                'ended': function (data) { console.log("call ended") }
+            };
+
+            var options = {
+                'eventHandlers': eventHandlers,
+                //'extraHeaders': ['X-Foo: foo', 'X-Bar: bar'],
+                'mediaConstraints': { 'audio': true, 'video': false },
+                /*'pcConfig': {
+                    'iceServers': [
+                        { 'urls': ['stun:stun.l.google.com:19302'] },
+                        { 'urls': 'turn:example.com', 'username': 'foo', 'credential': ' 1234' }
+                    ]
+                }*/
+            };
+            console.log("calling sip:" + partnerName + '@' + realm);
+            coolPhone.call('sip:' + partnerName + '@' + realm, options);
+        }
+    </script>
+</body>
+</html>

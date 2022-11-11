@@ -45,6 +45,7 @@ namespace Messzendzser.Voip
         public SIPServer()
         {
             stack = new SIP_Stack();
+            stack.Realm = "localhost";
             //stack.HostName = "192.168.0.104";
             stack.BindInfo = new LumiSoft.Net.IPBindInfo[] { 
                 new LumiSoft.Net.IPBindInfo("192.168.0.104",LumiSoft.Net.BindInfoProtocol.TCP, IPAddress.Any, 5060) ,
@@ -55,6 +56,7 @@ namespace Messzendzser.Voip
             proxyCore.Authenticate += ProxyCore_Authenticate;
             proxyCore.ProxyMode = SIP_ProxyMode.Statefull | SIP_ProxyMode.Registrar;
             proxyCore.AddressExists += ProxyCore_AddressExists;
+            
             stack.Start();
         }
 
@@ -74,7 +76,7 @@ namespace Messzendzser.Voip
 
         private void ProxyCore_Authenticate(SIP_AuthenticateEventArgs e)
         {
-            Console.WriteLine("Authentication request: {0}, {1}", e.AuthContext.UserName, e.AuthContext.Password);
+            
             VoipCredential voipCredential = VoipCredentialManager.GetVoipCredential(e.AuthContext.UserName);
             if (/*e.AuthContext.Password.IsNullOrEmpty() ||*/ voipCredential == null) { 
                 e.Authenticated = false;
@@ -83,13 +85,13 @@ namespace Messzendzser.Voip
             if (e.AuthContext.Authenticate(voipCredential.VoipUsername, voipCredential.VoipPassword))
             {
                 e.Authenticated = true;
-                Console.WriteLine("Successful registration: {0}", e.AuthContext.UserName);
+                
                 return;
             }
             else
             {
                 e.Authenticated = false;
-                Console.WriteLine("Unsuccessful registration: {0}", e.AuthContext.UserName);
+                
                 return;
             }
         }

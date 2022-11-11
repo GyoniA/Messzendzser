@@ -1,0 +1,842 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_HeaderField" Collapsed="true">
+    <Position X="1.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAIAAAAAAQAAAYAAgAAAAAgAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_HeaderField.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_HeaderFieldCollection" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="111" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIgAEAAAAAABBBACAAABAQAAACwAAAAIgAAAQBQAAA=</HashCode>
+      <FileName>SIP\Message\SIP_HeaderFieldCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_Message" Collapsed="true">
+    <Position X="6.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BqwAhEIAAVAREVsEqtADBBCQEgwIwjgBJFCUAiBMpCE=</HashCode>
+      <FileName>SIP\Message\SIP_Message.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_MultiValueHF&lt;T&gt;" Collapsed="true">
+    <Position X="0.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAIAAAAAAAAAAEBAQAAAAAAAAAAgAgAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_MultiValueHF.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_MVGroupHFCollection&lt;T&gt;" Collapsed="true">
+    <Position X="104" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAoEAQAIAABAAAAAAACBAAQAEACEAAAAIAAgAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_MVGroupHFCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_OptionTags" Collapsed="true">
+    <Position X="105.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AASAAAAIEAACgAAiAIEKAACBAAEAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_OptionTags.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_Parameter" Collapsed="true">
+    <Position X="107.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAQAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_Parameter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_ParameterCollection" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="109.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAABBAACAAABAQAAABAAAAAAAAAAABQAAA=</HashCode>
+      <FileName>SIP\Message\SIP_ParameterCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_ParseException" Collapsed="true">
+    <Position X="111" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_ParseException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_SingleValueHF&lt;T&gt;" Collapsed="true">
+    <Position X="2.75" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAgAgAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_SingleValueHF.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_SVGroupHFCollection&lt;T&gt;" Collapsed="true">
+    <Position X="109.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAoAAQAIAABAAAAAAACABAQAEACAAAAAIAAAAQAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_SVGroupHFCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_AcceptRange" Collapsed="true">
+    <Position X="5.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EABgAIAAAAAAAAggAAAEAAAAAAAAEAAAAIAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_AcceptRange.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ACValue" Collapsed="true">
+    <Position X="45.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAIBAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ACValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_AddressParam" Collapsed="true">
+    <Position X="52.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAACAIAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_AddressParam.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_AlertParam" Collapsed="true">
+    <Position X="57" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAgAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_AlertParam.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_AuthenticationInfo" Collapsed="true">
+    <Position X="18.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAggAoAABAAAAAAAAAAFAAABAABAAAAAABgAAAACAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_AuthenticationInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_CallID" Collapsed="true">
+    <Position X="21" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAABAIIAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_CallID.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Challenge" Collapsed="true">
+    <Position X="27.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAAoAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Challenge.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ContactParam" Collapsed="true">
+    <Position X="77.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABgAAAAAAAAAAAAAAAEAQAAAAAAAAACIIAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ContactParam.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ContentCoding" Collapsed="true">
+    <Position X="34.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAIgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ContentCoding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ContentDisposition" Collapsed="true">
+    <Position X="90.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAABAAAAAQIAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ContentDisposition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Credentials" Collapsed="true">
+    <Position X="36.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAAoAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Credentials.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_CSeq" Collapsed="true">
+    <Position X="7.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAgEAAAAAAAAAAAAAAAAgkAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_CSeq.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Directive" Collapsed="true">
+    <Position X="9.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAgAABAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Directive.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Encoding" Collapsed="true">
+    <Position X="54.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABgAAAAAAAAAAAAAAAEAAAAAACAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Encoding.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ErrorUri" Collapsed="true">
+    <Position X="59.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAgAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ErrorUri.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Event" Collapsed="true">
+    <Position X="66" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAgAAAAAAEAAAEAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Event.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_EventType" Collapsed="true">
+    <Position X="23.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAEAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_EventType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_From" Collapsed="true">
+    <Position X="72.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAgAAAAAAAEAAAAAAAAAAACAIAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_From.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_HiEntry" Collapsed="true">
+    <Position X="79.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAACAIEAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_HiEntry.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_IdentityInfo" Collapsed="true">
+    <Position X="84" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAgAAAAAAAAAACIAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_IdentityInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Info" Collapsed="true">
+    <Position X="93" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAgAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Info.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Join" Collapsed="true">
+    <Position X="97.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAQAAAAAAAAAAAAAEAACAAAAAAAAAAAAAAAAIAIA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Join.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Language" Collapsed="true">
+    <Position X="39" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABgAAAAAAAAAAAAAIIEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Language.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_LanguageTag" Collapsed="true">
+    <Position X="48" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAACAAAAAAAAEAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_LanguageTag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Method" Collapsed="true">
+    <Position X="14.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Method.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_MinSE" Collapsed="true">
+    <Position X="61.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>SIP\Message\SIP_t_MinSE.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_NameAddress" Collapsed="true">
+    <Position X="111" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAgEAAAAAAAAAAAAAAMAAUAAAAAAAgACAAAAAAAAAE=</HashCode>
+      <FileName>SIP\Message\SIP_t_NameAddress.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_OptionTag" Collapsed="true">
+    <Position X="25.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAEAAAAAAgAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_OptionTag.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_RAck" Collapsed="true">
+    <Position X="30" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAAAACAAAAAAAAAAkAAQAAAAAAAAAAABCAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_RAck.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_RCValue" Collapsed="true">
+    <Position X="81.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_RCValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ReasonValue" Collapsed="true">
+    <Position X="86.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAEAAAAAAAAAAAAAEAIBAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ReasonValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ReferredBy" Collapsed="true">
+    <Position X="95.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAACAIAAAAAAAEA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ReferredBy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ReferSub" Collapsed="true">
+    <Position X="99.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ReferSub.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Replaces" Collapsed="true">
+    <Position X="41.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAQAAAAAAAAAAAAAUAACAAAAAAAAAAAAABAAIAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Replaces.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_RetryAfter" Collapsed="true">
+    <Position X="50.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAAAAAAACAAAAAAAEAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>SIP\Message\SIP_t_RetryAfter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_RValue" Collapsed="true">
+    <Position X="16.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAkAAAEAAAAAAAAIAAAAAAAAAAACAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_RValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_SecMechanism" Collapsed="true">
+    <Position X="63.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAgAAAAAAACAAQAEAAAAAAAAAAAAABAAAAQgAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_SecMechanism.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_SessionExpires" Collapsed="true">
+    <Position X="68.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAICAAAAAACAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_SessionExpires.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_SubscriptionState" Collapsed="true">
+    <Position X="70.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAIAAAAEAAAAAAQAAAAAIEAgAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_SubscriptionState.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_TargetDialog" Collapsed="true">
+    <Position X="75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAkAAAAAAAAQAAAAAAABAAIAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_TargetDialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Timestamp" Collapsed="true">
+    <Position X="32.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAgAAQAAAAAAAAAAAAEAAAAAAAIAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Timestamp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_To" Collapsed="true">
+    <Position X="88.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAgAAAAAAAEAAAAAAAAAAACAIAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_To.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_Value" Collapsed="true">
+    <Position X="52.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_Value.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ValueWithParams" Collapsed="true">
+    <Position X="69.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAgACAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ValueWithParams.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_ViaParm" Collapsed="true">
+    <Position X="43.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAAgAAABAAAAAAAAIBgEAAABQAQAAAgAAAACBAEANAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_ViaParm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_t_WarningValue" Collapsed="true">
+    <Position X="12" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAgAAAAEkAAAEAAAAAAAgAAAACAAAAAA=</HashCode>
+      <FileName>SIP\Message\SIP_t_WarningValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Message.SIP_WarningCodes" Collapsed="true">
+    <Position X="107.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAYAAAAASAAEAQAAAAAAAAACAEMAAAIA=</HashCode>
+      <FileName>SIP\Message\SIP_WarningCodes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_AuthenticateEventArgs" Collapsed="true">
+    <Position X="102.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAgAAAAAAAAAAAAAACAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_AuthenticateEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_B2BUA" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="104" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAgAACAARAQSAJAAAAhAgAAACAAAAAgAAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_B2BUA.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_B2BUA_Call" Collapsed="true">
+    <Position X="105.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAIAAAgAAIAAAAAAAAAgAAIAgAACAEAAQEBAEIAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_B2BUA_Call.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_Presence" Collapsed="true">
+    <Position X="112.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAACAABAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_Presence.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_Proxy" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="102.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAgACiAUAQQQCAAAABKg0EgkAAAEADQAFgEAAAQ=</HashCode>
+      <FileName>SIP\Proxy\SIP_Proxy.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_ProxyContext" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="104" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gCEABBgAWCBFggwAQCQQYBAAAAEEgAAABioGIgAAAAI=</HashCode>
+      <FileName>SIP\Proxy\SIP_ProxyContext.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_ProxyHandler" Collapsed="true">
+    <Position X="105.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABABgAAAAABAAAAgAAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_ProxyHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_ProxyTarget" Collapsed="true">
+    <Position X="107.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAwAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_ProxyTarget.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_Registrar" Collapsed="true">
+    <Position X="109.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAIAQCCAIAAQARAAAAJCQAAABAAQAQAgAQQCAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_Registrar.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_Registration" Collapsed="true">
+    <Position X="111" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAEAAAAAQAAAAAAGQABCAAAAAAEgAAAAAUAAgAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_Registration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_RegistrationBinding" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="112.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AARAAIQIAAggAAQAAAAAhAAQAAAA0CAAAgAABAAICAQ=</HashCode>
+      <FileName>SIP\Proxy\SIP_RegistrationBinding.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_RegistrationCollection" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="102.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAIAAAAAAAAAABAACAAABAQAAAAAAAAAEAAgAAAQAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_RegistrationCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_RegistrationEventArgs" Collapsed="true">
+    <Position X="104" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAEAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_RegistrationEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Proxy.SIP_RequestContext" Collapsed="true">
+    <Position X="105.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACBAIgAAAAAAAgAAAAAIAAAIAIAgEAABgwBAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_RequestContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_ClientTransaction" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAQCAAAABQBAAAAAACAAAAABAgAAAAAgBEAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_ClientTransaction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Dialog" Collapsed="true">
+    <Position X="1.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AhmChKgABCQBkAggRJCgsgCAhKEAQAAIAABGDgAoICA=</HashCode>
+      <FileName>SIP\Stack\SIP_Dialog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Dialog_Invite" Collapsed="true">
+    <Position X="0.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAgCAAAAAAIBgAAAAAAAAAAAAAAAAGAABAABA=</HashCode>
+      <FileName>SIP\Stack\SIP_Dialog_Invite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Dialog_Refer" Collapsed="true">
+    <Position X="2.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAEAAAAAAAAAABAAAAAgAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Dialog_Refer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Dialog_Subscribe" Collapsed="true">
+    <Position X="107.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Dialog_Subscribe.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Dialog_Usage" Collapsed="true">
+    <Position X="6.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Dialog_Usage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Dialog_Usage_Invite" Collapsed="true">
+    <Position X="5.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Dialog_Usage_Invite.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Dialog_Usage_Subscribe" Collapsed="true">
+    <Position X="7.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Dialog_Usage_Subscribe.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Flow" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="109.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAMCAoAgAKAAhEQAQETAMByAAAGgIAQABAAEwCACJAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Flow.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Hop" Collapsed="true">
+    <Position X="112.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAQEAAAAAAAAQAKAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Hop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Methods" Collapsed="true">
+    <Position X="102.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAEAAABAARABAAAAAAABAABIAAAAhAABAgAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Methods.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Request" Collapsed="true">
+    <Position X="5.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAIAAAACAAAAEAAAAgAAQAgAAIAQBABEAAAASAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Request.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_RequestLine" Collapsed="true">
+    <Position X="107.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IBAAAAAAAAAAAAAEAAAgAIAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_RequestLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_RequestReceivedEventArgs" Collapsed="true">
+    <Position X="109.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAIgAEAAAQAAAAAAAoACAAAAAgAAAEAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_RequestReceivedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_RequestSender" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="111" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAgIgAQGBhACIYAAQgoBiCwABEgBAAAABQAAACAAg=</HashCode>
+      <FileName>SIP\Stack\SIP_RequestSender.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Response" Collapsed="true">
+    <Position X="7.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAEAQCCAAAAEgAAAIAAAAgAAoAABIAAAAAQAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Response.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_ResponseCodes" Collapsed="true">
+    <Position X="112.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EjBIwCGCADyERQNAAAEAKxCAAEgEhFAQCDAiGQBAAHI=</HashCode>
+      <FileName>SIP\Stack\SIP_ResponseCodes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_ResponseReceivedEventArgs" Collapsed="true">
+    <Position X="102.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAABAAAAAAAAAQACAAoAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_ResponseReceivedEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_ResponseSentEventArgs" Collapsed="true">
+    <Position X="104" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAEABAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_ResponseSentEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_ServerTransaction" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AQAAABAAQCAAAABAhBAAAAAAAAAAAAAAAAAAACRAgAA=</HashCode>
+      <FileName>SIP\Stack\SIP_ServerTransaction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Stack" Collapsed="true">
+    <Position X="105.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>vBECAI0AAGqRAQAwAlQAJAIGAAAEDAEjIGHABBTmYBg=</HashCode>
+      <FileName>SIP\Stack\SIP_Stack.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_StatusLine" Collapsed="true">
+    <Position X="107.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAIAAAAAAIEAAAAAIAAAAAAAAAAIAAAAAQAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_StatusLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_TimerConstants" Collapsed="true">
+    <Position X="112.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAACAAAAAAABAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_TimerConstants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Transaction" Collapsed="true">
+    <Position X="1.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABEA1KAARCBhgCQIQACg8BiAgAEBgAAAECAEBAACAiA=</HashCode>
+      <FileName>SIP\Stack\SIP_Transaction.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_TransactionLayer" Collapsed="true">
+    <Position X="102.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAIMAECABAAQAgAAAAACCU4AAAAgAAAAAAAAAAIA=</HashCode>
+      <FileName>SIP\Stack\SIP_TransactionLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_Transport" Collapsed="true">
+    <Position X="104" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAACAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_Transport.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_TransportException" Collapsed="true">
+    <Position X="105.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_TransportException.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_TransportLayer" Collapsed="true">
+    <Position X="107.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EQQAARAAACDAEAQAAEQAUkCAgkAAhAQAIAAAAgAKAgE=</HashCode>
+      <FileName>SIP\Stack\SIP_TransportLayer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_UA_Registration" Collapsed="true">
+    <Position X="102.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JAAApIAQRCKBAQQAHQACABGAAgCgQAAAIAAgxCACAiA=</HashCode>
+      <FileName>SIP\Stack\SIP_UA_Registration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.Stack.SIP_ValidateRequestEventArgs" Collapsed="true">
+    <Position X="105.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAIAAAAAAQgAAAAAEAAQAAAAA=</HashCode>
+      <FileName>SIP\SIP_ValidateRequestEventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.UA.SIP_UA" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="109.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAgAAmAAIAQAAIAAABiAgAAAAAAAAABAAQBAAAA=</HashCode>
+      <FileName>SIP\UA\SIP_UA.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.UA.SIP_UA_Call" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="111" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IIEADQAShSBjAUIAAAEgAxBAICAAABAMAABENCAAAKA=</HashCode>
+      <FileName>SIP\UA\SIP_UA_Call.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.UA.SIP_UA_Call_EventArgs" Collapsed="true">
+    <Position X="112.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\UA\SIP_UA_Call_EventArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LumiSoft.Net.SIP.SIP_Utils" Collapsed="true">
+    <Position X="104" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAIAAAAgEAAAAAAAJAAAgAQEAAgCA=</HashCode>
+      <FileName>SIP\SIP_Utils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="LumiSoft.Net.SIP.Proxy.SIP_ForkingMode" Collapsed="true">
+    <Position X="104" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAACEAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_ForkingMode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LumiSoft.Net.SIP.Proxy.SIP_ProxyMode" Collapsed="true">
+    <Position X="105.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAgAAAAAAAAAAAAAAAAAAAAABAAAAAAEAAAQ=</HashCode>
+      <FileName>SIP\Proxy\SIP_ProxyMode.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LumiSoft.Net.SIP.Stack.SIP_DialogState" Collapsed="true">
+    <Position X="102.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAACAAAAAAAAAAAAAAAAAAgAAAGAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_DialogState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LumiSoft.Net.SIP.Stack.SIP_StackState" Collapsed="true">
+    <Position X="107.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAIAAAAAAAAAAAACAAQ=</HashCode>
+      <FileName>SIP\Stack\SIP_StackState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LumiSoft.Net.SIP.Stack.SIP_StatusCodeType" Collapsed="true">
+    <Position X="109.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAECAAAgQQAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_StatusCodeType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LumiSoft.Net.SIP.Stack.SIP_TransactionState" Collapsed="true">
+    <Position X="111" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAABIAAAAAAAAAAAAAAAAACAAkAAAGABA=</HashCode>
+      <FileName>SIP\Stack\SIP_TransactionState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LumiSoft.Net.SIP.Stack.SIP_UA_RegistrationState" Collapsed="true">
+    <Position X="102.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAEAAAAAAAAAAgAAAAAAAIAAACAAA=</HashCode>
+      <FileName>SIP\Stack\SIP_UA_RegistrationState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LumiSoft.Net.SIP.UA.SIP_UA_CallState" Collapsed="true">
+    <Position X="112.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAIAAAAAAAAACBAAAAQAAAAAAgAAAEAAAGAAA=</HashCode>
+      <FileName>SIP\UA\SIP_UA_CallState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="LumiSoft.Net.SIP.Proxy.SIP_IsLocalUriEventHandler" Collapsed="true">
+    <Position X="107.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_Proxy.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="LumiSoft.Net.SIP.Proxy.SIP_AuthenticateEventHandler" Collapsed="true">
+    <Position X="104" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_Proxy.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="LumiSoft.Net.SIP.Proxy.SIP_AddressExistsEventHandler" Collapsed="true">
+    <Position X="102.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_Proxy.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="LumiSoft.Net.SIP.Proxy.SIP_CanRegisterEventHandler" Collapsed="true">
+    <Position X="105.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SIP\Proxy\SIP_Registrar.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
