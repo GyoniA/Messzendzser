@@ -201,9 +201,7 @@ function Chat() {
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setMessage("");
-                    setTimeout(function () {
                     sendMessage();
-                    }, 2000);
                 }
             }
         } catch (err) {

@@ -114,8 +114,9 @@ namespace Messzendzser.Model.DB
             List<TextChatMessage> messages = new List<TextChatMessage>();
             var results = TextChatMessages.Where(m =>( 
                 m.ChatroomId == chatroomId)
-            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time).OrderBy(m=>m.SentTime).Take(count);
+            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime >= time : m.SentTime <= time).OrderByDescending(m=>m.SentTime).Take(count);
             messages.AddRange(results);
+            messages.OrderBy(message => message.SentTime);
             return messages;
         }
 
@@ -124,8 +125,9 @@ namespace Messzendzser.Model.DB
             List<ImageChatMessage> messages = new List<ImageChatMessage>();
             var results = ImageChatMessages.Where(m =>
                 m.ChatroomId == chatroomId
-            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time).OrderBy(m => m.SentTime).Take(count);
+            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime >= time : m.SentTime <= time).OrderByDescending(m => m.SentTime).Take(count);
             messages.AddRange(results);
+            messages.OrderBy(message => message.SentTime);
             return messages;
         }
 
@@ -134,8 +136,9 @@ namespace Messzendzser.Model.DB
             List<VoiceChatMessage> messages = new List<VoiceChatMessage>();
             var results = VoiceChatMessages.Where(m =>
                 m.ChatroomId == chatroomId
-            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime > time : m.SentTime < time).OrderBy(m => m.SentTime).Take(count);
+            ).Where(m => directon == IDataSource.TimeDirecton.Forward ? m.SentTime >= time : m.SentTime <= time).OrderByDescending(m => m.SentTime).Take(count);
             messages.AddRange(results);
+            messages.OrderBy(message => message.SentTime);
             return messages;
         }
 

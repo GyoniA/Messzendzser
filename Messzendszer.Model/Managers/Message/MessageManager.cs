@@ -56,9 +56,11 @@ namespace Messzendzser.Model.Managers.Message
             combined.AddRange(Texts);
             combined.AddRange(Images);
             combined.AddRange(Voices);
-            combined = combined.OrderBy(x => x.Time).ToList();
+            combined = combined.OrderByDescending(x => x.Time).ToList();
             
             List<Message> parentList = combined.Take(count).Cast<Message>().ToList();
+
+            parentList = parentList.OrderBy(x => x.Time).ToList();
             return parentList;
         }
     }
