@@ -20,6 +20,8 @@ function Chat() {
 
     const refChatroomId = useRef("");
 
+    const refVoiceData = useRef("");
+
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
@@ -146,7 +148,7 @@ function Chat() {
 
     //Send Voice to API
     let voiceSent = async (e) => {
-
+        console.log(refVoiceData.current);
         try {
             let res = await fetch("https://localhost:7043/api/SendVoice", {
                 method: "POST",
@@ -160,7 +162,7 @@ function Chat() {
                     contentType: 'application/my-binary-type',
                     length: 200,
                 },
-                body: voiceData,
+                body: refVoiceData.current,
 
 
 
@@ -292,13 +294,15 @@ function Chat() {
                         </li>
                     )
                 } else {
-                    <li className="voice_from_other">
-                        <audio controls>
-                            <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
-                                type="audio/ogg">
-                            </source>
-                        </audio>
-                    </li>
+                    return (
+                        <li className="voice_from_other">
+                            <audio controls>
+                                <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
+                                    type="audio/ogg">
+                                </source>
+                            </audio>
+                        </li>
+                    )
                 }
 
             } else {
@@ -346,7 +350,7 @@ function Chat() {
         } else {
 
             stopRecording();
-            voiceSent();
+            
 
         }
     }
@@ -363,19 +367,23 @@ function Chat() {
 
     };
 
+
+
     const stopRecording = () => {
         Mp3Recorder
             .stop()
             .getMp3()
             .then(([buffer, blob]) => {
 
-                setVoiceData(blob);
-
                 setIsRecording(false);
-
+                refVoiceData.current = blob;
+                setVoiceData(blob);
+                voiceSent();
 
             }).catch((e) => console.log(e));
     };
+
+   
 
     const popupCloseHandler = (e) => {
         setVisibility(e);

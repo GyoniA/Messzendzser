@@ -78,7 +78,9 @@ function WhiteBoard() {
                 </div>
 
                 <div className='actions'>
-                    <button className='clear'>
+                    <button className='clear' onClick={ (e) => {
+                        setColor(4294967295);
+                    }}>
                         <img src="/images/clear.png" ></img>
                     </button>
 
