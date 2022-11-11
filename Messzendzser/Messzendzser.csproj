@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Luminet_NetStandard" Version="1.2.52" />
     <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.3" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SIPSorcery" Version="6.0.11" />
@@ -18,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\lumisoft.net\Luminet_NetStandard\Luminet_NetStandard.csproj" />
     <ProjectReference Include="..\Messzendszer.Model\Messzendzser.Model.csproj" />
   </ItemGroup>
 

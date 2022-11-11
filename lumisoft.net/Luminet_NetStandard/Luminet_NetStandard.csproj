@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="IMAP\Server\old\**" />
+    <Compile Remove="_Obsolete\Data\**" />
+    <EmbeddedResource Remove="IMAP\Server\old\**" />
+    <EmbeddedResource Remove="_Obsolete\Data\**" />
+    <None Remove="IMAP\Server\old\**" />
+    <None Remove="_Obsolete\Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="SPF\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-rc0003" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="4.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BouncyCastle\BouncyCastle.csproj" />
+  </ItemGroup>
+
+</Project>
