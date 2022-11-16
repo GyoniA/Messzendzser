@@ -42,7 +42,6 @@ export default function Form() {
                     setUsername("");
                     setPassword("");
                     let tok = resJson.body.token;
-                    console.log(tok);
                     document.cookie = "user-token=" + resJson.body.token;
 
                     navigate("/chat")
