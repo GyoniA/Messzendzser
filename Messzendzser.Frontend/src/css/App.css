@@ -54,10 +54,12 @@ body {
 
 form {
     background: white;
-    padding: 3em;
-    height: 550px;
-    width: 600px;
-    border-radius: 20px;
+    padding: 1.5rem;
+    height: fit-content;
+    width: 40rem;
+    margin-top: 3rem;
+    margin-bottom:1rem;
+    border-radius: 2rem;
     border-left: 1px solid white;
     border-top: 1px solid white;
     backdrop-filter: blur(10px);
@@ -421,4 +423,9 @@ nav {
     .popup {
         width: 70%;
     }
+}
+
+.message {
+    color: red;
+    font-size: 1.5rem;
 }
