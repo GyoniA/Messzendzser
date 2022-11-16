@@ -6,6 +6,7 @@ import DecideCall from './DecideCall.js';
 import InCall from './InCall.js';
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { wait } from "@testing-library/user-event/dist/utils/index.js";
+import VoipComponent from "./VoipComponent.js";
 
 function Chat() {
 
@@ -38,6 +39,36 @@ function Chat() {
     );
 
     var userId;
+
+    const messageNum = 20;
+
+    // Voip
+
+    const voipComp = useRef();
+
+    // Event handlers
+
+    const incomingCallHandler = (from) => {
+        console.log("incoming call registered by page, from: "+from);
+        // TODO ...
+    }
+
+    const callEndedHandler = () => {
+        console.log("call ended registered by page");
+        // TODO ...
+    }
+
+    const callAcceptedHandler = () => {
+        console.log("call accepted registered by page");
+        // TODO ...
+    }
+
+    const callFailedHandler = () => {
+        console.log("call accepted registered by page");
+        // TODO ...
+    }
+
+    // Voip end
 
     function addZero(i) {
         if (i < 10) { i = "0" + i }
@@ -75,6 +106,13 @@ function Chat() {
             console.log(err);
         }
     };
+
+    useEffect(() => {
+        // TODO retreive voip credentials (maybe store them in cookie or local storage)
+        voipComp.current.setCredentials("voip", "Password1!");
+        voipComp.current.connect();
+    }, [])
+
 
     useEffect(() => {
         const connect = new HubConnectionBuilder()
@@ -386,6 +424,7 @@ function Chat() {
                     {Chatrooms()}
                 </select>
 
+                <VoipComponent uri="wss://localhost:5062/ws" ref={voipComp} callEndedCallback={callEndedHandler} incomingCallCallback={incomingCallHandler} callAcceptedCallback={callAcceptedHandler} callFailedCallback={callFailedHandler} />
                 <div className='icons_up'>
 
                     <button className='whiteboard_button'
