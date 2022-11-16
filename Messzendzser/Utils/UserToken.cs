@@ -1,4 +1,5 @@
-﻿using Messzendzser.Model.DB.Models;
+﻿using Messzendzser.Model.DB;
+using Messzendzser.Model.DB.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -12,6 +13,7 @@ namespace Messzendzser.Utils
         public int Id { get; private set; }
         public string Username { get; private set; }
         public string Email { get; private set; }
+        public string VoipPassword { get; private set; }
         public DateTime Created { get; private set; }
 
         public User ToUser()
@@ -40,6 +42,7 @@ namespace Messzendzser.Utils
                 { "Id", Id } ,
                 { "Username" , Username },
                 { "Email" , Email },
+                { "VoipPassword" , VoipPassword },
                 { "Created" , Created },
             };
 
@@ -57,11 +60,12 @@ namespace Messzendzser.Utils
         /// <param name="Id">Id of the user</param>
         /// <param name="Username">Username of the user</param>
         /// <param name="Email">Email of the user</param>
-        public UserToken(int Id, string Username, string Email)
+        public UserToken(int Id, string Username, string Email,string VoipPassword)
         {
             this.Id = Id;
             this.Username = Username;
             this.Email = Email;
+            this.VoipPassword = VoipPassword;
             Created = DateTime.Now;
         }
 
@@ -69,11 +73,12 @@ namespace Messzendzser.Utils
         /// Creates a new instance of the UserToken class
         /// </summary>
         /// <param name="user">User object containing data about the user</param>
-        public UserToken(User user)
+        public UserToken(User user,IDataSource dataSource)
         {
             this.Id = user.Id;
             this.Username = user.Username;
             this.Email = user.Email;
+            this.VoipPassword = dataSource.GetCredentialsForUser(Username).VoipPassword;
             Created = DateTime.Now;
         }
 

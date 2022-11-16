@@ -61,7 +61,7 @@ namespace Messzendzser.Controllers
                 {
                     //Logging user in
                     User user = userManager.LoginUser(username, password);
-                    UserToken userToken = new UserToken(user);
+                    UserToken userToken = new UserToken(user,dataSource);
                     token = userToken.ToToken();
                     return ResponseMessage<Dictionary<string, string>>.CreateOkMessage(new Dictionary<string, string>() { { "token", token } });
                 }
