@@ -11,6 +11,8 @@ using System.Text;
 using System.Runtime.CompilerServices;
 using Messzendzser.Model.Managers.Message;
 using Org.BouncyCastle.Asn1.X509.Qualified;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Messzendzser.Controllers
 {
@@ -21,6 +23,7 @@ namespace Messzendzser.Controllers
     ///     Method: Post
     /// 
     /// </summary>
+    [Authorize]
     [Route("api/GetChatrooms")]
     [ApiController]
     public class GetChatroomsController : ControllerBase

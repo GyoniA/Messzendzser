@@ -8,6 +8,7 @@ using System.Text.Json;
 using Messzendzser.Model.Managers.Media;
 using System.Text.Unicode;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
@@ -19,6 +20,7 @@ namespace Messzendzser.Controllers
     ///     Parameters:
     ///            img: image token 
     /// </summary>
+    [Authorize]
     [Route("api/GetVoice")]
     [ApiController]
     public class GetVoiceController : ControllerBase

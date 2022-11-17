@@ -10,6 +10,7 @@ using System.Text.Unicode;
 using System.Text;
 using System.Runtime.CompilerServices;
 using Messzendzser.Model.Managers.Message;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
@@ -25,6 +26,7 @@ namespace Messzendzser.Controllers
     ///            dir: direction to search messages ("forward" or "backward")
     /// 
     /// </summary>
+    [Authorize]
     [Route("api/GetMessages")]
     [ApiController]
     public class GetMessagesController : ControllerBase

@@ -20,7 +20,7 @@ namespace Messzendzser.Utils
         {
             User user = new User();
             user.Id = Id;
-            user.Username = Username;
+            user.UserName = Username;
             user.Email = Email;
             return user;
         }
@@ -76,7 +76,7 @@ namespace Messzendzser.Utils
         public UserToken(User user,IDataSource dataSource)
         {
             this.Id = user.Id;
-            this.Username = user.Username;
+            this.Username = user.UserName;
             this.Email = user.Email;
             this.VoipPassword = dataSource.GetCredentialsForUser(Username).VoipPassword;
             Created = DateTime.Now;

@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.Message;
 using Messzendzser.Model.DB;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
@@ -16,6 +17,7 @@ namespace Messzendzser.Controllers
     ///            message: email adress of the new user
     ///            chatroomId: username of the new user
     /// </summary>
+    [Authorize]
     [Route("api/SendMessage")]
     [ApiController]
     public class SendMessageController : ControllerBase

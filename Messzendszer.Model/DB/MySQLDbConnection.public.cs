@@ -38,7 +38,7 @@ namespace Messzendzser.Model.DB
         {
             try
             {
-                User user = Users.Where(u => u.Username == username || u.Email == username).First<User>();
+                User user = Users.Where(u => u.UserName == username || u.Email == username.ToUpper()).First<User>();
                 return user;
             }
             catch (InvalidOperationException ex)
@@ -174,7 +174,7 @@ namespace Messzendzser.Model.DB
                 string name = "";
                 foreach (User user in assignedUsers) {
                     if (user.Id != userId)
-                        name += $" {user.Username}";
+                        name += $" {user.UserName}";
                 }
                 chatroomInfos.Add(new ChatroomInfo(name, chatroom.Id));
             }

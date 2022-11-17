@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.Message;
 using Messzendzser.Model.DB;
-using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.AspNetCore.Identity;
 using Messzendzser.Model.Managers.Media;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
-
     /// <summary>
     /// Api endpoint, where users can send text messages
     /// Usage:
@@ -18,6 +15,7 @@ namespace Messzendzser.Controllers
     ///     Parameters:
     ///            chatroomId: username of the new user
     /// </summary>
+    [Authorize]
     [Route("api/SendImage")]
     [ApiController]
     public class SendImageController : ControllerBase
