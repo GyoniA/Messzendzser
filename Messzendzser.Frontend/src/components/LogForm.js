@@ -20,7 +20,8 @@ export default function Form(){
         e.preventDefault();
         try {
           let res = await fetch("https://localhost:7043/api/Login", {
-            method: "POST",
+              method: "POST",
+              credentials: 'include',
             mode: 'cors',
               headers: {
                 'Access-Control-Allow-Origin': '*',

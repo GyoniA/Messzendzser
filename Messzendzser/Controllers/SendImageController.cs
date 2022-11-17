@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.Message;
 using Messzendzser.Model.DB;
 using Messzendzser.Model.Managers.Media;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
@@ -14,6 +15,7 @@ namespace Messzendzser.Controllers
     ///     Parameters:
     ///            chatroomId: username of the new user
     /// </summary>
+    [Authorize]
     [Route("api/SendImage")]
     [ApiController]
     public class SendImageController : ControllerBase

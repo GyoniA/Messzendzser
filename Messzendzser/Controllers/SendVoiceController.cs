@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Messzendzser.Model.Managers.Message;
 using Messzendzser.Model.Managers.Media;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
@@ -20,6 +21,7 @@ namespace Messzendzser.Controllers
     ///            chatroomId: id of the chatroom to send the message to
     ///            length: length of the audio message
     /// </summary>
+    [Authorize]
     [Route("api/SendVoice")]
     [ApiController]
     public class SendVoiceController : ControllerBase

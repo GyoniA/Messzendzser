@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Messzendzser.Model.DB
 {
-    public partial class MySQLDbConnection : IdentityDbContext<MesszendzserIdentityUser, IdentityRole<int>, int>
+    public partial class MySQLDbConnection : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public MySQLDbConnection()
         {
@@ -23,7 +23,7 @@ namespace Messzendzser.Model.DB
         public virtual DbSet<Chatroom> Chatrooms { get; set; } = null!;
         public virtual DbSet<ImageChatMessage> ImageChatMessages { get; set; } = null!;
         public virtual DbSet<TextChatMessage> TextChatMessages { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
+        //public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<VoiceChatMessage> VoiceChatMessages { get; set; } = null!;
         public virtual DbSet<VoipCredential> VoipCredentials { get; set; } = null!;
         public virtual DbSet<Whiteboard> Whiteboards { get; set; } = null!;

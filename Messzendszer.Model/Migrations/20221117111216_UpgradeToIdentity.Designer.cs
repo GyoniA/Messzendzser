@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Messzendzser.Model.Migrations
 {
     [DbContext(typeof(MySQLDbConnection))]
-    [Migration("20221015122313_test1")]
-    partial class test1
+    [Migration("20221117111216_UpgradeToIdentity")]
+    partial class UpgradeToIdentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

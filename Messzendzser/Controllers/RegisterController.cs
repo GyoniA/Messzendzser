@@ -25,13 +25,13 @@ namespace Messzendzser.Controllers
     {
 
         private IDataSource dataSource;
-        private IUserStore<MesszendzserIdentityUser> userStore;
-        private readonly UserManager<MesszendzserIdentityUser> userManager;
-        private SignInManager<MesszendzserIdentityUser> signInManager;
+        private IUserStore<User> userStore;
+        private readonly UserManager<User> userManager;
+        private SignInManager<User> signInManager;
         public RegisterController(IDataSource dataSource,
-            UserManager<MesszendzserIdentityUser> userManager,
-            IUserStore<MesszendzserIdentityUser> userStore,
-            SignInManager<MesszendzserIdentityUser> signInManager)
+            UserManager<User> userManager,
+            IUserStore<User> userStore,
+            SignInManager<User> signInManager)
         {
             this.dataSource = dataSource;
             this.userManager = userManager;
@@ -86,13 +86,19 @@ namespace Messzendzser.Controllers
             {
                 try
                 {
-                    MesszendzserIdentityUser user = new MesszendzserIdentityUser();
+                    //Registering user
+                    User user = new User();
                     user.Email = email;
                     user.UserName = username;
-                    await userManager.CreateAsync(user, password);
-                    //Registering user
-                    //userManager.RegisterUser(email, username, password);
+                    IdentityResult res = await userManager.CreateAsync(user, password);
+                    if (!res.Succeeded)
+                    {
+                        foreach(IdentityError e in res.Errors)
+                            errors.Add(e.Code,e.Description); // TODO rewiev
+                        
+                    }
                 }
+                // TODO remove exceptions
                 catch (EmailTakenException ex)
                 { // Email is taken exception
                     errors.Add("email", "Email is already taken");

@@ -26,12 +26,17 @@ new Thread(() => {
 // Add services to the container.
 builder.Services.AddControllers();
 
-builder.Services.AddAuthentication().AddCookie(options=>options.Cookie.Name = "new-user-token");
+builder.Services.AddAuthentication().AddCookie(options => {
+    options.Cookie.Name = "new-user-token";
+    options.Cookie.HttpOnly = false;
+    options.Cookie.SameSite = SameSiteMode.None;
+    }
+);
 
 // Add DbContext service
 builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
 
-builder.Services.AddDefaultIdentity<MesszendzserIdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MySQLDbConnection>()
     .AddDefaultTokenProviders();
 
@@ -40,8 +45,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
-    options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+    options.Cookie.HttpOnly = false;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
 
     options.LoginPath = "/api/Login";
     options.AccessDeniedPath = "/ilyennincs";

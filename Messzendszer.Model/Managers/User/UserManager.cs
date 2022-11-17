@@ -26,6 +26,9 @@ namespace Messzendzser.Model.Managers.User
         /// <param name="username">Email address or username of the user</param>
         /// <param name="password">Password of the user</param>
         /// <exception cref="WrongCredentialsException">Thrown if given credentials are invalid</exception>
+        /// 
+
+        /// Oboslete
         public DB.Models.User LoginUser(string username, string password)
         {
             DB.Models.User user = dataSource.GetUser(username);
@@ -33,7 +36,7 @@ namespace Messzendzser.Model.Managers.User
             {
                 //Create pass
                 PasswordHasher<DB.Models.User> passwordHasher = new PasswordHasher<DB.Models.User>();
-                PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(null, user.Password, password); // Does not use first argument, so it can be left as null
+                PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(null, user.PasswordHash, password); // Does not use first argument, so it can be left as null
                 if(verificationResult.HasFlag(PasswordVerificationResult.Success)|| verificationResult.HasFlag(PasswordVerificationResult.SuccessRehashNeeded))
                 {
                     return user;

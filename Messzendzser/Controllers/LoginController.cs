@@ -24,12 +24,12 @@ namespace Messzendzser.Controllers
     public class LoginController : ControllerBase
     {
         private IDataSource dataSource;
-        private IUserStore<MesszendzserIdentityUser> userStore;
-        private readonly UserManager<MesszendzserIdentityUser> userManager;
-        private SignInManager<MesszendzserIdentityUser> signInManager;
-        public LoginController(IDataSource dataSource, UserManager<MesszendzserIdentityUser> userManager,
-            IUserStore<MesszendzserIdentityUser> userStore,
-            SignInManager<MesszendzserIdentityUser> signInManager)
+        private IUserStore<User> userStore;
+        private readonly UserManager<User> userManager;
+        private SignInManager<User> signInManager;
+        public LoginController(IDataSource dataSource, UserManager<User> userManager,
+            IUserStore<User> userStore,
+            SignInManager<User> signInManager)
         {
             this.dataSource = dataSource;
             this.userManager = userManager;
@@ -72,7 +72,9 @@ namespace Messzendzser.Controllers
                     var result = await signInManager.PasswordSignInAsync(username, password, true, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
-                        token = "I don't know how this will work";
+                        User user = dataSource.GetUser(username);
+                        UserToken userToken = new UserToken(user);
+                        token = userToken.ToToken();
                     }
                     //Logging user in
                     /*User user = userManager.LoginUser(username, password);

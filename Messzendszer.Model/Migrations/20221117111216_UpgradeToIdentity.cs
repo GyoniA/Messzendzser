@@ -6,12 +6,65 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Messzendzser.Model.Migrations
 {
-    public partial class test1 : Migration
+    public partial class UpgradeToIdentity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("MySql:CharSet", "utf8mb4");
+            migrationBuilder.CreateTable(
+                name: "AspNetRoles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_general_ci");
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NormalizedEmail = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EmailConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PasswordHash = table.Column<string>(type: "longtext", nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SecurityStamp = table.Column<string>(type: "longtext", nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ConcurrencyStamp = table.Column<string>(type: "longtext", nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_general_ci");
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
@@ -139,8 +192,6 @@ namespace Messzendzser.Model.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4")
                 .Annotation("Relational:Collation", "utf8mb4_general_ci");
 
-           
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -177,46 +228,6 @@ namespace Messzendzser.Model.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "chatroom_id_idx",
-                table: "chatroom_associations",
-                column: "chatroom_id");
-
-            migrationBuilder.CreateIndex(
-                name: "user_id_idx",
-                table: "chatroom_associations",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
-                name: "image_chat_message_chatroom_id_idx",
-                table: "image_chat_message",
-                column: "chatroom_id");
-
-            migrationBuilder.CreateIndex(
-                name: "image_chat_message_user_id_idx",
-                table: "image_chat_message",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
-                name: "chatroom_id_idx1",
-                table: "text_chat_message",
-                column: "chatroom_id");
-
-            migrationBuilder.CreateIndex(
-                name: "user_id_idx1",
-                table: "text_chat_message",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
-                name: "voice_chat_message_chatroom_id_idx",
-                table: "voice_chat_message",
-                column: "chatroom_id");
-
-            migrationBuilder.CreateIndex(
-                name: "voice_chat_message_user_id_idx",
-                table: "voice_chat_message",
-                column: "user_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -237,37 +248,10 @@ namespace Messzendzser.Model.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "chatroom_associations");
-
-            migrationBuilder.DropTable(
-                name: "ChatroomUser");
-
-            migrationBuilder.DropTable(
-                name: "image_chat_message");
-
-            migrationBuilder.DropTable(
-                name: "text_chat_message");
-
-            migrationBuilder.DropTable(
-                name: "voice_chat_message");
-
-            migrationBuilder.DropTable(
-                name: "voip_credentials");
-
-            migrationBuilder.DropTable(
-                name: "whiteboard");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "chatroom");
-
-            migrationBuilder.DropTable(
-                name: "user");
         }
     }
 }
