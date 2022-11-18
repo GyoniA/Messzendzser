@@ -28,7 +28,9 @@ function WhiteBoard() {
     }, []);
 
     useEffect(() => {
-        wBoard.current.setColor(color);
+        if (color !== undefined) {
+            wBoard.current.setColor(color);
+        }
     });
 
     return (
