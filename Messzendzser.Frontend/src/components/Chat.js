@@ -293,7 +293,12 @@ function Chat() {
     }
 
     const voipSet = () => {
-        let token = document.cookie;
+        let token;
+
+        var match = document.cookie.match(new RegExp('(^| )' + 'user-token' + '=([^;]+)'));
+        if (match)
+            token = match[2];
+
         token = token.split('.')[1].replace('-', '+').replace('_', '/');
         let decoded = atob(token);
         let userName = (decoded.split(',')[1]).split(':')[1];
