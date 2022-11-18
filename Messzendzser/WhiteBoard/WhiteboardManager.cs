@@ -1,6 +1,8 @@
 ﻿namespace Messzendzser.WhiteBoard
 {
+    using Messzendzser.Model.DB;
     using Messzendzser.Model.DB.Models;
+    using Messzendzser.Utils;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json.Linq;
     using Org.BouncyCastle.Utilities;
@@ -40,20 +42,30 @@
         {
             await ClientLoop(socket);
         }
-
-        public WhiteboardManager()
+        private IDataSource dataSource;
+        public WhiteboardManager(IDataSource dataSource)
         {
+            this.dataSource = dataSource;
             whiteboards = new ConcurrentDictionary<int, Whiteboard>();
-            lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();            
+            lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();
         }
-        public static bool AuthenticateMessage(WhiteboardAuthenticationMessage wm)
+        public bool AuthenticateMessage(WhiteboardAuthenticationMessage wm)
         {
-            //TODO implement authentication
-            /*authenticate with:
-                private string username;
-                private string password;
-                private Chatroom chatroom;*/
-            return true;
+            return true;//TODO remove
+
+            UserToken token = new UserToken(wm.Username);
+            User user = token.ToUser();
+            var res = false;
+            try
+            {
+                res = dataSource.IsUserInChatroom(user.Id, wm.ChatroomId);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+
+            return res;
         }
 
         class CustomTimer : System.Timers.Timer
