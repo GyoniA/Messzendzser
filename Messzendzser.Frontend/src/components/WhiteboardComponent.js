@@ -38,8 +38,17 @@ class WhiteboardLineEvent extends WhiteboardEvent {
         this.End = new Point(endX, endY);
 
         this.$type = "Messzendzser.WhiteBoard.WhiteboardLineEvent, Messzendzser"
-        this.Type = 2;
+        this.Type = 2
         this.Color = color
+    }
+}
+
+
+class WhiteboardClearEvent extends WhiteboardEvent {
+    constructor() {
+        super();
+        this.Type = 3
+        this.$type = "Messzendzser.WhiteBoard.WhiteboardClearEvent, Messzendzser"
     }
 }
 
@@ -79,6 +88,25 @@ class WhiteboardManager {
             self.socket.close();
         }
 
+        this.dispose = function () {
+            self.isDisposed = true;
+            self.disconnect();
+        }
+
+        this.clearCanvas = function () {
+            var c = '#FFFFFFFF';
+            var sizeWidth = self.canvasContext.canvas.clientWidth;
+            var sizeHeight = self.canvasContext.canvas.clientHeight;
+
+            self.canvasContext.fillStyle = c;
+            self.canvasContext.fillRect(0, 0, sizeWidth, sizeHeight);
+        }
+
+        this.clear = function () {
+            self.clearCanvas();
+            self.events.push(new WhiteboardClearEvent());
+        }
+
         this.sendMessage = function (json) {
             console.log('Sending data: ' + json);
             self.socket.send(json)
@@ -101,6 +129,7 @@ class WhiteboardManager {
         this.drawLine = function (fromX, fromY, toX, toY, color) {
             //self.canvasContext.fillStyle = color
             // todo set color
+            console.log("drawing line with color: " + color);
             var c = '#' + color.toString(16).substring(2);
             self.canvasContext.strokeStyle = c;
             self.canvasContext.lineWidth = 3;
@@ -117,6 +146,8 @@ class WhiteboardManager {
                 self.drawLine(event.Start.X, event.Start.Y, event.End.X, event.End.Y, event.Color);
             } else if (event.Type == 0) {
                 self.drawImage(event.Image)
+            }else if (event.Type == 3) {
+                self.clearCanvas();
             }
         }
 
@@ -146,33 +177,39 @@ class WhiteboardManager {
             self.sendMessage(json);
         }
         this.canvas.addEventListener("mousedown", function (e) {
-            self.mousedown = true;
-            self.lastPointX = e.offsetX == undefined ? e.layerX : e.offsetX;
-            self.lastPointY = e.offsetY == undefined ? e.layerY : e.offsetY;
+            if (self.isDisposed !== true) {
+                self.mousedown = true;
+                self.lastPointX = e.offsetX == undefined ? e.layerX : e.offsetX;
+                self.lastPointY = e.offsetY == undefined ? e.layerY : e.offsetY;
+            }
         });
         this.canvas.addEventListener("mouseup", function (e) {
-            self.mousedown = false;
-            self.lastPointX = undefined;
-            self.lastPointY = undefined;
+            if (self.isDisposed !== true) {
+                self.mousedown = false;
+                self.lastPointX = undefined;
+                self.lastPointY = undefined;
+            }
         });
         this.canvas.addEventListener("mousemove", function (e) {
-            if (self.mousedown) {
-                if (!e) e = window.event;
+            if (self.isDisposed !== true) {
+                if (self.mousedown) {
+                    if (!e) e = window.event;
 
-                var x = e.offsetX == undefined ? e.layerX : e.offsetX;
-                var y = e.offsetY == undefined ? e.layerY : e.offsetY;
+                    var x = e.offsetX == undefined ? e.layerX : e.offsetX;
+                    var y = e.offsetY == undefined ? e.layerY : e.offsetY;
 
-                if (self.lastPointX !== undefined) {
-                    self.drawLine(self.lastPointX, self.lastPointY, x, y, self.color);
-                    self.events.push(new WhiteboardLineEvent(self.lastPointX, self.lastPointY, x, y, self.color));
+                    if (self.lastPointX !== undefined) {
+                        self.drawLine(self.lastPointX, self.lastPointY, x, y, self.color);
+                        self.events.push(new WhiteboardLineEvent(self.lastPointX, self.lastPointY, x, y, self.color));
+                    }
+                    self.lastPointX = x;
+                    self.lastPointY = y;
+                    /*
+                     *  Dot option
+                    self.drawDot(x, y, self.color);
+                    self.events.push(new WhiteboardDotEvent(x,y,self.color));
+                    */
                 }
-                self.lastPointX = x;
-                self.lastPointY = y;
-                /*
-                 *  Dot option
-                self.drawDot(x, y, self.color);
-                self.events.push(new WhiteboardDotEvent(x,y,self.color));
-                */
             }
         });
 
@@ -220,12 +257,18 @@ class WhiteboardComponent extends React.Component {
     componentDidMount() {
         // Connect
         console.log("Component mounted")
+        if (this.WhiteboardManager !== undefined)
+            this.WhiteboardManager.dispose();
         this.WhiteboardManager = new WhiteboardManager(this.Canvas.current,this.props.uri, this.props.token, this.props.chatroomId);
         this.WhiteboardManager.setColor(4278190080);
     }
 
     setColor = (color) => {
         this.WhiteboardManager.setColor(color);
+    }
+
+    clear = () => {
+        this.WhiteboardManager.clear();
     }
 
     componentWillUnmount() {
