@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 class VoipComponent extends React.Component {
-   
+
+    
 
     constructor(props) {        
         super(props);
@@ -9,7 +10,7 @@ class VoipComponent extends React.Component {
         this.realm = 'localhost';
         this.expiryTime = 360000;
 
-
+        var self = this;
 
         this.connectionState = "disconnected";
         this.JsSIP = require('jssip');
@@ -41,6 +42,7 @@ class VoipComponent extends React.Component {
     }
 
     connect = () => {
+        var self = this;
         if (this.connectionState == "disconnected") {
             this.connectionState = "connecting";
             let configuration = {
@@ -57,21 +59,21 @@ class VoipComponent extends React.Component {
                 ha1: this.ha1
             };
 
-            this.ua = new this.JsSIP.UA(configuration);
-            this.ua.on('connected', function (e) {
+            self.ua = new self.JsSIP.UA(configuration);
+            self.ua.on('connected', function (e) {
                 console.log("connected")
-                this.connectionState = "connected";
+                self.connectionState = "connected";
             });
-            this.ua.on('disconnected', function (e) {
+            self.ua.on('disconnected', function (e) {
                 console.log("disconnected")
-                this.connectionState = "disconnected";
+                self.connectionState = "disconnected";
             });
-            this.ua.on('newRTCSession', function (e) {
+            self.ua.on('newRTCSession', function (e) {
                 let session = e.session; 
                 if (e.originator == 'remote') { // outgoing call session here
                     console.log("Incoming call from: " + e.request.from);
                     
-                    if (this.incomingCallSession !== undefined || this.activeCallSession !== undefined) {
+                    if (self.incomingCallSession !== undefined || self.activeCallSession !== undefined) {
                         console.log("rejecting incoming call because other session is in progress (either incoming or active)");
                         e.session.terminate();
                     }
@@ -83,8 +85,8 @@ class VoipComponent extends React.Component {
                             voipAudio.play();
                             console.log("call confirmed");
                         });
-                        this.incomingCallSession = e.session;
-                        this.props.incomingCallCallback(e.request.from);
+                        self.incomingCallSession = e.session;
+                        self.props.incomingCallCallback(e.request.from);
                     }
                 }
             });
