@@ -21,18 +21,17 @@ export default function Form() {
     let handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            let res = await fetch("https://localhost:7043/api/Login", {
-                method: "POST",
-                mode: 'cors',
-
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    username: username,
-                    password: password,
-
-                },
-            });
-            let resJson = await res.json();
+          let res = await fetch("https://localhost:7043/api/Login", {
+              method: "POST",
+              credentials: 'include',
+            mode: 'cors',
+              headers: {
+                'Access-Control-Allow-Origin': '*',
+                username: username,
+                password: password,
+            },
+          });
+          let resJson = await res.json();
 
             if (res.status === 200) {
 

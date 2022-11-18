@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.Message;
 using Messzendzser.Model.DB;
-using System.Text.Json;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.AspNetCore.Identity;
 using Messzendzser.Model.Managers.Media;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
-
     /// <summary>
     /// Api endpoint, where users can send text messages
     /// Usage:
@@ -18,6 +15,7 @@ namespace Messzendzser.Controllers
     ///     Parameters:
     ///            chatroomId: username of the new user
     /// </summary>
+    [Authorize]
     [Route("api/SendImage")]
     [ApiController]
     public class SendImageController : ControllerBase
@@ -32,15 +30,13 @@ namespace Messzendzser.Controllers
         [HttpPost(), DisableRequestSizeLimit]
         public ResponseMessage<object> Post([FromHeader(Name = "chatroomId")] string? chatroomId)
         {
-            string? userToken = null;
-            Request.Cookies.TryGetValue("user-token", out userToken);
 
             IFormFile? file = Request.Form.Files.GetFile("image");
-            return SendImage(file,chatroomId,userToken,new MessageManager(dataSource),new MediaManager());
+            return SendImage(file,chatroomId,new MessageManager(dataSource),new MediaManager());
         }
 
         [NonAction]
-        public ResponseMessage<object> SendImage(IFormFile? image, string? chatroomId, string? usertoken,IMessageManager messageManager,IMediaManager mediaManager)
+        public ResponseMessage<object> SendImage(IFormFile? image, string? chatroomId,IMessageManager messageManager,IMediaManager mediaManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -81,19 +77,6 @@ namespace Messzendzser.Controllers
             }
             #endregion
 
-            #region UserTokenVerification
-            UserToken token = null;
-
-            try
-            {
-                token = new UserToken(usertoken);
-            }
-            catch (Exception)
-            {
-                errors.Add("usertoken", "Invalid user token");
-            }
-            #endregion
-
             if (errors.Count == 0)
             {
                 try
@@ -107,7 +90,7 @@ namespace Messzendzser.Controllers
                             imageData = memoryStream.ToArray();
                         }
                     }
-                    messageManager.StoreImageMessage(imageData,format, ChatroomId, token.ToUser(),mediaManager);
+                    messageManager.StoreImageMessage(imageData,format, ChatroomId, User.ToUser(),mediaManager);
 
                 }
                 catch (Exception ex) // Other exception

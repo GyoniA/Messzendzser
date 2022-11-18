@@ -10,6 +10,7 @@ using System.Text.Unicode;
 using System.Text;
 using System.Runtime.CompilerServices;
 using Messzendzser.Model.Managers.Message;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
@@ -25,6 +26,7 @@ namespace Messzendzser.Controllers
     ///            dir: direction to search messages ("forward" or "backward")
     /// 
     /// </summary>
+    [Authorize]
     [Route("api/GetMessages")]
     [ApiController]
     public class GetMessagesController : ControllerBase
@@ -39,14 +41,12 @@ namespace Messzendzser.Controllers
         [HttpGet()]
         public ResponseMessage<IReadOnlyList<object>> Get( [FromHeader(Name = "chatroomId")] string? chatroom, [FromHeader(Name = "count")] string? count, [FromHeader(Name = "time")] string? time,[FromHeader(Name = "dir")] string? dir)
         {
-            string? userToken = null;
-            Request.Cookies.TryGetValue("user-token", out userToken);
             IMessageManager messageManager = new MessageManager(dataSource);
             IUserManager userManager = new UserManager(dataSource);
-            return FetchMessages(chatroom,count,time,dir,userToken, messageManager, userManager);
+            return FetchMessages(chatroom,count,time,dir, messageManager, userManager);
         }
         [NonAction]
-        public ResponseMessage<IReadOnlyList<object>> FetchMessages(string? chatroom,string? count, string? time, string? dir,string? usertoken, IMessageManager messageManager,IUserManager userManager)
+        public ResponseMessage<IReadOnlyList<object>> FetchMessages(string? chatroom,string? count, string? time, string? dir, IMessageManager messageManager,IUserManager userManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -135,18 +135,6 @@ namespace Messzendzser.Controllers
             }
             #endregion
 
-            #region UserTokenVerification
-            UserToken token = null;
-
-            try
-            {
-                token = new UserToken(usertoken);
-            }
-            catch (Exception)
-            {
-                errors.Add("usertoken", "Invalid user token");
-            }
-            #endregion
 
 
             if (errors.Count == 0)

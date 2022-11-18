@@ -3,6 +3,8 @@ using Messzendzser.Model.Managers.User;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using System.Data;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Messzendzser.Model.DB
 {
@@ -38,7 +40,7 @@ namespace Messzendzser.Model.DB
         {
             try
             {
-                User user = Users.Where(u => u.Username == username || u.Email == username).First<User>();
+                User user = Users.Where(u => u.UserName == username || u.Email == username.ToUpper()).First<User>();
                 return user;
             }
             catch (InvalidOperationException ex)
@@ -174,11 +176,35 @@ namespace Messzendzser.Model.DB
                 string name = "";
                 foreach (User user in assignedUsers) {
                     if (user.Id != userId)
-                        name += $" {user.Username}";
+                        name += $" {user.UserName}";
                 }
                 chatroomInfos.Add(new ChatroomInfo(name, chatroom.Id));
             }
             return chatroomInfos;
+        }
+
+        private static string CreateMD5(string input)
+        {
+            // Use input string to calculate MD5 hash
+            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+
+                // Convert the byte array to hexadecimal string
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("X2"));
+                }
+                return sb.ToString();
+            }
+        }
+
+        public void CreateVoipCredentialsForUser(User user)
+        {
+            VoipCredentials.Add(new VoipCredential() { UserId = user.Id, VoipUsername = user.UserName, VoipPassword = CreateMD5(DateTime.Now.ToString()), VoipRealmHash = "Not needed" });
+            SaveChanges();
         }
     }
 }

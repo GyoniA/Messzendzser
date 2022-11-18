@@ -1217,7 +1217,10 @@ namespace LumiSoft.Net.IO
                     try{
                         m_pOwner.m_pStream.BeginRead(buffer,0,count,new AsyncCallback(delegate(IAsyncResult r){
                             try{
-                                m_BytesInBuffer = m_pOwner.m_pStream.EndRead(r);
+                                if (m_pOwner != null) // Added to end random breakpoint triggers.
+                                    m_BytesInBuffer = m_pOwner.m_pStream.EndRead(r);
+                                else
+                                    throw new Exception();
                             }
                             catch(Exception x){
                                 m_pException = x;

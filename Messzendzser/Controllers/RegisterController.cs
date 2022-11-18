@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 using Messzendzser.Model.Managers.User;
 using Messzendzser.Model.DB;
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
+using Messzendzser.Model.DB.Models;
 
 namespace Messzendzser.Controllers
 {
@@ -23,19 +25,28 @@ namespace Messzendzser.Controllers
     {
 
         private IDataSource dataSource;
-        public RegisterController(IDataSource dataSource)
+        private IUserStore<User> userStore;
+        private readonly UserManager<User> userManager;
+        private SignInManager<User> signInManager;
+        public RegisterController(IDataSource dataSource,
+            UserManager<User> userManager,
+            IUserStore<User> userStore,
+            SignInManager<User> signInManager)
         {
             this.dataSource = dataSource;
+            this.userManager = userManager;
+            this.userStore = userStore;
+            this.signInManager = signInManager;
         }
         // POST api/Register
         [HttpPost()]
-        public ResponseMessage<object> Post([FromHeader(Name = "email")] string? email, [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
+        public async Task<ResponseMessage<object>> Post([FromHeader(Name = "email")] string? email, [FromHeader(Name = "username")] string? username, [FromHeader(Name = "password")] string? password)
         {
-            IUserManager userManager = new UserManager(dataSource);
-            return Register(email,username,password,userManager);
+            //IUserManager userManager = new UserManager(dataSource);
+            return await Register(email,username,password);
         }
         [NonAction]
-        public ResponseMessage<object> Register(string? email,string? username,string? password, IUserManager userManager)
+        public async Task<ResponseMessage<object>> Register(string? email,string? username,string? password)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -76,8 +87,22 @@ namespace Messzendzser.Controllers
                 try
                 {
                     //Registering user
-                    userManager.RegisterUser(email, username, password);
+                    User user = new User();
+                    user.Email = email;
+                    user.UserName = username;
+                    IdentityResult res = await userManager.CreateAsync(user, password);
+                    if (!res.Succeeded)
+                    {
+                        foreach(IdentityError e in res.Errors)
+                            errors.Add(e.Code,e.Description); // TODO rewiev
+                    }
+                    else {
+                        User createdUser = dataSource.GetUser(username);
+                        dataSource.CreateVoipCredentialsForUser(createdUser);
+                        dataSource.AddAllAssociations(createdUser.Id);
+                    }
                 }
+                // TODO remove exceptions
                 catch (EmailTakenException ex)
                 { // Email is taken exception
                     errors.Add("email", "Email is already taken");

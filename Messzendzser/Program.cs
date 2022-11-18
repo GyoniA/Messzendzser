@@ -1,11 +1,13 @@
 using Messzendzser.Controllers;
 using Messzendzser.Model.DB;
+using Messzendzser.Model.DB.Models;
 using Messzendzser.Voip;
 using Messzendzser.WhiteBoard;
 using System.Net;
 using Microsoft.Owin;
 using Owin;
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,14 +30,33 @@ new Thread(() => {
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddAuthentication().AddCookie(options => {
+    options.Cookie.Name = "new-user-token";
+    options.Cookie.HttpOnly = false;
+    options.Cookie.SameSite = SameSiteMode.None;
+    }
+);
+
 // Add DbContext service
 builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
 
+builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<MySQLDbConnection>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddSwaggerGen();
 
-//WhiteboardManager.JsonTest();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Cookie settings
+    options.Cookie.HttpOnly = false;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
 
-//WhiteboardManager.JsonMessageEventTest();
+    options.LoginPath = "/api/Login";
+    options.AccessDeniedPath = "/ilyennincs";
+    options.SlidingExpiration = true;
+});
 
 builder.Services.AddScoped<WhiteboardManager>();
 
@@ -73,6 +94,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();;
 
 app.UseAuthorization();
 

@@ -11,6 +11,9 @@ using System.Text;
 using System.Runtime.CompilerServices;
 using Messzendzser.Model.Managers.Message;
 using Org.BouncyCastle.Asn1.X509.Qualified;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Messzendzser.Controllers
 {
@@ -21,6 +24,7 @@ namespace Messzendzser.Controllers
     ///     Method: Post
     /// 
     /// </summary>
+    [Authorize]
     [Route("api/GetChatrooms")]
     [ApiController]
     public class GetChatroomsController : ControllerBase
@@ -35,36 +39,25 @@ namespace Messzendzser.Controllers
         [HttpGet()]
         public ResponseMessage<IReadOnlyList<ChatroomInfo>> Get( )
         {
-            string? userToken = null;
-            Request.Cookies.TryGetValue("user-token", out userToken);
             IMessageManager messageManager = new MessageManager(dataSource);
             IUserManager userManager = new UserManager(dataSource);
-            return GetChatrooms(userToken,userManager);
+            return GetChatrooms(userManager);
         }
+
+        
+
         [NonAction]
-        public ResponseMessage<IReadOnlyList<ChatroomInfo>> GetChatrooms(string? usertoken,IUserManager userManager)
+        public ResponseMessage<IReadOnlyList<ChatroomInfo>> GetChatrooms(IUserManager userManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
-
-            #region UserTokenVerification
-            UserToken token = null;
-
-            try
-            {
-                token = new UserToken(usertoken);
-            }
-            catch (Exception)
-            {
-                errors.Add("usertoken", "Invalid user token");
-            }
-            #endregion
+            
 
             if (errors.Count == 0)
             {
                 try
                 {
-                    IReadOnlyList<ChatroomInfo> chatrooms = dataSource.GetChatrooms(token.Id);
+                    IReadOnlyList<ChatroomInfo> chatrooms = dataSource.GetChatrooms(User.ToUser().Id);
                     return Utils.ResponseMessage<IReadOnlyList<ChatroomInfo>>.CreateOkMessage(chatrooms);
                 }
                 catch (Exception ex) // Other exception

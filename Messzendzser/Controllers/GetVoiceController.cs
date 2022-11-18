@@ -8,6 +8,7 @@ using System.Text.Json;
 using Messzendzser.Model.Managers.Media;
 using System.Text.Unicode;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Messzendzser.Controllers
 {
@@ -19,6 +20,7 @@ namespace Messzendzser.Controllers
     ///     Parameters:
     ///            img: image token 
     /// </summary>
+    [Authorize]
     [Route("api/GetVoice")]
     [ApiController]
     public class GetVoiceController : ControllerBase
@@ -32,10 +34,8 @@ namespace Messzendzser.Controllers
         [HttpGet()]
         public IActionResult Get( [FromQuery(Name = "voice")] string? voice)
         {            
-            IMediaManager mediaManager = new MediaManager(); // TODO
-            string? userToken = null;
-            Request.Cookies.TryGetValue("user-token", out userToken);
-            Utils.FileResult result = LoadSound(voice,userToken,mediaManager);
+            IMediaManager mediaManager = new MediaManager();
+            Utils.FileResult result = LoadSound(voice,mediaManager);
             if (result.Success)
             {
                 return result.FileContentResult;
@@ -46,7 +46,7 @@ namespace Messzendzser.Controllers
             }
         }
         [NonAction]
-        public Utils.FileResult LoadSound(string? soundToken, string? usertoken, IMediaManager media)
+        public Utils.FileResult LoadSound(string? soundToken, IMediaManager media)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -55,19 +55,6 @@ namespace Messzendzser.Controllers
             if (soundToken == null)
             {
                 errors.Add("voice", "Voice cannot be empty");
-            }
-            #endregion
-
-            #region User Token Verification
-            UserToken token;
-
-            try
-            {
-                token = new UserToken(usertoken);
-            }
-            catch (ArgumentException)
-            {
-                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage<object>.CreateErrorMessage(3, "Invalid user token")));
             }
             #endregion
 
