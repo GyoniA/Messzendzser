@@ -51,11 +51,11 @@
         }
         public bool AuthenticateMessage(WhiteboardAuthenticationMessage wm)
         {
-            return true;//TODO remove
+            //return true;//TODO remove
 
+            var res = false;
             UserToken token = new UserToken(wm.Username);
             User user = token.ToUser();
-            var res = false;
             try
             {
                 res = dataSource.IsUserInChatroom(user.Id, wm.ChatroomId);

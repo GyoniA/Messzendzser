@@ -146,7 +146,7 @@ namespace Messzendzser.Model.DB
 
         public bool IsUserInChatroom(int userId, int chatroomId)
         {
-            return Users.Where(x=>x.Id == userId).First().Chatrooms.Where(c=>c.Id== chatroomId).Any();
+            return Users.Where(x=>x.Id == userId).Include(x => x.Chatrooms).First().Chatrooms.Where(c=>c.Id== chatroomId).Any();
         }
 
         public void AddAllAssociations(int userId)
