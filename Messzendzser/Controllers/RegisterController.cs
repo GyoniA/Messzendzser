@@ -95,7 +95,11 @@ namespace Messzendzser.Controllers
                     {
                         foreach(IdentityError e in res.Errors)
                             errors.Add(e.Code,e.Description); // TODO rewiev
-                        
+                    }
+                    else {
+                        User createdUser = dataSource.GetUser(username);
+                        dataSource.CreateVoipCredentialsForUser(createdUser);
+                        dataSource.AddAllAssociations(createdUser.Id);
                     }
                 }
                 // TODO remove exceptions

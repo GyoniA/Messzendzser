@@ -35,10 +35,8 @@ namespace Messzendzser.Controllers
         [HttpGet()]
         public IActionResult Get( [FromQuery(Name = "img")] string? image)
         {   
-            IMediaManager mediaManager = new MediaManager(); // TODO
-            string? userToken = null;
-            Request.Cookies.TryGetValue("user-token", out userToken);
-            Utils.FileResult result = LoadImage(image,userToken,mediaManager);
+            IMediaManager mediaManager = new MediaManager();
+            Utils.FileResult result = LoadImage(image,mediaManager);
             if (result.Success)
             {
                 return result.FileContentResult;
@@ -49,7 +47,7 @@ namespace Messzendzser.Controllers
             }
         }
         [NonAction]
-        public Utils.FileResult LoadImage(string? imageToken, string? usertoken, IMediaManager media)
+        public Utils.FileResult LoadImage(string? imageToken, IMediaManager media)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -58,19 +56,6 @@ namespace Messzendzser.Controllers
             if (imageToken == null)
             {
                 errors.Add("image", "Image cannot be empty");
-            }
-            #endregion
-
-            #region UserTokenVerification
-            UserToken token;
-
-            try
-            {
-                token = new UserToken(usertoken);
-            }
-            catch (ArgumentException)
-            {
-                return new Utils.FileResult(JsonSerializer.Serialize(ResponseMessage<object>.CreateErrorMessage(3, "Invalid user token")));
             }
             #endregion
 

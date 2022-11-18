@@ -10,7 +10,6 @@ namespace Messzendzser.Model.DB.Models;
 // Add profile data for application users by adding properties to the MesszendzserIdentityUser class
 public class User : IdentityUser<int>
 {
-
     [InverseProperty("User")]
     public virtual VoipCredential? VoipCredential { get; set; }
     [InverseProperty("User")]

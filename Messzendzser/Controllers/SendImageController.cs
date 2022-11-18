@@ -30,15 +30,13 @@ namespace Messzendzser.Controllers
         [HttpPost(), DisableRequestSizeLimit]
         public ResponseMessage<object> Post([FromHeader(Name = "chatroomId")] string? chatroomId)
         {
-            string? userToken = null;
-            Request.Cookies.TryGetValue("user-token", out userToken);
 
             IFormFile? file = Request.Form.Files.GetFile("image");
-            return SendImage(file,chatroomId,userToken,new MessageManager(dataSource),new MediaManager());
+            return SendImage(file,chatroomId,new MessageManager(dataSource),new MediaManager());
         }
 
         [NonAction]
-        public ResponseMessage<object> SendImage(IFormFile? image, string? chatroomId, string? usertoken,IMessageManager messageManager,IMediaManager mediaManager)
+        public ResponseMessage<object> SendImage(IFormFile? image, string? chatroomId,IMessageManager messageManager,IMediaManager mediaManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -79,19 +77,6 @@ namespace Messzendzser.Controllers
             }
             #endregion
 
-            #region UserTokenVerification
-            UserToken token = null;
-
-            try
-            {
-                token = new UserToken(usertoken);
-            }
-            catch (Exception)
-            {
-                errors.Add("usertoken", "Invalid user token");
-            }
-            #endregion
-
             if (errors.Count == 0)
             {
                 try
@@ -105,7 +90,7 @@ namespace Messzendzser.Controllers
                             imageData = memoryStream.ToArray();
                         }
                     }
-                    messageManager.StoreImageMessage(imageData,format, ChatroomId, token.ToUser(),mediaManager);
+                    messageManager.StoreImageMessage(imageData,format, ChatroomId, User.ToUser(),mediaManager);
 
                 }
                 catch (Exception ex) // Other exception

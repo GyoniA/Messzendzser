@@ -284,9 +284,11 @@ function Chat() {
 
 
     const userIdSet = () => {
-        let token = document.cookie;
+        let token;
 
-
+        var match = document.cookie.match(new RegExp('(^| )' + 'user-token' + '=([^;]+)'));
+        if (match)
+            token = match[2];
 
         token = token.split('.')[1].replace('-', '+').replace('_', '/');
         let decoded = atob(token);

@@ -38,15 +38,13 @@ namespace Messzendzser.Controllers
         [HttpPost(),DisableRequestSizeLimit]
         public ResponseMessage<object> Post( [FromHeader(Name = "format")] string? format, [FromHeader(Name = "chatroomId")] string? chatroomId, [FromHeader(Name = "length")] string? length)
         {
-            string? userToken = null;
-            Request.Cookies.TryGetValue("user-token", out userToken);
             byte[] buffer = new byte[(int)Request.ContentLength];
             Request.Body.ReadAsync(buffer, 0, buffer.Length);
-            return SendVoice(buffer, format, chatroomId,length, userToken, new MessageManager(dataSource), new MediaManager());
+            return SendVoice(buffer, format, chatroomId,length, new MessageManager(dataSource), new MediaManager());
         }
 
         [NonAction]
-        public ResponseMessage<object> SendVoice(byte[]? voice,string? format, string? chatroomId,string? length, string? usertoken, IMessageManager messageManager, IMediaManager mediaManager)
+        public ResponseMessage<object> SendVoice(byte[]? voice,string? format, string? chatroomId,string? length, IMessageManager messageManager, IMediaManager mediaManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -103,24 +101,12 @@ namespace Messzendzser.Controllers
             }
             #endregion
 
-            #region UserTokenVerification
-            UserToken token = null;
-
-            try
-            {
-                token = new UserToken(usertoken);
-            }
-            catch (Exception)
-            {
-                errors.Add("usertoken", "Invalid user token");
-            }
-            #endregion
 
             if (errors.Count == 0)
             {
                 try
                 {
-                    messageManager.StoreVoiceMessage(voice, format, ChatroomId, token.ToUser(),Length, mediaManager);
+                    messageManager.StoreVoiceMessage(voice, format, ChatroomId, User.ToUser(), Length, mediaManager);
 
                 }
                 catch (Exception ex) // Other exception

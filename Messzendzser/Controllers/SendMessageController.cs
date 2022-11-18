@@ -32,13 +32,11 @@ namespace Messzendzser.Controllers
         [HttpPost()]
         public ResponseMessage<object> Post( [FromHeader(Name = "message")] string? message, [FromHeader(Name = "chatroomId")] string? chatroomId)
         {
-            string? userToken = null;
-            Request.Cookies.TryGetValue("user-token", out userToken);
-            return SendMessage(message,chatroomId,userToken,new MessageManager(dataSource));
+            return SendMessage(message,chatroomId,new MessageManager(dataSource));
         }
 
         [NonAction]
-        public ResponseMessage<object> SendMessage(string? message, string? chatroomId, string? usertoken,IMessageManager messageManager)
+        public ResponseMessage<object> SendMessage(string? message, string? chatroomId,IMessageManager messageManager)
         {
             //Initialize error list for possible errors
             Dictionary<string, string> errors = new Dictionary<string, string>();
@@ -68,25 +66,12 @@ namespace Messzendzser.Controllers
             }
             #endregion
 
-            #region UserTokenVerification
-            UserToken token = null;
-
-            try
-            {
-                token = new UserToken(usertoken);
-            }
-            catch (Exception)
-            {
-                errors.Add("usertoken", "Invalid user token");
-            }
-            #endregion
-
             if (errors.Count == 0)
             {
                 try
                 {
                     // Record message
-                    messageManager.StoreMessage(message, ChatroomId, token.ToUser());
+                    messageManager.StoreMessage(message, ChatroomId, User.ToUser());
                     
                 }
                 catch (Exception ex) // Other exception

@@ -69,18 +69,19 @@ namespace Messzendzser.Controllers
                 try
                 {
 
+                    //Logging user in
                     var result = await signInManager.PasswordSignInAsync(username, password, true, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
                         User user = dataSource.GetUser(username);
-                        UserToken userToken = new UserToken(user);
+                        UserToken userToken = new UserToken(user,dataSource);
                         token = userToken.ToToken();
+                        return ResponseMessage<Dictionary<string, string>>.CreateOkMessage(new Dictionary<string, string>() { { "token", token } });
                     }
-                    //Logging user in
-                    /*User user = userManager.LoginUser(username, password);
-                    UserToken userToken = new UserToken(user);
-                    token = userToken.ToToken();*/
-                    return ResponseMessage<Dictionary<string, string>>.CreateOkMessage(new Dictionary<string, string>() { { "token", token } });
+                    else
+                    {
+                        errors.Add("username", "Given credentials do not match any record");
+                    }
                 }
                 catch (WrongCredentialsException ex) // Given credentials don't match any record
                 {

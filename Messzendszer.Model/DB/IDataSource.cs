@@ -56,5 +56,11 @@ namespace Messzendzser.Model.DB
         /// <param name="directon">Direction to look for message compared to <paramref name="time"/></param>
         /// <returns></returns>
         public IReadOnlyList<VoiceChatMessage> GetVoiceChatMessages(int chatroomId, int count, DateTime time, TimeDirecton directon);
+        /// <summary>
+        /// Creates and stores Voip credentials for user
+        /// </summary>
+        /// <param name="user">User to create credentials for</param>
+        /// <returns></returns>
+        public void CreateVoipCredentialsForUser(User user);
     }
 }
