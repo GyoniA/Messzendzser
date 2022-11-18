@@ -37,7 +37,7 @@ class WhiteboardLineEvent extends WhiteboardEvent {
 
         this.$type = "Messzendzser.WhiteBoard.WhiteboardLineEvent, Messzendzser"
         this.Type = 2;
-        this.Position.Color = color
+        this.Color = color
     }
 }
 
@@ -101,10 +101,23 @@ class WhiteboardManager {
             self.canvasContext.fillStyle = c;
             self.canvasContext.fillRect(x, y, 3, 3);
         }
+        this.drawLine = function (fromX, fromY, toX, toY, color) {
+            //self.canvasContext.fillStyle = color
+            // todo set color
+            var c = '#' + color.toString(16).substring(2);
+            self.canvasContext.strokeStyle = c;
+            self.canvasContext.lineWidth = 3;
+            self.canvasContext.beginPath();
+            self.canvasContext.moveTo(fromX, fromY);
+            self.canvasContext.lineTo(toX, toY);
+            self.canvasContext.stroke();            
+        }
 
         this.handleEvent = function (event) {
             if (event.Type == 1) { // Dot event
                 self.drawDot(event.Position.X, event.Position.Y, event.Color);
+            } else if(event.Type == 2){
+                self.drawLine(event.Start.X, event.Start.Y, event.End.X, event.End.Y, event.Color);
             } else if (event.Type == 0) {
                 self.drawImage(event.Image)
             }
@@ -135,16 +148,34 @@ class WhiteboardManager {
             var json = JSON.stringify(auth);
             self.sendMessage(json);
         }
-        this.canvas.addEventListener("mousedown", function (e) { self.mousedown = true });
-        this.canvas.addEventListener("mouseup", function (e) { self.mousedown = false });
+        this.canvas.addEventListener("mousedown", function (e) {
+            self.mousedown = true;
+            self.lastPointX = e.offsetX == undefined ? e.layerX : e.offsetX;
+            self.lastPointY = e.offsetY == undefined ? e.layerY : e.offsetY;
+        });
+        this.canvas.addEventListener("mouseup", function (e) {
+            self.mousedown = false;
+            self.lastPointX = undefined;
+            self.lastPointY = undefined;
+        });
         this.canvas.addEventListener("mousemove", function (e) {
             if (self.mousedown) {
                 if (!e) e = window.event;
 
                 var x = e.offsetX == undefined ? e.layerX : e.offsetX;
                 var y = e.offsetY == undefined ? e.layerY : e.offsetY;
+
+                if (self.lastPointX !== undefined) {
+                    self.drawLine(self.lastPointX, self.lastPointY, x, y, self.color);
+                    self.events.push(new WhiteboardLineEvent(self.lastPointX, self.lastPointY, x, y, self.color));
+                }
+                self.lastPointX = x;
+                self.lastPointY = y;
+                /*
+                 *  Dot option
                 self.drawDot(x, y, self.color);
                 self.events.push(new WhiteboardDotEvent(x,y,self.color));
+                */
             }
         });
 
