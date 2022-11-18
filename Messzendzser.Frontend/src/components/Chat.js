@@ -1,12 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MicRecorder from 'mic-recorder-to-mp3';
 import './WhiteBoard.js';
-
 import DecideCall from './DecideCall.js';
 import InCall from './InCall.js';
-
-
 import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { wait } from "@testing-library/user-event/dist/utils/index.js";
 import VoipComponent from "./VoipComponent.js";
@@ -16,9 +13,12 @@ function Chat() {
     //For navigation
     let navigate = useNavigate();
 
+
+
     //States 
     const [chatroomId, setChatroomId] = useState("");
 
+    const [help, setHelp] = useState(false);
     const refChatroomId = useRef("");
 
     const refVoiceData = useRef("");
@@ -31,7 +31,6 @@ function Chat() {
     const [name, setName] = useState("");
 
     const [visibility, setVisibility] = useState(false);
-
 
     const [isRecording, setIsRecording] = useState(false);
     const [voiceData, setVoiceData] = useState("");
@@ -75,6 +74,7 @@ function Chat() {
         if (i < 10) { i = "0" + i }
         return i;
     }
+
     //Load messages from API
     const loadMessages = async (e) => {
         var today = new Date();
@@ -121,7 +121,12 @@ function Chat() {
             .build();
 
         setConnection(connect);
+
+
+
     }, []);
+
+           
 
     useEffect(() => {
         if (connection) {
@@ -134,6 +139,7 @@ function Chat() {
                 })
                 .catch((error) => console.log(error));
         }
+
     }, [connection]);
 
     const joinRoom = async () => {
@@ -156,18 +162,14 @@ function Chat() {
                 method: "POST",
                 mode: 'cors',
                 credentials: "include",
-
                 headers: {
                     'Access-Control-Allow-Origin': '*',
 
                     chatroomId: chatroomId,
                 },
                 body: data,
-
-
             });
             let resJson = await res.json();
-
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     sendMessage();
@@ -175,9 +177,7 @@ function Chat() {
             }
         } catch (err) {
             console.log(err);
-
         }
-
     };
 
     //Send Voice to API
@@ -188,7 +188,6 @@ function Chat() {
                 method: "POST",
                 mode: 'cors',
                 credentials: "include",
-
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     format: 'MP3',
@@ -197,9 +196,6 @@ function Chat() {
                     length: 200,
                 },
                 body: refVoiceData.current,
-
-
-
             });
             let resJson = await res.json();
 
@@ -210,30 +206,24 @@ function Chat() {
             }
         } catch (err) {
             console.log(err);
-
         }
-
     };
 
 
     //Send message to API
     let messageSent = async (e) => {
-
         try {
             let res = await fetch("https://localhost:7043/api/SendMessage", {
                 method: "POST",
                 mode: 'cors',
                 credentials: "include",
-
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     message: message,
                     chatroomId: chatroomId,
-
                 },
             });
             let resJson = await res.json();
-
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setMessage("");
@@ -245,11 +235,9 @@ function Chat() {
         }
     };
 
-
-
     //Load chatrooms from API
-    const loadChatrooms = async (e) => {
-
+    const loadChatrooms = async () => {
+        console.log("tolt");
         try {
             const res = await fetch("https://localhost:7043/api/GetChatrooms", {
                 method: "GET",
@@ -269,19 +257,20 @@ function Chat() {
         } catch (err) {
             console.log(err);
         }
+        console.log(chatrooms);
     };
 
-    //Run once after the initial render
+
     useEffect(() => {
         loadMessages();
         loadChatrooms();
-        /*const interval = setInterval(() => {
-            loadMessages();
-            loadChatrooms();
-        }, 3000);
-        return () => clearInterval(interval);*/
+        setHelp(true);
     }, [chatroomId]);
 
+    useEffect(() => {
+        setDefaultChatroom();
+        loadMessages();     
+    }, [help]);
 
     const userIdSet = () => {
         let token;
@@ -294,7 +283,6 @@ function Chat() {
         let decoded = atob(token);
         decoded = (decoded.split(',')[0]).split(':')[1];
         userId = parseInt(decoded);
-
     }
 
     //Display messages in correct form
@@ -302,7 +290,6 @@ function Chat() {
         return messages.map((msg) => {
             userIdSet();
             if (msg.hasOwnProperty('text')) {
-
                 if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
@@ -316,7 +303,6 @@ function Chat() {
                         </li>
                     )
                 }
-
             }
             if (msg.hasOwnProperty('length')) {
                 if (msg.userId == userId) {
@@ -340,7 +326,6 @@ function Chat() {
                         </li>
                     )
                 }
-
             } else {
                 if (msg.userId == userId) {
                     return (
@@ -357,8 +342,6 @@ function Chat() {
                         </li>
                     )
                 }
-
-
             }
         })
     }
@@ -370,75 +353,67 @@ function Chat() {
         hiddenFileInput.current.click();
     };
 
-    //FUnction to display only the names
+    //Function to display only the names
     const Chatrooms = () => {
         return chatrooms.map((cr) => {
             return <option key={cr.id} value={cr.id}>{cr.name}
             </option>;
         });
+
     };
 
     const btnManager = () => {
         if (!isRecording) {
-
             startRecording();
-
         } else {
-
             stopRecording();
-            
-
         }
     }
 
     const startRecording = () => {
-
         Mp3Recorder
             .start()
             .then(() => {
-
                 setIsRecording(true);
-
             }).catch((e) => console.error(e));
-
     };
-
-
 
     const stopRecording = () => {
         Mp3Recorder
             .stop()
             .getMp3()
             .then(([buffer, blob]) => {
-
                 setIsRecording(false);
                 refVoiceData.current = blob;
                 setVoiceData(blob);
                 voiceSent();
-
             }).catch((e) => console.log(e));
     };
-
-   
 
     const popupCloseHandler = (e) => {
         setVisibility(e);
     };
 
     const handleEnterPressed = (event) => {
-
         if (event.key === 'Enter') {
             messageSent();
         }
     };
 
+    const setDefaultChatroom = () => {
+        const first = chatrooms[0];
+        if (chatrooms != null) {
+            console.log(chatrooms);
+        }
+
+        refChatroomId.current = first?.id;
+        setChatroomId(first?.id);
+        joinRoom(first?.id);
+    }
 
     return (
-
-
         <div className='chatapp'>
             <div className='upper_row'>
-
 
                 <select onChange={(e) => {
                     if (chatroomId != null) {
@@ -448,9 +423,7 @@ function Chat() {
                     setChatroomId(e.target.value)
                     joinRoom(e.target.value)
                 }} >
-                    <option value="choose" disabled selected="selected">
-                        Név:
-                    </option>
+
                     {Chatrooms()}
                 </select>
 
@@ -459,12 +432,9 @@ function Chat() {
 
                     <button className='whiteboard_button'
                         onClick={() => {
-
                             let token = document.cookie;
                             let array = token.split("=");
                             token = array[1];
-
-
                             navigate("/whiteboard", {
                                 state: {
                                     chatroomId: chatroomId,
@@ -476,12 +446,9 @@ function Chat() {
                         <img src="/images/whiteboard.png" ></img>
                     </button>
 
-
-
                     <button className='phone'
                         onClick={(e) => {
                             setVisibility(!visibility);
-
                         }}>
                         <img src="/images/phone.png" ></img>
                     </button>
@@ -490,32 +457,20 @@ function Chat() {
                         onClose={popupCloseHandler}
                         show={visibility}
                         name={name}>
-
                     </InCall>
-
-
                 </div>
-
             </div>
-
-
 
             <ul>
                 {displayMessages()}
             </ul>
 
-
-
-
             <div className='bottom_row'>
-
-
 
                 <button className='send'
                     onClick={messageSent}>
                     <img src="/images/send.png" ></img>
                 </button>
-
 
                 <input className="msg"
                     onKeyPress={handleEnterPressed}
@@ -525,14 +480,11 @@ function Chat() {
                     onChange={(e) => setMessage(e.target.value)}>
                 </input>
 
-
                 <button className='microphone'
                     onClick={btnManager}
                     name="voice">
                     <img src="/images/microphone.png" ></img>
                 </button>
-
-
 
                 <form className="imageSend" id="uploadImg" >
                     <input type="file"
@@ -544,13 +496,8 @@ function Chat() {
                     <button className='picture' onClick={handleClick}>
                         <img src="/images/picture.png" ></img>
                     </button>
-
                 </form>
-
-
-
             </div>
-
         </div >
     )
 }
