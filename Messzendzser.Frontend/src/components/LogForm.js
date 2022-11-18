@@ -89,6 +89,7 @@ export default function Form() {
 
                     <div className="message">
                         {message ? <p>{message.username}</p> : null}
+                        {message ? <p>{message.error}</p> : null}
                     </div>
                 </form>
             </div>
