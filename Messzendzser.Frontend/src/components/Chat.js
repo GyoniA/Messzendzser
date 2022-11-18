@@ -483,8 +483,6 @@ function Chat() {
                             var match = document.cookie.match(new RegExp('(^| )' + 'user-token' + '=([^;]+)'));
                             if (match)
                                 token = match[2];
-                            let array = token.split("=");
-                            token = array[1];
                             navigate("/whiteboard", {
                                 state: {
                                     chatroomId: chatroomId,
