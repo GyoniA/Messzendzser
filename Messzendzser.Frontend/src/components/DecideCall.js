@@ -13,6 +13,12 @@ const DecideCall = (props) => {
         props.onClose(false);
     };
 
+    const changeHandler = (e) => {
+        setShow(false);
+        props.onChange(false);
+    };
+
+
     useEffect(() => {
         setShow(props.show);
     }, [props.show]);
@@ -33,7 +39,7 @@ const DecideCall = (props) => {
                 <div className="button">
 
                 <div className="buttons">
-                <button className='pick-up' >
+                        <button className='pick-up' onClick={changeHandler}>
                     <img src = "/images/pickup.png" ></img>
                 </button>
                 <button className='decline' onClick={closeHandler}>
@@ -51,7 +57,8 @@ const DecideCall = (props) => {
 DecideCall.propTypes = {
     name: PropTypes.string.isRequired,
     show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 export default DecideCall;

@@ -30,17 +30,17 @@ function Chat() {
     const [connection, setConnection] = useState();
     const [name, setName] = useState("");
 
-    const [visibility, setVisibility] = useState(false);
+    const [inCall, setInCall] = useState(false);
+    const [callFromOther, setCallFromOther] = useState(false);
+
+    const [callFrom, setCallFrom] = useState("");
+
 
     const [isRecording, setIsRecording] = useState(false);
     const [voiceData, setVoiceData] = useState("");
     const [Mp3Recorder, setMp3Recorder] = useState(
         new MicRecorder({ bitRate: 128 })
     );
-
-    var userId;
-
-    const messageNum = 20;
 
     // Voip
 
@@ -49,23 +49,26 @@ function Chat() {
     // Event handlers
 
     const incomingCallHandler = (from) => {
-        console.log("incoming call registered by page, from: "+from);
-        // TODO ...
+        console.log(from._display_name);
+        setCallFrom(from._display_name);
+        console.log("incoming call registered by page, from: " + from);
+        setCallFromOther(!callFromOther);
     }
 
     const callEndedHandler = () => {
         console.log("call ended registered by page");
-        // TODO ...
+        setInCall(false);
     }
 
     const callAcceptedHandler = () => {
         console.log("call accepted registered by page");
-        // TODO ...
+        //setCallFromOther(!callFromOther);
     }
 
     const callFailedHandler = () => {
         console.log("call accepted registered by page");
-        // TODO ...
+        setCallFromOther(false);
+        setInCall(false);
     }
 
     // Voip end
@@ -109,7 +112,12 @@ function Chat() {
 
     useEffect(() => {
         // TODO retreive voip credentials (maybe store them in cookie or local storage)
-        voipComp.current.setCredentials("voip", "Password1!");
+        voipSet();
+        let name = localStorage.getItem('username');
+        console.log(name);
+        let password = localStorage.getItem('voippassword');
+        voipComp.current.setCredentials(name, password);
+        //voipComp.current.setCredentials("voip", "Password1!");
         voipComp.current.connect();
     }, [])
 
@@ -126,7 +134,7 @@ function Chat() {
 
     }, []);
 
-           
+
 
     useEffect(() => {
         if (connection) {
@@ -237,7 +245,6 @@ function Chat() {
 
     //Load chatrooms from API
     const loadChatrooms = async () => {
-        console.log("tolt");
         try {
             const res = await fetch("https://localhost:7043/api/GetChatrooms", {
                 method: "GET",
@@ -257,7 +264,6 @@ function Chat() {
         } catch (err) {
             console.log(err);
         }
-        console.log(chatrooms);
     };
 
 
@@ -269,23 +275,38 @@ function Chat() {
 
     useEffect(() => {
         setDefaultChatroom();
-        loadMessages();     
+        loadMessages();
     }, [help]);
 
 
 
     const userIdSet = () => {
         let token = document.cookie;
+
         token = token.split('.')[1].replace('-', '+').replace('_', '/');
         let decoded = atob(token);
         decoded = (decoded.split(',')[0]).split(':')[1];
-        userId = parseInt(decoded);
+        let userId = parseInt(decoded);
+        localStorage.setItem('userid', userId);
+    }
+
+    const voipSet = () => {
+        let token = document.cookie;
+        token = token.split('.')[1].replace('-', '+').replace('_', '/');
+        let decoded = atob(token);
+        let userName = (decoded.split(',')[1]).split(':')[1];
+        let voipPassword = (decoded.split(',')[3]).split(':')[1];
+        userName = userName.replaceAll('"', '');
+        voipPassword = voipPassword.replaceAll('"', '');
+        localStorage.setItem('username', userName);
+        localStorage.setItem('voippassword', voipPassword);
     }
 
     //Display messages in correct form
     const displayMessages = () => {
         return messages.map((msg) => {
             userIdSet();
+            const userId = localStorage.getItem('userid');
             if (msg.hasOwnProperty('text')) {
                 if (msg.userId == userId) {
                     return (
@@ -353,7 +374,8 @@ function Chat() {
     //Function to display only the names
     const Chatrooms = () => {
         return chatrooms.map((cr) => {
-            return <option key={cr.id} value={cr.id}>{cr.name}
+            return <option
+                key={cr.id} value={cr.id}>{cr.name}
             </option>;
         });
 
@@ -387,9 +409,7 @@ function Chat() {
             }).catch((e) => console.log(e));
     };
 
-    const popupCloseHandler = (e) => {
-        setVisibility(e);
-    };
+
 
     const handleEnterPressed = (event) => {
         if (event.key === 'Enter') {
@@ -399,20 +419,44 @@ function Chat() {
 
     const setDefaultChatroom = () => {
         const first = chatrooms[0];
-        if (chatrooms != null) {
-            console.log(chatrooms);
-        }
-
         refChatroomId.current = first?.id;
         setChatroomId(first?.id);
         joinRoom(first?.id);
     }
 
+
+
+
+    const hangUp = (e) => {
+        
+        setInCall(e);
+        voipComp.current.hangUp();
+      
+    };
+
+    const popupChangeHandler = (e) => {
+       
+        setName(callFrom);
+        setCallFromOther(e);
+        setInCall(!e);
+        voipComp.current.acceptCall();
+    };
+
+    const declineCall = (e) => {
+        
+        setCallFromOther(e);
+        voipComp.current.declineCall();
+    };
+
+
+
+
+
     return (
         <div className='chatapp'>
             <div className='upper_row'>
 
-                <select onChange={(e) => {
+                <select id="chatroomSelect" onChange={(e) => {
                     if (chatroomId != null) {
                         leaveRoom(chatroomId)
                     }
@@ -445,18 +489,34 @@ function Chat() {
 
                     <button className='phone'
                         onClick={(e) => {
-                            setVisibility(!visibility);
+                            setInCall(!inCall);
+                            let selected = document.getElementById("chatroomSelect");
+                            const index = selected.selectedIndex;
+                            const tempName = selected.options[index].text;                         
+                            setName(tempName);                           
+                            voipComp.current.call(tempName);
                         }}>
                         <img src="/images/phone.png" ></img>
                     </button>
 
-                    <InCall
-                        onClose={popupCloseHandler}
-                        show={visibility}
-                        name={name}>
-                    </InCall>
+
                 </div>
             </div>
+
+            <InCall
+                onClose={hangUp}
+                show={inCall}
+                name={name}>
+            </InCall>
+
+
+            <DecideCall
+                onChange={popupChangeHandler}
+                onClose={declineCall}
+                show={callFromOther}
+                name={callFrom}>
+            </DecideCall>
+
 
             <ul>
                 {displayMessages()}
