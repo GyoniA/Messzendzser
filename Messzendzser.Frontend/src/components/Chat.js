@@ -42,6 +42,8 @@ function Chat() {
         new MicRecorder({ bitRate: 128 })
     );
 
+    const MessagesContainer = useRef();
+
     // Voip
 
     const voipComp = useRef();
@@ -102,6 +104,7 @@ function Chat() {
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setMessages(resJson.body);
+                    MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight;
                 }
 
             }
@@ -525,7 +528,7 @@ function Chat() {
             </DecideCall>
 
 
-            <ul>
+            <ul ref={MessagesContainer}>
                 {displayMessages()}
             </ul>
 
