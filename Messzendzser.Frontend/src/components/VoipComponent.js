@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import VoIP from "./VoIP";
 
 class VoipComponent extends React.Component {
 
@@ -17,6 +18,8 @@ class VoipComponent extends React.Component {
         this.md5 = require('md5')
         this.props = props
         this.addedScript = false;
+
+        this.Ringtone = React.createRef();
         if (props.uri === undefined) {
             throw new Error("uri is undefined");
         }
@@ -26,14 +29,17 @@ class VoipComponent extends React.Component {
     }
 
     componentDidMount() {
-        // Connect
-        if (this.addedScript === false) {
-            
-        }
-
+        
     }
 
+    playRingtone = () => {
+        this.Ringtone.current.play();
+    }
 
+    stopRingtone = () => {
+        this.Ringtone.current.pause();
+        this.Ringtone.current.currentTime = 0;
+    }
 
     setCredentials = (username, password) => {
         this.username = username;
@@ -78,8 +84,9 @@ class VoipComponent extends React.Component {
                         e.session.terminate();
                     }
                     else {
-                        // TODO add ringtone
+                        self.playRingtone();
                         e.session.on("confirmed", function () {
+                            self.stopRingtone();
                             let voipAudio = document.getElementById("voipAudio")
                             voipAudio.srcObject = session.connection.getRemoteStreams()[0];
                             voipAudio.play();
@@ -132,6 +139,7 @@ class VoipComponent extends React.Component {
     // Declines an incoming call
     declineCall = () => {
         if (this.incomingCallSession !== undefined) {
+            this.stopRingtone();
             this.incomingCallSession.terminate();
             this.incomingCallSession = undefined;
         }
@@ -147,7 +155,10 @@ class VoipComponent extends React.Component {
 
     // Accepts incoming call
     acceptCall = () => {
+        let self = this;
         if (this.incomingCallSession !== undefined) {
+            let voipAudio = document.getElementById("voipAudio")
+            self.stopRingtone();
             this.incomingCallSession.answer();
             this.activeCallSession = this.incomingCallSession;
             this.incomingCallSession = undefined;
@@ -171,6 +182,7 @@ class VoipComponent extends React.Component {
             <div id='voipContainer'>
                 <script src="js/jssip.js"></script>
                 <audio id="voipAudio"></audio>
+                <audio id="ringtone" loop={true} src="/audio/ringtone.mp3" ref={this.Ringtone}></audio>
             </div>
         );
     }
