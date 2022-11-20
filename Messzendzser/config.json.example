@@ -1,3 +1,0 @@
-{
-  "DbConnectionString": "server=localhost;port=3306;database=messzendzser;uid=root;pwd=secret"
-}

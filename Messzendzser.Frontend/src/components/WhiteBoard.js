@@ -15,6 +15,7 @@ function WhiteBoard() {
 
 
     const Load = () => {
+
         setChatroomId(location.state.chatroomId);
         setToken(location.state.token);
         setColor(4278190080);
