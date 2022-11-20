@@ -8,19 +8,12 @@ namespace Messzendzser.Controllers
 
     public class WebSocketController : ControllerBase
     {
-        private readonly IDataSource dataSource;
-
-        public WebSocketController(IDataSource dataSource)
-        {
-            this.dataSource = dataSource;
-        }
-
         static WhiteboardManager whiteboardManager = null;
         [HttpGet("/ws/whiteboard")]
         public async Task Get()
         {
             if(whiteboardManager == null)
-                whiteboardManager = new WhiteboardManager(dataSource);            
+                whiteboardManager = new WhiteboardManager();            
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();

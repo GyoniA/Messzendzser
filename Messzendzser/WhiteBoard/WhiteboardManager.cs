@@ -42,10 +42,8 @@
         {
             await ClientLoop(socket);
         }
-        private IDataSource dataSource;
-        public WhiteboardManager(IDataSource dataSource)
+        public WhiteboardManager()
         {
-            this.dataSource = dataSource;
             whiteboards = new ConcurrentDictionary<int, Whiteboard>();
             lastTimestamps = new ConcurrentDictionary<WhiteboardConnection, DateTime>();
         }
@@ -58,7 +56,10 @@
             User user = token.ToUser();
             try
             {
-                res = dataSource.IsUserInChatroom(user.Id, wm.ChatroomId);
+                using (IDataSource dataSource = new MySQLDbConnection())
+                {
+                    res = dataSource.IsUserInChatroom(user.Id, wm.ChatroomId);
+                }
             }
             catch (Exception e)
             {
@@ -133,9 +134,13 @@
                         {
                             //if it is a successful authentication message
                             WhiteboardAuthenticationMessage auth = (WhiteboardAuthenticationMessage)wMessage;
-                            whiteboards.TryAdd(auth.ChatroomId, new Whiteboard(auth.ChatroomId));
                             Whiteboard board;
-                            whiteboards.TryGetValue(auth.ChatroomId, out board);
+                            if(!whiteboards.TryGetValue(auth.ChatroomId, out board))
+                            {
+                                whiteboards.TryAdd(auth.ChatroomId, new Whiteboard(auth.ChatroomId));
+
+                                board?.LoadImageFromFile();
+                            }
                             wConn = new WhiteboardConnection(auth.Username, auth.ChatroomId, client);
                             board?.AddConnection(wConn);
                             byte[] wbm = new WhiteboardOKMessage().Serialize();
@@ -161,6 +166,7 @@
                             wbim.AddEvent(new WhiteboardImageEvent(wConn.RoomId));
                             byte[] imageMessage = wbim.Serialize();
                             await SendMessageWithCheck(client, wConn, isAliveTimer, imageMessage);
+                            board?.SaveDataToFile();
                         }
                         break;
                     case State.Authenticated:
