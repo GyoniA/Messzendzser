@@ -117,7 +117,7 @@
                 // Translate data sentMessage to a ASCII string.
                 //TODO take this out after testing
                 data = System.Text.Encoding.ASCII.GetString(sentMessage, 0, receiveResult.Count);
-                Console.WriteLine("Received: {0}", data);
+                //Console.WriteLine("Received: {0}", data);
                 
                 wMessage = WhiteboardMessage.DeSerialize(sentMessage);
 
@@ -137,7 +137,8 @@
                             Whiteboard board;
                             if(!whiteboards.TryGetValue(auth.ChatroomId, out board))
                             {
-                                whiteboards.TryAdd(auth.ChatroomId, new Whiteboard(auth.ChatroomId));
+                                board = new Whiteboard(auth.ChatroomId);
+                                whiteboards.TryAdd(auth.ChatroomId, board);
 
                                 board?.LoadImageFromFile();
                             }
@@ -162,7 +163,7 @@
                             isAliveTimer.Start();
                             wConn.IsAliveTimer = isAliveTimer;
                             
-                            board?.SaveDataToFile();
+                            //board?.SaveDataToFile();
                             WhiteboardEventMessage wbim = new WhiteboardEventMessage();
                             wbim.AddEvent(new WhiteboardImageEvent(wConn.RoomId));
                             byte[] imageMessage = wbim.Serialize();

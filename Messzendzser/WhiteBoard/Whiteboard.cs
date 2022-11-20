@@ -49,6 +49,7 @@ namespace Messzendzser.WhiteBoard
             {
                 connections[connection.Username] = connection;
             }
+            Console.WriteLine($"Whiteboard: connecntion added to room {RoomId}, current connection count: {connections.Count}");
         }
 
         public void RemoveConnection(WhiteboardConnection connection)
