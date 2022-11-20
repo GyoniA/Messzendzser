@@ -4,7 +4,7 @@ import MicRecorder from 'mic-recorder-to-mp3';
 import './WhiteBoard.js';
 import DecideCall from './DecideCall.js';
 import InCall from './InCall.js';
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
+import { LogLevel, HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { wait } from "@testing-library/user-event/dist/utils/index.js";
 import VoipComponent from "./VoipComponent.js";
 
@@ -28,6 +28,7 @@ function Chat() {
     const [name, setName] = useState("");
 
     const [whyWontReactWorkForMe, setWhyWontReactWorkForMe] = useState(0);
+    const [whyWontReactWorkForMe2, setWhyWontReactWorkForMe2] = useState(0);
 
     const [inCall, setInCall] = useState(false);
     const [callFromOther, setCallFromOther] = useState(false);
@@ -50,8 +51,11 @@ function Chat() {
     const MessagesContainer = useRef();
 
     const forceUpdate = () => {
-        console.log('should force update');
-        setWhyWontReactWorkForMe(whyWontReactWorkForMe + Math.random()%10000); // It works, dont't touch it! (ノಠ益ಠ)ノ
+        setWhyWontReactWorkForMe(whyWontReactWorkForMe2 + Math.random()%10000); // It works, dont't touch it! (ノಠ益ಠ)ノ
+    }
+
+    const forceUpdate2 = () => {
+        setWhyWontReactWorkForMe2(whyWontReactWorkForMe2 + Math.random() % 10000); // It works, dont't touch it! (ノಠ益ಠ)ノ
     }
 
     // Voip
@@ -140,6 +144,7 @@ function Chat() {
         const connect = new HubConnectionBuilder()
             .withUrl("https://localhost:7043/messageSenderHub")
             .withAutomaticReconnect()
+            .configureLogging(LogLevel.Trace)
             .build();
 
         setConnection(connect);
@@ -154,7 +159,6 @@ function Chat() {
 
 
     useEffect(() => {
-        console.log('should have reloaded');
         if (autoScroll) { 
             scrollToBottom();
         }
@@ -254,34 +258,49 @@ function Chat() {
         });
     }, [MessagesContainer]);*/
 
-
-
     useEffect(() => {
+        console.log("Trying to join room");
+        setTimeout(() => joinRoom(chatroomId.current), 100);
+        
+    }, [whyWontReactWorkForMe2]);
 
+
+    const connectionCreated = async ()=>{
         if (connection) {
-            connection
+            await connection
                 .start()
                 .then(() => {
-                    joinRoom(chatroomId);
+                    forceUpdate2();
                     connection.on("ReceiveMessage", () => {
                         loadNewerMessages();
                     });
                 })
                 .catch((error) => console.log(error));
         }
+
+    }
+
+    useEffect( () => {
+        connectionCreated();
+       
+
     }, [connection]);
 
     const joinRoom = async () => {
-        if (connection) await connection.send("JoinRoom", refChatroomId.current);
-
+        if (whyWontReactWorkForMe2 != 0) {
+            console.log("trying to connect to room: " + refChatroomId.current);
+            if (connection) {
+                await connection.send("JoinRoom", refChatroomId.current.toString());
+            }
+        }
     };
 
     const leaveRoom = async () => {
-        if (connection) await connection.send("LeaveRoom", refChatroomId.current);
+        if (connection) await connection.send("LeaveRoom", refChatroomId.current.toString());
     };
 
     const sendMessage = async () => {
-        if (connection) await connection.send("SendMessage", refChatroomId.current);
+        if (connection) await connection.send("SendMessage", refChatroomId.current.toString());
     };
 
     //Send Image to API
