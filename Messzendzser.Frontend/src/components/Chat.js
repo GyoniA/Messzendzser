@@ -31,6 +31,12 @@ function Chat() {
 
     const [callFrom, setCallFrom] = useState("");
 
+    const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
+
+    const [oldestMessageTime, setOldestMessageTime] = useState('');
+    const newestMessageTime = useRef('');
+
+    const [autoScroll, setAutoScroll] = useState(true);
 
     const [isRecording, setIsRecording] = useState(false);
     const [voiceData, setVoiceData] = useState("");
@@ -39,9 +45,6 @@ function Chat() {
     );
 
     const MessagesContainer = useRef();
-
-
-
 
     // Voip
 
@@ -103,6 +106,11 @@ function Chat() {
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setMessages(resJson.body);
+                    let newMessages = resJson.body;
+                    setOldestMessageTime(newMessages[0].time.replace('T', ' '));
+                    console.log('oldest message set to ' + newMessages[0].time.replace('T', ' '));
+                    newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
+                    console.log('newest message set to ' + newMessages[newMessages.length - 1].time.replace('T', ' '));
                 }
 
             }
@@ -110,6 +118,13 @@ function Chat() {
             console.log(err);
         }
     };
+
+    useEffect(() => {
+        console.log('oldest set to:' + oldestMessageTime);
+    }, [oldestMessageTime]);
+    /*useEffect(() => {
+        console.log('newest set to:' + newestMessageTime);
+    }, [newestMessageTime]);*/
 
     useEffect(() => {
         // TODO retreive voip credentials (maybe store them in cookie or local storage)
@@ -135,8 +150,108 @@ function Chat() {
     }, []);
 
     useEffect(() => {
-        MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight; // TODO update because it is not always needed
+        if (autoScroll) { 
+            MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight; 
+        }
     }, [messages]);
+
+    // Autoscroll
+
+    let isLoading = false;
+
+    const loadNewerMessages = async () => {
+        console.log('loading newer messages, time:' + newestMessageTime.current + ' oldest: ' + oldestMessageTime);
+        try {
+            const res = await fetch("https://localhost:7043/api/GetMessages", {
+                method: "GET",
+                mode: 'cors',
+                credentials: "include",
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    chatroomId: refChatroomId.current,
+                    count: 40,
+                    time: newestMessageTime.current,
+                    dir: "forward",
+                },
+            });
+            let resJson = await res.json();
+
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+                    let newMessages = resJson.body;
+                    newMessages.shift();
+                    newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
+                    console.log('newest message set to ' + newMessages[newMessages.length - 1].time.replace('T', ' '));
+                    let catMessages = [...messages,...newMessages];
+                    setMessages(catMessages);
+                    console.log('loaded newer messages');
+                }
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
+    const loadOlderMessages = async () => {
+        console.log('loading older messages');
+        try {
+            const res = await fetch("https://localhost:7043/api/GetMessages", {
+                method: "GET",
+                mode: 'cors',
+                credentials: "include",
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    chatroomId: refChatroomId.current,
+                    count: 40,
+                    time: oldestMessageTime,
+                    dir: "backward",
+                },
+            });
+            let resJson = await res.json();
+
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+                    let newMessages = resJson.body;
+                    newMessages.pop(); // remove last item, because it is the same as an already loaded item
+                    if (newMessages.length > 0) {
+                        console.log('oldest message set to ' + newMessages[0].time.replace('T', ' '));
+                        setOldestMessageTime(newMessages[0].time.replace('T', ' '));
+                        let catMessages = [...newMessages, ...messages];
+                        setMessages(catMessages);
+                        console.log('loaded older messages');
+                    }
+                }
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleScroll = async (e) => {
+        if (MessagesContainer.current.scrollTop < 200 && MessagesContainer.current.scrollHeight > 0) {
+
+            if (!isLoading) {
+                isLoading = (true);
+                loadOlderMessages();
+            }
+        }
+        if (MessagesContainer.current.scrollHeight - MessagesContainer.current.scrollTop === MessagesContainer.current.clientHeight) {
+            // scrolled to bottom
+            setAutoScroll(true);
+        } else {
+            setAutoScroll(false);
+        }
+    }
+
+   /* useEffect(() => {
+        MessagesContainer.current.addEventListener('scroll', function (e) {
+            let isAlreadyLoading = false;
+            
+        });
+    }, [MessagesContainer]);*/
 
 
 
@@ -146,7 +261,7 @@ function Chat() {
                 .start()
                 .then(() => {
                     connection.on("ReceiveMessage", () => {
-                        loadMessages();
+                        loadNewerMessages();
                     });
                 })
                 .catch((error) => console.log(error));
@@ -434,13 +549,6 @@ const handleEnterPressed = (event) => {
     }
 };
 
-
-
-
-
-
-
-
 const hangUp = (e) => {
 
     setInCall(e);
@@ -533,7 +641,7 @@ return (
         </DecideCall>
 
 
-        <ul ref={MessagesContainer}>
+        <ul ref={MessagesContainer} onScroll={handleScroll}>
             {displayMessages()}
         </ul>
 
