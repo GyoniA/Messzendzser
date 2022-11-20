@@ -33,7 +33,10 @@ namespace Messzendzser.WhiteBoard
         public void SaveDataToFile()
         {
             new MediaManager().StoreWhiteboard(GetData(), RoomId);
-            events.Clear();
+            events.Clear();/*
+            LinkedList<WhiteboardEvent> imageEv = new LinkedList<WhiteboardEvent>();
+            imageEv.AddLast(new WhiteboardImageEvent(RoomId));
+            AddEvents(imageEv, );*/
         }
         
         public void AddConnection(WhiteboardConnection connection)
@@ -60,6 +63,12 @@ namespace Messzendzser.WhiteBoard
         private void Draw(WhiteboardEvent e)
         {
             Canvas = e.Draw(Canvas);
+        }
+
+        public void LoadImageFromFile()
+        {
+            WhiteboardImageEvent wbim = new WhiteboardImageEvent(RoomId);
+            Draw(wbim);
         }
 
         public async Task AddEvents(LinkedList<WhiteboardEvent> newEvents,WhiteboardManager whiteboardManager, WhiteboardConnection sender)
