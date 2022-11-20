@@ -19,12 +19,14 @@ function Chat() {
 
     const refVoiceData = useRef("");
 
-    const [messages, setMessages] = useState([]);
+    const messages = useRef([]);
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
     //const [connection, setConnection] = useState < null | HubConnection > (null);
     const [connection, setConnection] = useState();
     const [name, setName] = useState("");
+
+    const [whyWontReactWorkForMe, setWhyWontReactWorkForMe] = useState(0);
 
     const [inCall, setInCall] = useState(false);
     const [callFromOther, setCallFromOther] = useState(false);
@@ -45,6 +47,11 @@ function Chat() {
     );
 
     const MessagesContainer = useRef();
+
+    const forceUpdate = () => {
+        console.log('should force update');
+        setWhyWontReactWorkForMe(whyWontReactWorkForMe + Math.random()%10000); // It works, dont't touch it! (ノಠ益ಠ)ノ
+    }
 
     // Voip
 
@@ -105,12 +112,11 @@ function Chat() {
 
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
-                    setMessages(resJson.body);
+                    messages.current = (resJson.body);
                     let newMessages = resJson.body;
-                    setOldestMessageTime(newMessages[0].time.replace('T', ' '));
-                    console.log('oldest message set to ' + newMessages[0].time.replace('T', ' '));
+                    setOldestMessageTime(newMessages[0].time.replace('T', ' '));                    
                     newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
-                    console.log('newest message set to ' + newMessages[newMessages.length - 1].time.replace('T', ' '));
+                    forceUpdate();
                 }
 
             }
@@ -119,12 +125,6 @@ function Chat() {
         }
     };
 
-    useEffect(() => {
-        console.log('oldest set to:' + oldestMessageTime);
-    }, [oldestMessageTime]);
-    /*useEffect(() => {
-        console.log('newest set to:' + newestMessageTime);
-    }, [newestMessageTime]);*/
 
     useEffect(() => {
         // TODO retreive voip credentials (maybe store them in cookie or local storage)
@@ -149,18 +149,23 @@ function Chat() {
 
     }, []);
 
+    const scrollToBottom = () => {
+        MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight;
+    }
+
+
     useEffect(() => {
+        console.log('should have reloaded');
         if (autoScroll) { 
-            MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight; 
+            scrollToBottom();
         }
-    }, [messages]);
+    }, [whyWontReactWorkForMe]);
 
     // Autoscroll
 
     let isLoading = false;
 
     const loadNewerMessages = async () => {
-        console.log('loading newer messages, time:' + newestMessageTime.current + ' oldest: ' + oldestMessageTime);
         try {
             const res = await fetch("https://localhost:7043/api/GetMessages", {
                 method: "GET",
@@ -181,10 +186,9 @@ function Chat() {
                     let newMessages = resJson.body;
                     newMessages.shift();
                     newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
-                    console.log('newest message set to ' + newMessages[newMessages.length - 1].time.replace('T', ' '));
-                    let catMessages = [...messages,...newMessages];
-                    setMessages(catMessages);
-                    console.log('loaded newer messages');
+                    let catMessages = [...messages.current,...newMessages];
+                    messages.current = (catMessages);
+                    forceUpdate();
                 }
 
             }
@@ -195,7 +199,6 @@ function Chat() {
 
 
     const loadOlderMessages = async () => {
-        console.log('loading older messages');
         try {
             const res = await fetch("https://localhost:7043/api/GetMessages", {
                 method: "GET",
@@ -216,11 +219,10 @@ function Chat() {
                     let newMessages = resJson.body;
                     newMessages.pop(); // remove last item, because it is the same as an already loaded item
                     if (newMessages.length > 0) {
-                        console.log('oldest message set to ' + newMessages[0].time.replace('T', ' '));
                         setOldestMessageTime(newMessages[0].time.replace('T', ' '));
-                        let catMessages = [...newMessages, ...messages];
-                        setMessages(catMessages);
-                        console.log('loaded older messages');
+                        let catMessages = [...newMessages, ...messages.current];
+                        messages.current = (catMessages);
+                        forceUpdate();
                     }
                 }
 
@@ -432,7 +434,7 @@ function Chat() {
 
     //Display messages in correct form
     const displayMessages = () => {
-        return messages.map((msg) => {
+        return messages.current.map((msg) => {
             userIdSet();
             const userId = localStorage.getItem('userid');
             if (msg.hasOwnProperty('text')) {
