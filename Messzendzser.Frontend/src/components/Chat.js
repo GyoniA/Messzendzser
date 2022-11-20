@@ -20,19 +20,26 @@ function Chat() {
     const refVoiceData = useRef("");
 
     const [first, setFirst] = useState(true);
-
-    const [messages, setMessages] = useState([]);
+    const messages = useRef([]);
     const [chatrooms, setChatrooms] = useState([]);
     const [message, setMessage] = useState("");
     //const [connection, setConnection] = useState < null | HubConnection > (null);
     const [connection, setConnection] = useState();
     const [name, setName] = useState("");
 
+    const [whyWontReactWorkForMe, setWhyWontReactWorkForMe] = useState(0);
+
     const [inCall, setInCall] = useState(false);
     const [callFromOther, setCallFromOther] = useState(false);
 
     const [callFrom, setCallFrom] = useState("");
 
+    const [loadingOlderMessages, setLoadingOlderMessages] = useState(false);
+
+    const [oldestMessageTime, setOldestMessageTime] = useState('');
+    const newestMessageTime = useRef('');
+
+    const [autoScroll, setAutoScroll] = useState(true);
 
     const [isRecording, setIsRecording] = useState(false);
     const [voiceData, setVoiceData] = useState("");
@@ -42,8 +49,10 @@ function Chat() {
 
     const MessagesContainer = useRef();
 
-
-
+    const forceUpdate = () => {
+        console.log('should force update');
+        setWhyWontReactWorkForMe(whyWontReactWorkForMe + Math.random()%10000); // It works, dont't touch it! (ノಠ益ಠ)ノ
+    }
 
     // Voip
 
@@ -104,7 +113,11 @@ function Chat() {
 
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
-                    setMessages(resJson.body);
+                    messages.current = (resJson.body);
+                    let newMessages = resJson.body;
+                    setOldestMessageTime(newMessages[0].time.replace('T', ' '));                    
+                    newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
+                    forceUpdate();
                 }
 
             }
@@ -112,6 +125,7 @@ function Chat() {
             console.log(err);
         }
     };
+
 
     useEffect(() => {
         // TODO retreive voip credentials (maybe store them in cookie or local storage)
@@ -136,9 +150,111 @@ function Chat() {
 
     }, []);
 
+    const scrollToBottom = () => {
+        MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight;
+    }
+
+
     useEffect(() => {
-        MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight; // TODO update because it is not always needed
-    }, [messages]);
+        console.log('should have reloaded');
+        if (autoScroll) { 
+            scrollToBottom();
+        }
+    }, [whyWontReactWorkForMe]);
+
+    // Autoscroll
+
+    let isLoading = false;
+
+    const loadNewerMessages = async () => {
+        try {
+            const res = await fetch("https://localhost:7043/api/GetMessages", {
+                method: "GET",
+                mode: 'cors',
+                credentials: "include",
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    chatroomId: refChatroomId.current,
+                    count: 40,
+                    time: newestMessageTime.current,
+                    dir: "forward",
+                },
+            });
+            let resJson = await res.json();
+
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+                    let newMessages = resJson.body;
+                    newMessages.shift();
+                    newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
+                    let catMessages = [...messages.current,...newMessages];
+                    messages.current = (catMessages);
+                    forceUpdate();
+                }
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+
+    const loadOlderMessages = async () => {
+        try {
+            const res = await fetch("https://localhost:7043/api/GetMessages", {
+                method: "GET",
+                mode: 'cors',
+                credentials: "include",
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    chatroomId: refChatroomId.current,
+                    count: 40,
+                    time: oldestMessageTime,
+                    dir: "backward",
+                },
+            });
+            let resJson = await res.json();
+
+            if (res.status === 200) {
+                if (resJson.message === "Ok") {
+                    let newMessages = resJson.body;
+                    newMessages.pop(); // remove last item, because it is the same as an already loaded item
+                    if (newMessages.length > 0) {
+                        setOldestMessageTime(newMessages[0].time.replace('T', ' '));
+                        let catMessages = [...newMessages, ...messages.current];
+                        messages.current = (catMessages);
+                        forceUpdate();
+                    }
+                }
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleScroll = async (e) => {
+        if (MessagesContainer.current.scrollTop < 200 && MessagesContainer.current.scrollHeight > 0) {
+
+            if (!isLoading) {
+                isLoading = (true);
+                loadOlderMessages();
+            }
+        }
+        if (MessagesContainer.current.scrollHeight - MessagesContainer.current.scrollTop === MessagesContainer.current.clientHeight) {
+            // scrolled to bottom
+            setAutoScroll(true);
+        } else {
+            setAutoScroll(false);
+        }
+    }
+
+   /* useEffect(() => {
+        MessagesContainer.current.addEventListener('scroll', function (e) {
+            let isAlreadyLoading = false;
+            
+        });
+    }, [MessagesContainer]);*/
 
 
 
@@ -149,7 +265,7 @@ function Chat() {
                 .start()
                 .then(() => {
                     connection.on("ReceiveMessage", () => {
-                        loadMessages();
+                        loadNewerMessages();
                     });
                 })
                 .catch((error) => console.log(error));
@@ -324,7 +440,7 @@ function Chat() {
 
     //Display messages in correct form
     const displayMessages = () => {
-        return messages.map((msg) => {
+        return messages.current.map((msg) => {
             userIdSet();
             const userId = localStorage.getItem('userid');
             if (msg.hasOwnProperty('text')) {
@@ -441,14 +557,7 @@ function Chat() {
         }
     };
 
-
-
-
-
-
-
-
-    const hangUp = (e) => {
+const hangUp = (e) => {
 
         setInCall(e);
         voipComp.current.hangUp();
@@ -540,9 +649,9 @@ function Chat() {
             </DecideCall>
 
 
-            <ul ref={MessagesContainer}>
-                {displayMessages()}
-            </ul>
+        <ul ref={MessagesContainer} onScroll={handleScroll}>
+            {displayMessages()}
+        </ul>
 
             <div className='bottom_row'>
 
