@@ -15,7 +15,8 @@ class VoipComponent extends React.Component {
 
         this.connectionState = "disconnected";
         this.JsSIP = require('jssip');
-        this.JsSIP.debug.enable('JsSIP:*');
+        //this.JsSIP.debug.enable('JsSIP:*');
+        this.JsSIP.debug.disable();
         this.md5 = require('md5')
         this.props = props
         this.addedScript = false;

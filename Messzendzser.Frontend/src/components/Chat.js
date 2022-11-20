@@ -279,7 +279,7 @@ function Chat() {
     useEffect(() => {
         setDefaultChatroom();
         loadMessages();
-    }, [help]);
+    }, [chatrooms]);
 
     const userIdSet = () => {
         let token;
@@ -427,6 +427,7 @@ function Chat() {
     };
 
     const setDefaultChatroom = () => {
+        console.log("setting chatroom");
         const first = chatrooms[0];
         refChatroomId.current = first?.id;
         setChatroomId(first?.id);
