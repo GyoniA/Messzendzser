@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="config.json.example" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config.json.example" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Luminet_NetStandard" Version="1.2.52" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />

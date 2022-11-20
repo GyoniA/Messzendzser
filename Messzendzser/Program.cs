@@ -8,8 +8,14 @@ using Microsoft.Owin;
 using Owin;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Messzendzser.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// LoadConfiguration
+
+Configuration config = Configuration.Load("config.json");
 
 new Thread(() => {
     try
@@ -37,8 +43,12 @@ builder.Services.AddAuthentication().AddCookie(options => {
     }
 );
 
+builder.Services.AddSingleton<Configuration>(config);
+
 // Add DbContext service
-builder.Services.AddDbContext<IDataSource,MySQLDbConnection>();
+builder.Services.AddDbContext<IDataSource,MySQLDbConnection>(
+    options => options.UseMySql(config.DbConnectionString, Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.14-mariadb"))
+    );
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<MySQLDbConnection>()
