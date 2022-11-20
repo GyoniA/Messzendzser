@@ -12,19 +12,18 @@ namespace Messzendzser.Controllers
 { 
     public class MessageSenderHub : Hub
     {
-        public Task JoinRoom(string chatroomId)
+        public async Task JoinRoom(string chatroomId)
         {
-            return Groups.AddToGroupAsync(Context.ConnectionId, chatroomId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, chatroomId);
         }
 
-        public Task LeaveRoom(string chatroomId)
+        public async Task LeaveRoom(string chatroomId)
         {
-            return Groups.RemoveFromGroupAsync(Context.ConnectionId, chatroomId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, chatroomId);
         }
 
         public async Task SendMessage(string chatroomId)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, chatroomId);
             await Clients.Group(chatroomId).SendAsync("ReceiveMessage");
         }
 
