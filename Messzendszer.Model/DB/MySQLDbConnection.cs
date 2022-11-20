@@ -25,6 +25,14 @@ namespace Messzendzser.Model.DB
             ChangeTracker.LazyLoadingEnabled = false;
         }
 
+        private string? ExtraConnectionString;
+
+        public MySQLDbConnection(string ConnectionString)
+        {
+            ExtraConnectionString = ConnectionString;
+            ChangeTracker.LazyLoadingEnabled = false;
+        }
+
         public MySQLDbConnection(DbContextOptions<MySQLDbConnection> options)
             : base(options)
         {            
@@ -40,6 +48,10 @@ namespace Messzendzser.Model.DB
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseMySql(ExtraConnectionString, Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.14-mariadb"));
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

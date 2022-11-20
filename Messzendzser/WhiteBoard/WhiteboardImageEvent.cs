@@ -31,9 +31,10 @@ namespace Messzendzser.WhiteBoard
             var ms = new MemoryStream(data);
 
             SKBitmap bitmap = SKBitmap.Decode(ms);
-            var image = new SKCanvas(bitmap);
+            canvas.DrawBitmap(bitmap, new SKPoint(0, 0));
+            //var image = new SKCanvas(bitmap);
 
-            return image;
+            return canvas;//image;
         }
     }
 }
