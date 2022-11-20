@@ -15,6 +15,7 @@ class VoipComponent extends React.Component {
 
         this.connectionState = "disconnected";
         this.JsSIP = require('jssip');
+        this.JsSIP.debug.enable('JsSIP:*');
         this.md5 = require('md5')
         this.props = props
         this.addedScript = false;
@@ -75,10 +76,24 @@ class VoipComponent extends React.Component {
                 self.connectionState = "disconnected";
             });
             self.ua.on('newRTCSession', function (e) {
-                let session = e.session; 
+                let session = e.session;
+                session.on('ended', function (e) {
+                    console.log('call ended');
+                    self.props.callEndedCallback();
+                    self.incomingCallSession = undefined;
+                    self.activeCallSession = undefined;
+                });
+                session.on('failed', function (e){
+                    console.log("call failed")
+                    self.props.callFailedCallback();
+                    self.incomingCallSession = undefined;
+                    self.activeCallSession = undefined;
+                    self.stopRingtone();
+
+                });
                 if (e.originator == 'remote') { // outgoing call session here
                     console.log("Incoming call from: " + e.request.from);
-                    
+
                     if (self.incomingCallSession !== undefined || self.activeCallSession !== undefined) {
                         console.log("rejecting incoming call because other session is in progress (either incoming or active)");
                         e.session.terminate();
@@ -95,6 +110,8 @@ class VoipComponent extends React.Component {
                         self.incomingCallSession = e.session;
                         self.props.incomingCallCallback(e.request.from);
                     }
+                } else {
+                    self.activeCallSession = session;
                 }
             });
             this.ua.on('registered', function (e) {
@@ -110,23 +127,17 @@ class VoipComponent extends React.Component {
 
     // Starts a new call
     call = (username) => {
+        let self = this;
         let eventHandlers = {
             'progress': function (data) { console.log("call progress") },
-            'failed': function (data) {
-                console.log("call failed")
-                this.props.callFailedCallback();
-            },
             'confirmed': function (data) {
                 console.log("call confirmed")
-                this.props.callAcceptedCallback();
-            },
-            'ended': function (data) {
-                console.log("call ended")
-                this.props.callEndedCallback();
+                self.props.callAcceptedCallback();
             }
         };
 
         let options = {
+            'eventHandlers': eventHandlers,
             mediaConstraints: {
                 audio: true,
                 video: false
@@ -148,6 +159,7 @@ class VoipComponent extends React.Component {
     // ends an active call
     hangUp = () => {
         if (this.activeCallSession !== undefined) {
+            console.log("hanging up");
             this.activeCallSession.terminate();
             this.activeCallSession = undefined;
         }
