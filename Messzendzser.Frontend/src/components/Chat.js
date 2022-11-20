@@ -114,19 +114,15 @@ function Chat() {
     };
 
     useEffect(() => {
-        // TODO retreive voip credentials (maybe store them in cookie or local storage)
         voipSet();
         const name = localStorage.getItem('username');
         const password = localStorage.getItem('voippassword');
         voipComp.current.setCredentials(name, password);
-        //voipComp.current.setCredentials("voip", "Password1!");
         voipComp.current.connect();
     }, [])
 
 
     useEffect(() => {
-
-        loadChatrooms();
         const connect = new HubConnectionBuilder()
             .withUrl("https://localhost:7043/messageSenderHub")
             .withAutomaticReconnect()
@@ -143,12 +139,15 @@ function Chat() {
 
 
     useEffect(() => {
-       
+
+        loadChatrooms();
         if (connection) {
             connection
                 .start()
                 .then(() => {
+                    
                     connection.on("ReceiveMessage", () => {
+                        joinRoom(refChatroomId.current);
                         loadMessages();
                     });
                 })
@@ -199,7 +198,7 @@ function Chat() {
 
     //Send Voice to API
     let voiceSent = async (e) => {
-        console.log(refVoiceData.current);
+
         try {
             const res = await fetch("https://localhost:7043/api/SendVoice", {
                 method: "POST",
@@ -269,9 +268,9 @@ function Chat() {
                 if (resJson.message === "Ok") {
                     setChatrooms(resJson.body);
                     if (first) {
-                        setChatroomId(resJson.body[1].id);
-                        refChatroomId.current = resJson.body[1].id;
-                        joinRoom();
+                        setChatroomId(resJson.body[0].id);
+                        refChatroomId.current = resJson.body[0].id;
+
                     }
                     setFirst(false);
 
@@ -285,9 +284,8 @@ function Chat() {
 
 
     useEffect(() => {
-        loadChatrooms();
+     
         loadMessages();
-
 
     }, [chatroomId]);
 
