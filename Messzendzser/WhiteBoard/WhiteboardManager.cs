@@ -56,7 +56,7 @@
             User user = token.ToUser();
             try
             {
-                using (IDataSource dataSource = new MySQLDbConnection())
+                using (IDataSource dataSource = new MySQLDbConnection(Configuration.Instance.DbConnectionString))
                 {
                     res = dataSource.IsUserInChatroom(user.Id, wm.ChatroomId);
                 }

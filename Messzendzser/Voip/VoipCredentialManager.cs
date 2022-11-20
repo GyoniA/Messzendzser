@@ -2,6 +2,7 @@
 using Messzendzser.Model.DB.Models;
 using SIPSorcery.SIP;
 using System.Text;
+using Messzendzser.Utils;
 
 namespace Messzendzser.Voip
 {
@@ -9,9 +10,9 @@ namespace Messzendzser.Voip
     {
         public static VoipCredential GetVoipCredential(string username)
         {
-            using (IDataSource dataSource = new MySQLDbConnection()) 
+            using (IDataSource dataSource = new MySQLDbConnection(Configuration.Instance.DbConnectionString))
             {
-                VoipCredential  cred = dataSource.GetCredentialsForUser(username);
+                VoipCredential cred = dataSource.GetCredentialsForUser(username);
                 return cred;
             }
         }
