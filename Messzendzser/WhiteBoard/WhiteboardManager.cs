@@ -162,11 +162,11 @@
                             isAliveTimer.Start();
                             wConn.IsAliveTimer = isAliveTimer;
                             
+                            board?.SaveDataToFile();
                             WhiteboardEventMessage wbim = new WhiteboardEventMessage();
                             wbim.AddEvent(new WhiteboardImageEvent(wConn.RoomId));
                             byte[] imageMessage = wbim.Serialize();
                             await SendMessageWithCheck(client, wConn, isAliveTimer, imageMessage);
-                            board?.SaveDataToFile();
                         }
                         break;
                     case State.Authenticated:
@@ -185,7 +185,6 @@
                         }
                         else
                         {
-                            //TODO check if casting works
                             WhiteboardEventMessage evMessage = (WhiteboardEventMessage)wMessage;
                             Whiteboard board;
                             whiteboards.TryGetValue(wConn.RoomId, out board);
