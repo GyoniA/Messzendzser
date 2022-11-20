@@ -11,13 +11,15 @@ import VoipComponent from "./VoipComponent.js";
 function Chat() {
 
     //For navigation
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     //States 
     const [chatroomId, setChatroomId] = useState("");
 
     const refChatroomId = useRef("");
 
     const refVoiceData = useRef("");
+
+    const [first, setFirst] = useState(true);
 
     const [messages, setMessages] = useState([]);
     const [chatrooms, setChatrooms] = useState([]);
@@ -81,10 +83,10 @@ function Chat() {
 
     //Load messages from API
     const loadMessages = async (e) => {
-        var today = new Date();
-        var date = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
-        var time = addZero(today.getHours()) + ":" + addZero(today.getMinutes()) + ":" + addZero(today.getSeconds());
-        var dateTime = date + ' ' + time;
+        const today = new Date();
+        const date = today.getFullYear() + '-' + addZero(today.getMonth() + 1) + '-' + addZero(today.getDate());
+        const time = addZero(today.getHours()) + ":" + addZero(today.getMinutes()) + ":" + addZero(today.getSeconds());
+        const dateTime = date + ' ' + time;
         try {
             const res = await fetch("https://localhost:7043/api/GetMessages", {
                 method: "GET",
@@ -98,7 +100,7 @@ function Chat() {
                     dir: "backward",
                 },
             });
-            let resJson = await res.json();
+            const resJson = await res.json();
 
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
@@ -115,8 +117,8 @@ function Chat() {
     useEffect(() => {
         // TODO retreive voip credentials (maybe store them in cookie or local storage)
         voipSet();
-        let name = localStorage.getItem('username');
-        let password = localStorage.getItem('voippassword');
+        const name = localStorage.getItem('username');
+        const password = localStorage.getItem('voippassword');
         voipComp.current.setCredentials(name, password);
         //voipComp.current.setCredentials("voip", "Password1!");
         voipComp.current.connect();
@@ -124,20 +126,21 @@ function Chat() {
 
 
     useEffect(() => {
+
+        loadChatrooms();
         const connect = new HubConnectionBuilder()
             .withUrl("https://localhost:7043/messageSenderHub")
             .withAutomaticReconnect()
             .build();
 
         setConnection(connect);
-        loadChatrooms();
-
 
     }, []);
 
 
 
     useEffect(() => {
+       
         if (connection) {
             connection
                 .start()
@@ -149,10 +152,12 @@ function Chat() {
                 .catch((error) => console.log(error));
         }
 
+
     }, [connection]);
 
     const joinRoom = async () => {
         if (connection) await connection.send("JoinRoom", refChatroomId.current);
+
     };
 
     const leaveRoom = async () => {
@@ -165,9 +170,9 @@ function Chat() {
 
     //Send Image to API
     let imageSent = async (e) => {
-        var data = new FormData(document.getElementById("uploadImg"));
+        const data = new FormData(document.getElementById("uploadImg"));
         try {
-            let res = await fetch("https://localhost:7043/api/SendImage", {
+            const res = await fetch("https://localhost:7043/api/SendImage", {
                 method: "POST",
                 mode: 'cors',
                 credentials: "include",
@@ -178,7 +183,7 @@ function Chat() {
                 },
                 body: data,
             });
-            let resJson = await res.json();
+            const resJson = await res.json();
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     sendMessage();
@@ -193,7 +198,7 @@ function Chat() {
     let voiceSent = async (e) => {
         console.log(refVoiceData.current);
         try {
-            let res = await fetch("https://localhost:7043/api/SendVoice", {
+            const res = await fetch("https://localhost:7043/api/SendVoice", {
                 method: "POST",
                 mode: 'cors',
                 credentials: "include",
@@ -206,7 +211,7 @@ function Chat() {
                 },
                 body: refVoiceData.current,
             });
-            let resJson = await res.json();
+            const resJson = await res.json();
 
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
@@ -222,7 +227,7 @@ function Chat() {
     //Send message to API
     let messageSent = async (e) => {
         try {
-            let res = await fetch("https://localhost:7043/api/SendMessage", {
+            const res = await fetch("https://localhost:7043/api/SendMessage", {
                 method: "POST",
                 mode: 'cors',
                 credentials: "include",
@@ -232,7 +237,7 @@ function Chat() {
                     chatroomId: chatroomId,
                 },
             });
-            let resJson = await res.json();
+            const resJson = await res.json();
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setMessage("");
@@ -255,13 +260,19 @@ function Chat() {
                     'Access-Control-Allow-Origin': '*'
                 },
             });
-            let resJson = await res.json();
+            const resJson = await res.json();
 
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setChatrooms(resJson.body);
-                    setChatroomId(resJson.body[1].id);
-                    refChatroomId.current = resJson.body[1].id;
+                    if (first) {
+                        setChatroomId(resJson.body[1].id);
+                        refChatroomId.current = resJson.body[1].id;
+                        joinRoom();
+                    }
+                    setFirst(false);
+
+
                 }
             }
         } catch (err) {
@@ -271,15 +282,11 @@ function Chat() {
 
 
     useEffect(() => {
-
+        loadChatrooms();
         loadMessages();
 
+
     }, [chatroomId]);
-
-
-  
-
-
 
 
     const userIdSet = () => {
@@ -390,47 +397,46 @@ function Chat() {
                 key={cr.id} value={cr.id}>{cr.name}
             </option>;
         }
-           
+
         );
 
-};
+    };
 
-const btnManager = () => {
-    if (!isRecording) {
-        startRecording();
-    } else {
-        stopRecording();
+    const btnManager = () => {
+        if (!isRecording) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
     }
-}
 
-const startRecording = () => {
-    Mp3Recorder
-        .start()
-        .then(() => {
-            setIsRecording(true);
-        }).catch((e) => console.error(e));
-};
+    const startRecording = () => {
+        Mp3Recorder
+            .start()
+            .then(() => {
+                setIsRecording(true);
+            }).catch((e) => console.error(e));
+    };
 
-const stopRecording = () => {
-    Mp3Recorder
-        .stop()
-        .getMp3()
-        .then(([buffer, blob]) => {
-            setIsRecording(false);
-            refVoiceData.current = blob;
-            setVoiceData(blob);
-            voiceSent();
-        }).catch((e) => console.log(e));
-};
-
+    const stopRecording = () => {
+        Mp3Recorder
+            .stop()
+            .getMp3()
+            .then(([buffer, blob]) => {
+                setIsRecording(false);
+                refVoiceData.current = blob;
+                setVoiceData(blob);
+                voiceSent();
+            }).catch((e) => console.log(e));
+    };
 
 
-const handleEnterPressed = (event) => {
-    if (event.key === 'Enter') {
-        messageSent();
-    }
-};
 
+    const handleEnterPressed = (event) => {
+        if (event.key === 'Enter') {
+            messageSent();
+        }
+    };
 
 
 
@@ -438,136 +444,137 @@ const handleEnterPressed = (event) => {
 
 
 
-const hangUp = (e) => {
 
-    setInCall(e);
-    voipComp.current.hangUp();
+    const hangUp = (e) => {
 
-};
+        setInCall(e);
+        voipComp.current.hangUp();
 
-const popupChangeHandler = (e) => {
+    };
 
-    setName(callFrom);
-    setCallFromOther(e);
-    setInCall(!e);
-    voipComp.current.acceptCall();
-};
+    const popupChangeHandler = (e) => {
 
-const declineCall = (e) => {
+        setName(callFrom);
+        setCallFromOther(e);
+        setInCall(!e);
+        voipComp.current.acceptCall();
+    };
 
-    setCallFromOther(e);
-    voipComp.current.declineCall();
-};
+    const declineCall = (e) => {
 
-
-
+        setCallFromOther(e);
+        voipComp.current.declineCall();
+    };
 
 
-return (
-    <div className='chatapp'>
-        <div className='upper_row'>
-
-            <select id="chatroomSelect" value={chatroomId} onChange={(e) => {
-                if (chatroomId != null) {
-                    leaveRoom(chatroomId)
-                }
-                refChatroomId.current = e.target.value;
-                setChatroomId(e.target.value)
-                joinRoom(e.target.value)
-            }} >
-
-                {Chatrooms()};
-            </select>
-
-            <VoipComponent uri="wss://localhost:5062/ws" ref={voipComp} callEndedCallback={callEndedHandler} incomingCallCallback={incomingCallHandler} callAcceptedCallback={callAcceptedHandler} callFailedCallback={callFailedHandler} />
-            <div className='icons_up'>
-
-                <button className='whiteboard_button'
-                    onClick={() => {
-                        let token;
-                        var match = document.cookie.match(new RegExp('(^| )' + 'user-token' + '=([^;]+)'));
-                        if (match)
-                            token = match[2];
-                        navigate("/whiteboard", {
-                            state: {
-                                chatroomId: chatroomId,
-                                token: token
-                            }
-                        })
-                    }}>
-
-                    <img src="/images/whiteboard.png" ></img>
-                </button>
-
-                <button className='phone'
-                    onClick={(e) => {
-                        setInCall(!inCall);
-                        let selected = document.getElementById("chatroomSelect");
-                        const index = selected.selectedIndex;
-                        const tempName = selected.options[index].text;
-                        setName(tempName);
-                        voipComp.current.call(tempName);
-                    }}>
-                    <img src="/images/phone.png" ></img>
-                </button>
 
 
+
+    return (
+        <div className='chatapp'>
+            <div className='upper_row'>
+
+                <select id="chatroomSelect" value={chatroomId} onChange={(e) => {
+                    if (chatroomId != null) {
+                        leaveRoom(chatroomId)
+                    }
+                    refChatroomId.current = e.target.value;
+                    setChatroomId(e.target.value)
+                    joinRoom(e.target.value)
+                }} >
+
+                    {Chatrooms()};
+                </select>
+
+                <VoipComponent uri="wss://localhost:5062/ws" ref={voipComp} callEndedCallback={callEndedHandler} incomingCallCallback={incomingCallHandler} callAcceptedCallback={callAcceptedHandler} callFailedCallback={callFailedHandler} />
+                <div className='icons_up'>
+
+                    <button className='whiteboard_button'
+                        onClick={() => {
+                            let token;
+                            var match = document.cookie.match(new RegExp('(^| )' + 'user-token' + '=([^;]+)'));
+                            if (match)
+                                token = match[2];
+                            navigate("/whiteboard", {
+                                state: {
+                                    chatroomId: chatroomId,
+                                    token: token
+                                }
+                            })
+                        }}>
+
+                        <img src="/images/whiteboard.png" ></img>
+                    </button>
+
+                    <button className='phone'
+                        onClick={(e) => {
+                            setInCall(!inCall);
+                            let selected = document.getElementById("chatroomSelect");
+                            const index = selected.selectedIndex;
+                            const tempName = selected.options[index].text;
+                            setName(tempName);
+                            voipComp.current.call(tempName);
+                        }}>
+                        <img src="/images/phone.png" ></img>
+                    </button>
+
+
+                </div>
             </div>
-        </div>
 
-        <InCall
-            onClose={hangUp}
-            show={inCall}
-            name={name}>
-        </InCall>
-
-
-        <DecideCall
-            onChange={popupChangeHandler}
-            onClose={declineCall}
-            show={callFromOther}
-            name={callFrom}>
-        </DecideCall>
+            <InCall
+                onClose={hangUp}
+                show={inCall}
+                name={name}>
+            </InCall>
 
 
-        <ul ref={MessagesContainer}>
-            {displayMessages()}
-        </ul>
+            <DecideCall
+                onChange={popupChangeHandler}
+                onClose={declineCall}
+                show={callFromOther}
+                name={callFrom}>
+            </DecideCall>
 
-        <div className='bottom_row'>
 
-            <button className='send'
-                onClick={messageSent}>
-                <img src="/images/send.png" ></img>
-            </button>
+            <ul ref={MessagesContainer}>
+                {displayMessages()}
+            </ul>
 
-            <input className="msg"
-                onKeyPress={handleEnterPressed}
-                type="text"
-                value={message}
-                placeholder='Üzenet írása...'
-                onChange={(e) => setMessage(e.target.value)}>
-            </input>
+            <div className='bottom_row'>
 
-            <button className='microphone'
-                onClick={btnManager}
-                name="voice">
-                <img src="/images/microphone.png" ></img>
-            </button>
-
-            <form className="imageSend" id="uploadImg" >
-                <input type="file"
-                    ref={hiddenFileInput}
-                    onChange={imageSent}
-                    name="image"
-                    style={{ display: 'none' }} />
-
-                <button className='picture' onClick={handleClick}>
-                    <img src="/images/picture.png" ></img>
+                <button className='send'
+                    onClick={messageSent}>
+                    <img src="/images/send.png" ></img>
                 </button>
-            </form>
-        </div>
-    </div >
-)
+
+                <input className="msg"
+                    onKeyPress={handleEnterPressed}
+                    type="text"
+                    value={message}
+                    placeholder='Üzenet írása...'
+                    onChange={(e) => setMessage(e.target.value)}>
+                </input>
+
+                <button className='microphone'
+                    onClick={btnManager}
+                    name="voice">
+                    <img src="/images/microphone.png" ></img>
+                </button>
+
+                <form className="imageSend" id="uploadImg" >
+                    <input type="file"
+                        ref={hiddenFileInput}
+                        onChange={imageSent}
+                        name="image"
+                        style={{ display: 'none' }} />
+
+                    <button className='picture' onClick={handleClick}>
+                        <img src="/images/picture.png" ></img>
+                    </button>
+                </form>
+            </div>
+        </div >
+    )
 }
 export default Chat;
