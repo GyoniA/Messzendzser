@@ -105,7 +105,6 @@ function Chat() {
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     setMessages(resJson.body);
-                    MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight;
                 }
 
             }
@@ -136,6 +135,10 @@ function Chat() {
         setConnection(connect);
 
     }, []);
+
+    useEffect(() => {
+        MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight; // TODO update because it is not always needed
+    }, [messages]);
 
 
 
