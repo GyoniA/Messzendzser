@@ -130,31 +130,26 @@ h3 {
 }
 
 .msg_from_me {
-    background: border-box;
-    background: white;
-    width: fit-content;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    background: none;
     align-self: flex-end;
+
 }
 .voice_from_me {
     background: none;
     width: fit-content;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    padding: 0 0.5rem 0.5rem 0.5rem;
     align-self: flex-end;
 }
 
 .msg_from_other {
-    background: border-box;
-    background: white;
-    width: fit-content;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    background: none;
     float: right;
 }
 
 .voice_from_other {
     background: none;
     width: fit-content;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+    padding: 0 0.5rem 0.5rem 0.5rem;
     float: right;
 }
 
@@ -181,7 +176,6 @@ li {
     background: border-box;
     background: white;
     width: fit-content;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
     
 }
 
@@ -220,11 +214,6 @@ label {
     cursor: pointer;
 }
 
-
-nav {
-    height: 2rem;
-    background-color: rgba(255, 255, 255, 0.4);
-}
 
 .whiteboard {
 
@@ -340,13 +329,38 @@ nav {
     
 }
 
+.time {
+    color: black;
+    font-size: 0.75rem;
+    background: none;
+    
+}
+
+.msg_me {
+    background: border-box;
+    background-color: aquamarine;
+    width: fit-content;
+    padding: 0.5rem, 0.5rem 0.5rem 0.5rem;
+}
+
+.msg_other {
+    background: border-box;
+    background-color: ghostwhite;
+    width: fit-content;
+    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+}
+
 .chatapp {
-    height: calc(100vh - 2rem);
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
+#chatroomSelect{
+    width: 10rem;
+
+}
 .row {
     display: flex;
     flex-direction: row;

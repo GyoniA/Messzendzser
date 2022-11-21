@@ -81,7 +81,8 @@ export default function Form() {
                     <div className="message">
                         <p>{message.username}</p>
                         <p>{message.email}</p> 
-                         <p>{message.error}</p>
+                        <p>{message.password}</p>
+                        <p>{message.error}</p>
                     </div>
                 </form>
             </div>

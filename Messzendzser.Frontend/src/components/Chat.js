@@ -53,7 +53,7 @@ function Chat() {
     const MessagesContainer = useRef();
 
     const forceUpdate = () => {
-        setWhyWontReactWorkForMe(whyWontReactWorkForMe2 + Math.random()%10000); // It works, dont't touch it! (ノಠ益ಠ)ノ
+        setWhyWontReactWorkForMe(whyWontReactWorkForMe2 + Math.random() % 10000); // It works, dont't touch it! (ノಠ益ಠ)ノ
     }
 
     const forceUpdate2 = () => {
@@ -121,7 +121,7 @@ function Chat() {
                 if (resJson.message === "Ok") {
                     messages.current = (resJson.body);
                     let newMessages = resJson.body;
-                    setOldestMessageTime(newMessages[0].time.replace('T', ' '));                    
+                    setOldestMessageTime(newMessages[0].time.replace('T', ' '));
                     newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
                     forceUpdate();
                 }
@@ -151,7 +151,7 @@ function Chat() {
 
         setConnection(connect);
         loadChatrooms();
-        
+
 
     }, []);
 
@@ -164,7 +164,7 @@ function Chat() {
         if (autoScroll) {
             scrollToBottom();
         } else {
-            console.log('setting scrollTop to: '+(MessagesContainer.current.scrollHeight - scrollDiff.current));
+            console.log('setting scrollTop to: ' + (MessagesContainer.current.scrollHeight - scrollDiff.current));
             MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight - scrollDiff.current;
             isLoadingOlderMessages.current = false;
         }
@@ -194,7 +194,7 @@ function Chat() {
                     let newMessages = resJson.body;
                     newMessages.shift();
                     newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
-                    let catMessages = [...messages.current,...newMessages];
+                    let catMessages = [...messages.current, ...newMessages];
                     messages.current = (catMessages);
                     forceUpdate();
                 }
@@ -259,21 +259,21 @@ function Chat() {
         }
     }
 
-   /* useEffect(() => {
-        MessagesContainer.current.addEventListener('scroll', function (e) {
-            let isAlreadyLoading = false;
-            
-        });
-    }, [MessagesContainer]);*/
+    /* useEffect(() => {
+         MessagesContainer.current.addEventListener('scroll', function (e) {
+             let isAlreadyLoading = false;
+             
+         });
+     }, [MessagesContainer]);*/
 
     useEffect(() => {
         console.log("Trying to join room");
         setTimeout(() => joinRoom(chatroomId.current), 100);
-        
+
     }, [whyWontReactWorkForMe2]);
 
 
-    const connectionCreated = async ()=>{
+    const connectionCreated = async () => {
         if (connection) {
             await connection
                 .start()
@@ -288,9 +288,9 @@ function Chat() {
 
     }
 
-    useEffect( () => {
+    useEffect(() => {
         connectionCreated();
-       
+
 
     }, [connection]);
 
@@ -425,7 +425,7 @@ function Chat() {
 
 
     useEffect(() => {
-     
+
         loadMessages();
 
     }, [chatroomId]);
@@ -470,13 +470,17 @@ function Chat() {
                 if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
-                            {msg.text}
+                            <label className="time">{msg.time}</label>
+                            <br></br>
+                            <label className="msg_me">{msg.text}</label>
                         </li>
                     )
                 } else {
                     return (
                         <li className="msg_from_other">
-                            {msg.text}
+                            <label className="time">{msg.time}</label>
+                            <br></br>
+                            <label className="msg_other">{msg.text}</label>
                         </li>
                     )
                 }
@@ -485,8 +489,11 @@ function Chat() {
                 if (msg.userId == userId) {
                     return (
                         <li className="voice_from_me">
-                            <audio controls>
-                                <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
+                            <label className="time">{msg.time}</label>
+                            <br></br>
+                            <audio controls style={{ backgroundColor: 'aquamarine' }}>
+                                
+                                <source  src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                     type="audio/ogg">
                                 </source>
                             </audio>
@@ -495,7 +502,10 @@ function Chat() {
                 } else {
                     return (
                         <li className="voice_from_other">
-                            <audio controls>
+                            <label className="time">{msg.time}</label>
+                            <br></br>
+                            <audio controls style={{ backgroundColor: 'ghostwhite' }}>
+                               
                                 <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                     type="audio/ogg">
                                 </source>
@@ -507,6 +517,8 @@ function Chat() {
                 if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
+                            <label className="time">{msg.time}</label>
+                            <br></br>
                             <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)}>
                             </img>
                         </li>
@@ -514,6 +526,8 @@ function Chat() {
                 } else {
                     return (
                         <li className="msg_from_other">
+                            <label className="time">{msg.time}</label>
+                            <br></br>
                             <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)}>
                             </img>
                         </li>
@@ -580,7 +594,7 @@ function Chat() {
         }
     };
 
-const hangUp = (e) => {
+    const hangUp = (e) => {
 
         setInCall(e);
         voipComp.current.hangUp();
@@ -672,9 +686,9 @@ const hangUp = (e) => {
             </DecideCall>
 
 
-        <ul ref={MessagesContainer} onScroll={handleScroll}>
-            {displayMessages()}
-        </ul>
+            <ul className="displayMessages" ref={MessagesContainer} onScroll={handleScroll}>
+                {displayMessages()}
+            </ul>
 
             <div className='bottom_row'>
 
