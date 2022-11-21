@@ -29,6 +29,8 @@ function Chat() {
 
     const [whyWontReactWorkForMe, setWhyWontReactWorkForMe] = useState(0);
     const [whyWontReactWorkForMe2, setWhyWontReactWorkForMe2] = useState(0);
+    const scrollDiff = useRef(0);
+    const isLoadingOlderMessages = useRef(false);
 
     const [inCall, setInCall] = useState(false);
     const [callFromOther, setCallFromOther] = useState(false);
@@ -144,7 +146,7 @@ function Chat() {
         const connect = new HubConnectionBuilder()
             .withUrl("https://localhost:7043/messageSenderHub")
             .withAutomaticReconnect()
-            .configureLogging(LogLevel.Trace)
+            //.configureLogging(LogLevel.Trace)
             .build();
 
         setConnection(connect);
@@ -159,14 +161,17 @@ function Chat() {
 
 
     useEffect(() => {
-        if (autoScroll) { 
+        if (autoScroll) {
             scrollToBottom();
+        } else {
+            console.log('setting scrollTop to: '+(MessagesContainer.current.scrollHeight - scrollDiff.current));
+            MessagesContainer.current.scrollTop = MessagesContainer.current.scrollHeight - scrollDiff.current;
+            isLoadingOlderMessages.current = false;
         }
     }, [whyWontReactWorkForMe]);
 
     // Autoscroll
 
-    let isLoading = false;
 
     const loadNewerMessages = async () => {
         try {
@@ -202,6 +207,8 @@ function Chat() {
 
 
     const loadOlderMessages = async () => {
+        scrollDiff.current = MessagesContainer.current.scrollHeight - MessagesContainer.current.scrollTop;
+        //console.log('diff: ' + diff);
         try {
             const res = await fetch("https://localhost:7043/api/GetMessages", {
                 method: "GET",
@@ -225,6 +232,7 @@ function Chat() {
                         setOldestMessageTime(newMessages[0].time.replace('T', ' '));
                         let catMessages = [...newMessages, ...messages.current];
                         messages.current = (catMessages);
+                        //console.log('setting scrollTop to: ' + (MessagesContainer.current.scrollHeight - diff));
                         forceUpdate();
                     }
                 }
@@ -238,8 +246,8 @@ function Chat() {
     const handleScroll = async (e) => {
         if (MessagesContainer.current.scrollTop < 200 && MessagesContainer.current.scrollHeight > 0) {
 
-            if (!isLoading) {
-                isLoading = (true);
+            if (!isLoadingOlderMessages.current) {
+                isLoadingOlderMessages.current = true;
                 loadOlderMessages();
             }
         }
@@ -403,7 +411,7 @@ function Chat() {
                     if (first) {
                         setChatroomId(resJson.body[0].id);
                         refChatroomId.current = resJson.body[0].id;
-                        
+                        joinRoom();
                     }
                     setFirst(false);
 

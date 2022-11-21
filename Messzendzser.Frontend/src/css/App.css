@@ -62,11 +62,12 @@ body {
 
 form {
     background: white;
-    padding: 1.5rem;
+    padding: 1.5rem 5rem;
+
     height: fit-content;
     width: 40rem;
     margin-top: 3rem;
-    margin-bottom:1rem;
+    margin-bottom: 1rem;
     border-radius: 2rem;
     border-left: 1px solid white;
     border-top: 1px solid white;

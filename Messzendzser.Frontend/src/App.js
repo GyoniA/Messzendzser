@@ -14,11 +14,6 @@ import WhiteBoard from './components/WhiteBoard';
 function App() {
     return (
         <Router>
-            <nav>
-                <Link to="/" style={{ paddingLeft: 5, paddingRight: 10, textDecoration: 'none' }}> Főoldal   </Link>
-                <Link to="/register" style={{ paddingRight: 10, textDecoration: 'none' }}> Regisztráció   </Link>
-                <Link to="/login" style={{ paddingRight: 10, textDecoration: 'none' }}> Bejelentkezés  </Link>
-            </nav>
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/register" element={<RegForm />} />
