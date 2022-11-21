@@ -63,31 +63,8 @@ function WhiteBoard() {
 
                 </div>
 
-                <div className='shapes'>
-                    <button className='point'
-                        hidden
-                    >
-                        <img src="/images/point.png" ></img>
-                    </button>
-
-                    <button className='line'
-                        hidden
-                    >
-                        <img src="/images/line.png" ></img>
-                    </button>
-
-                    <button className='circle'
-                        hidden
-                    >
-                        <img src="/images/circle.png" ></img>
-                    </button>
-
-
-                </div>
-
                 <div className='actions'>
                     <button className='clear' onClick={ (e) => {
-                        //setColor(4294967295);
                         wBoard.current.clear();
                     }}>
                         <img src="/images/clear.png" ></img>

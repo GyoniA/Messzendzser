@@ -129,27 +129,55 @@ h3 {
     padding-bottom: 1rem;
 }
 
-.msg_from_me {
+.time {
+    color: black;
+    font-size: 0.65rem;
     background: none;
-    align-self: flex-end;
+    opacity: 0.5;
+}
 
+.msg_me {
+    display: block;
+    text-align: right;
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+.msg_other {
+    margin-top: 0;
+    font-size: 1.2rem;
+}
+
+.msg_from_me {
+    align-self: flex-end;
+    background-color: aquamarine;
+    width: fit-content;
+    padding-top: 0;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 30px;
 }
 .voice_from_me {
     background: none;
     width: fit-content;
-    padding: 0 0.5rem 0.5rem 0.5rem;
     align-self: flex-end;
 }
 
 .msg_from_other {
-    background: none;
     float: right;
+    background: border-box;
+    background-color: ghostwhite;
+    width: fit-content;
+    padding-top: 0;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 30px;
 }
 
 .voice_from_other {
     background: none;
     width: fit-content;
-    padding: 0 0.5rem 0.5rem 0.5rem;
     float: right;
 }
 
@@ -233,34 +261,13 @@ label {
     width: 100%;
     flex-direction: row;
     gap: 1em;
-    justify-content: space-between;
     background-color: rgba(255, 255, 255, 0.3);
+    position: center;
+
+    
 }
 
-.point {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 1rem;
-    cursor: pointer;
-    padding: 0 0;
 
-}
-
-.line {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 1rem;
-    cursor: pointer;
-    padding: 0 0;
-}
-
-.circle {
-    width: 2rem;
-    height: 2rem;
-    margin-right: 1rem;
-    cursor: pointer;
-    padding: 0 0;
-}
 
 .clear {
     width: 2rem;
@@ -329,26 +336,9 @@ label {
     
 }
 
-.time {
-    color: black;
-    font-size: 0.75rem;
-    background: none;
-    
-}
 
-.msg_me {
-    background: border-box;
-    background-color: aquamarine;
-    width: fit-content;
-    padding: 0.5rem, 0.5rem 0.5rem 0.5rem;
-}
 
-.msg_other {
-    background: border-box;
-    background-color: ghostwhite;
-    width: fit-content;
-    padding: 0.5rem 0.5rem 0.5rem 0.5rem;
-}
+
 
 .chatapp {
     height: 100vh;

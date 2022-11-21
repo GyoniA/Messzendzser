@@ -466,11 +466,15 @@ function Chat() {
         return messages.current.map((msg) => {
             userIdSet();
             const userId = localStorage.getItem('userid');
+            let time = msg.time;
+            time = time.replace('T', ' ');
+
+            
             if (msg.hasOwnProperty('text')) {
                 if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
-                            <label className="time">{msg.time}</label>
+                            <label className="time">{time}</label>
                             <br></br>
                             <label className="msg_me">{msg.text}</label>
                         </li>
@@ -478,7 +482,7 @@ function Chat() {
                 } else {
                     return (
                         <li className="msg_from_other">
-                            <label className="time">{msg.time}</label>
+                            <label className="time">{time}</label>
                             <br></br>
                             <label className="msg_other">{msg.text}</label>
                         </li>
@@ -489,9 +493,9 @@ function Chat() {
                 if (msg.userId == userId) {
                     return (
                         <li className="voice_from_me">
-                            <label className="time">{msg.time}</label>
+                            <label className="time" style={{ paddingLeft: 15 }}>{time}</label>
                             <br></br>
-                            <audio controls style={{ backgroundColor: 'aquamarine' }}>
+                            <audio controls >
                                 
                                 <source  src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                     type="audio/ogg">
@@ -502,9 +506,9 @@ function Chat() {
                 } else {
                     return (
                         <li className="voice_from_other">
-                            <label className="time">{msg.time}</label>
+                            <label className="time" style={{ paddingLeft: 15 }}>{time}</label>
                             <br></br>
-                            <audio controls style={{ backgroundColor: 'ghostwhite' }}>
+                            <audio controls >
                                
                                 <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                     type="audio/ogg">
@@ -517,7 +521,7 @@ function Chat() {
                 if (msg.userId == userId) {
                     return (
                         <li className="msg_from_me">
-                            <label className="time">{msg.time}</label>
+                            <label className="time">{time}</label>
                             <br></br>
                             <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)}>
                             </img>
@@ -526,7 +530,7 @@ function Chat() {
                 } else {
                     return (
                         <li className="msg_from_other">
-                            <label className="time">{msg.time}</label>
+                            <label className="time">{time}</label>
                             <br></br>
                             <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)}>
                             </img>
