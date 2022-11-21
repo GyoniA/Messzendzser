@@ -403,8 +403,8 @@ function Chat() {
                 if (resJson.message === "Ok") {
                     setChatrooms(resJson.body);
                     if (first) {
-                        setChatroomId(resJson.body[1].id);
-                        refChatroomId.current = resJson.body[1].id;
+                        setChatroomId(resJson.body[0].id);
+                        refChatroomId.current = resJson.body[0].id;
                         joinRoom();
                     }
                     setFirst(false);
