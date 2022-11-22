@@ -35,21 +35,19 @@ const DecideCall = (props) => {
             <div className="popup">
                 <h2>Hivas:</h2>
                 <h3>{props.name}</h3>
-                
-                <div className="button">
 
-                <div className="buttons">
-                        <button className='pick-up' onClick={changeHandler}>
-                    <img src = "/images/pickup.png" ></img>
-                </button>
-                <button className='decline' onClick={closeHandler}>
-                    <img src = "/images/dropcall.png" ></img>
-                </button>
-            </div>
+                <div id="call_buttons">
+                    <button onClick={changeHandler}>
+                        <img src="/images/pickup.png" ></img>
+                    </button>
+                    <button onClick={closeHandler}>
+                        <img src="/images/dropcall.png" ></img>
+                    </button>
                 </div>
-                
+
+
             </div>
-            
+
         </div>
     );
 };

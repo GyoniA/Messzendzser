@@ -313,7 +313,7 @@ function Chat() {
 
     //Send Image to API
     let imageSent = async (e) => {
-        const data = new FormData(document.getElementById("uploadImg"));
+        const data = new FormData(document.getElementById("image_send_form"));
         try {
             const res = await fetch("https://localhost:7043/api/SendImage", {
                 method: "POST",
@@ -473,18 +473,18 @@ function Chat() {
             if (msg.hasOwnProperty('text')) {
                 if (msg.userId == userId) {
                     return (
-                        <li className="msg_from_me">
-                            <label className="time">{time}</label>
+                        <li id="msg_from_me">
+                            <label id="time">{time}</label>
                             <br></br>
-                            <label className="msg_me">{msg.text}</label>
+                            <label id="msg_me">{msg.text}</label>
                         </li>
                     )
                 } else {
                     return (
-                        <li className="msg_from_other">
-                            <label className="time">{time}</label>
+                        <li id="msg_from_other">
+                            <label id="time">{time}</label>
                             <br></br>
-                            <label className="msg_other">{msg.text}</label>
+                            <label id="msg_other">{msg.text}</label>
                         </li>
                     )
                 }
@@ -492,8 +492,8 @@ function Chat() {
             if (msg.hasOwnProperty('length')) {
                 if (msg.userId == userId) {
                     return (
-                        <li className="voice_from_me">
-                            <label className="time" style={{ paddingLeft: 15 }}>{time}</label>
+                        <li id="voice_from_me">
+                            <label id="time" style={{ paddingLeft: 15 }}>{time}</label>
                             <br></br>
                             <audio controls >
                                 
@@ -505,8 +505,8 @@ function Chat() {
                     )
                 } else {
                     return (
-                        <li className="voice_from_other">
-                            <label className="time" style={{ paddingLeft: 15 }}>{time}</label>
+                        <li id="voice_from_other">
+                            <label id="time" style={{ paddingLeft: 15 }}>{time}</label>
                             <br></br>
                             <audio controls >
                                
@@ -520,8 +520,8 @@ function Chat() {
             } else {
                 if (msg.userId == userId) {
                     return (
-                        <li className="msg_from_me">
-                            <label className="time">{time}</label>
+                        <li id="msg_from_me">
+                            <label id="time">{time}</label>
                             <br></br>
                             <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)}>
                             </img>
@@ -529,8 +529,8 @@ function Chat() {
                     )
                 } else {
                     return (
-                        <li className="msg_from_other">
-                            <label className="time">{time}</label>
+                        <li id="msg_from_other">
+                            <label id="time">{time}</label>
                             <br></br>
                             <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)}>
                             </img>
@@ -624,8 +624,8 @@ function Chat() {
 
 
     return (
-        <div className='chatapp'>
-            <div className='upper_row'>
+        <div id='chatapp'>
+            <div id='chat_upper_row'>
 
                 <select id="chatroomSelect" value={chatroomId} onChange={(e) => {
                     if (chatroomId != null) {
@@ -640,9 +640,9 @@ function Chat() {
                 </select>
 
                 <VoipComponent uri="wss://localhost:5062/ws" ref={voipComp} callEndedCallback={callEndedHandler} incomingCallCallback={incomingCallHandler} callAcceptedCallback={callAcceptedHandler} callFailedCallback={callFailedHandler} />
-                <div className='icons_up'>
+                <div id='buttons_up'>
 
-                    <button className='whiteboard_button'
+                    <button
                         onClick={() => {
                             let token;
                             var match = document.cookie.match(new RegExp('(^| )' + 'user-token' + '=([^;]+)'));
@@ -659,7 +659,7 @@ function Chat() {
                         <img src="/images/whiteboard.png" ></img>
                     </button>
 
-                    <button className='phone'
+                    <button 
                         onClick={(e) => {
                             setInCall(!inCall);
                             let selected = document.getElementById("chatroomSelect");
@@ -668,7 +668,7 @@ function Chat() {
                             setName(tempName);
                             voipComp.current.call(tempName);
                         }}>
-                        <img src="/images/phone.png" ></img>
+                        <img src="/images/pickup.png" ></img>
                     </button>
 
 
@@ -690,18 +690,18 @@ function Chat() {
             </DecideCall>
 
 
-            <ul className="displayMessages" ref={MessagesContainer} onScroll={handleScroll}>
+            <ul ref={MessagesContainer} onScroll={handleScroll}>
                 {displayMessages()}
             </ul>
 
-            <div className='bottom_row'>
+            <div id='chat_bottom_row'>
 
                 <button className='send'
                     onClick={messageSent}>
                     <img src="/images/send.png" ></img>
                 </button>
 
-                <input className="msg"
+                <input id="input_message"
                     onKeyPress={handleEnterPressed}
                     type="text"
                     value={message}
@@ -715,7 +715,7 @@ function Chat() {
                     <img src="/images/microphone.png" ></img>
                 </button>
 
-                <form className="imageSend" id="uploadImg" >
+                <form id="image_send_form" >
                     <input type="file"
                         ref={hiddenFileInput}
                         onChange={imageSent}

@@ -58,7 +58,7 @@ export default function Form() {
 
     return (
         <section>
-            <div className='login'>
+            <div>
                 <form id='form' className='flex flex-col' onSubmit={handleSubmit}>
 
                     <h1>Bejelentkezés</h1>
@@ -76,18 +76,18 @@ export default function Form() {
 
 
 
-                    <div className='row'>
+                    <div>
 
-                        <button type="button" className='reference'
+                        <button type="button" id='reg_navigate_btn'
                             onClick={() => { navigate("/register") }}>
                             Regisztráció
                         </button>
 
                     </div>
 
-                    <button type="submit" className='btn'>Belépés</button>
+                    <button type="submit">Belépés</button>
 
-                    <div className="message">
+                    <div id="error_message">
                         {message ? <p>{message.username}</p> : null}
                         {message ? <p>{message.error}</p> : null}
                     </div>

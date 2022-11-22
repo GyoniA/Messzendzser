@@ -29,9 +29,9 @@ const InCall = (props) => {
                 <h2>Hivas:</h2>
                 <h3>{props.name}</h3>
                 
-                <div className="button">
+                <div>
 
-                    <button className='decline' onClick={closeHandler}>
+                    <button id="decline_outgoing_button" onClick={closeHandler}>
                         <img src="/images/dropcall.png" ></img>
                     </button>
                 </div>

@@ -279,7 +279,7 @@ class WhiteboardComponent extends React.Component {
 
     render() {
         return (
-        <div className='canvas' id='canvasContainer'>
+        <div id='canvasContainer'>
                 <canvas className='wCanvas' ref={this.Canvas} id="whiteboardCanvas" width="1000" height="800"></canvas>
         </div>
         );

@@ -53,4 +53,7 @@
   <ItemGroup>
     <None Remove="src\NewFolder1\**" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="public\images\circle.png" />
+  </ItemGroup>
 </Project>

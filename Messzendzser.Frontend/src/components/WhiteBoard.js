@@ -4,7 +4,7 @@ import WhiteboardComponent from "./WhiteboardComponent";
 
 
 function WhiteBoard() {
-   
+
 
     const wBoard = useRef();
 
@@ -25,7 +25,7 @@ function WhiteBoard() {
     //Run once after the initial render
     useEffect(() => {
         Load();
-        
+
     }, []);
 
     useEffect(() => {
@@ -36,41 +36,39 @@ function WhiteBoard() {
 
     return (
 
-        <div className='whiteboard'>
-            <div className='options'>
+        <div id='whiteboard'>
+            <div id='options'>
 
-                <div className='colors'>
+                <div id='whiteboard_colors' >
 
-                    <button className='red' onClick={(e) => {
+                    <button id='red' onClick={(e) => {
                         setColor(4294901760);
                     }}></button>
 
-                    <button className='blue' onClick={(e) => {
+                    <button id='blue' onClick={(e) => {
                         setColor(4278190335);
                     }}></button>
 
-                    <button className='green' onClick={(e) => {
+                    <button id='green' onClick={(e) => {
                         setColor(4278255360);
                     }}></button>
 
-                    <button className='yellow' onClick={(e) => {
+                    <button id='yellow' onClick={(e) => {
                         setColor(4294967040);
                     }}></button>
 
-                    <button className='black' onClick={(e) => {
+                    <button id='black' onClick={(e) => {
                         setColor(4278190080);
                     }}></button>
 
                 </div>
+                <button id='clear' onClick={(e) => {
+                    wBoard.current.clear();
+                }}>
+                    <img src="/images/clear.png" ></img>
+                </button>
 
-                <div className='actions'>
-                    <button className='clear' onClick={ (e) => {
-                        wBoard.current.clear();
-                    }}>
-                        <img src="/images/clear.png" ></img>
-                    </button>
 
-                </div>
 
 
             </div>

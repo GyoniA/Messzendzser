@@ -7,11 +7,11 @@ export default function Form(){
     let navigate = useNavigate();
     return (
         <section>
-            <div className="home">
+            <div id="home">
                 <form id='form' className='flex flex-col'>
                     <h1>Messzendzser</h1>
-                    <button className='login_btn'onClick={() => {navigate("/login")}}>Bejelentkezés</button>
-                    <button className='register_btn'onClick={() => {navigate("/register")}}>Regisztráció</button>
+                    <button onClick={() => {navigate("/login")}}>Bejelentkezés</button>
+                    <button onClick={() => {navigate("/register")}}>Regisztráció</button>
                     </form> 
                 </div>
         </section>
