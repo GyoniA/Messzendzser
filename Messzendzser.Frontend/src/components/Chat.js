@@ -466,8 +466,32 @@ function Chat() {
         return messages.current.map((msg) => {
             userIdSet();
             const userId = localStorage.getItem('userid');
-            let time = msg.time;
-            time = time.replace('T', ' ');
+
+
+            let fulltime = msg.time;
+            fulltime = fulltime.split('T');
+            const dateString = fulltime[0];
+            const timeString = fulltime[1];
+            let time;
+
+            const today = new Date();
+            const year = dateString.split('-')[0];
+            const month = dateString.split('-')[1];
+            const day = dateString.split('-')[2]
+
+
+            if (today.getFullYear() == year && (today.getMonth() + 1) == month) {
+                if (today.getDate() == day) {
+                    time = "Ma " + timeString.split(':')[0] + ":" + timeString.split(':')[1];
+                }
+                else if ((today.getDate() - 1) == day) {
+                    time = "Tegnap " + timeString.split(':')[0] + ":" + timeString.split(':')[1];
+                } else {
+                    time = dateString + " " + timeString.split(':')[0] + ":" + timeString.split(':')[1];
+                }
+            }
+            
+
 
             
             if (msg.hasOwnProperty('text')) {
@@ -497,7 +521,7 @@ function Chat() {
                             <br></br>
                             <audio controls >
                                 
-                                <source  src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
+                                <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                     type="audio/ogg">
                                 </source>
                             </audio>
@@ -510,7 +534,7 @@ function Chat() {
                             <br></br>
                             <audio controls >
                                
-                                <source src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
+                                <source  src={"https://localhost:7043/api/GetVoice?voice=" + encodeURIComponent(msg.token)}
                                     type="audio/ogg">
                                 </source>
                             </audio>
