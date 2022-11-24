@@ -3,23 +3,14 @@
     using Messzendzser.Model.DB;
     using Messzendzser.Model.DB.Models;
     using Messzendzser.Utils;
-    using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json.Linq;
-    using Org.BouncyCastle.Utilities;
-    using SkiaSharp;
     using System;
-    using System.Collections;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.IO;
-    using System.Net;
-    using System.Net.Sockets;
     using System.Net.WebSockets;
     using System.Threading;
     using System.Timers;
-    using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-    public class WhiteboardManager : IWhiteboardManager
+    public class WhiteboardManager
     {
         enum State
         {
@@ -49,8 +40,6 @@
         }
         public bool AuthenticateMessage(WhiteboardAuthenticationMessage wm)
         {
-            //return true;//TODO remove
-
             var res = false;
             UserToken token = new UserToken(wm.Username);
             User user = token.ToUser();
@@ -115,7 +104,6 @@
             while (!receiveResult.CloseStatus.HasValue)
             {
                 // Translate data sentMessage to a ASCII string.
-                //TODO take this out after testing
                 data = System.Text.Encoding.ASCII.GetString(sentMessage, 0, receiveResult.Count);
                 //Console.WriteLine("Received: {0}", data);
                 

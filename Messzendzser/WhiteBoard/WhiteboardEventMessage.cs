@@ -1,19 +1,4 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using Messzendzser.Model.DB.Models;
-using Messzendzser.Model.Managers.Message;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Http.Json;
-using System.Reflection;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using static LumiSoft.Net.MIME.MIME_MediaTypes;
-
-namespace Messzendzser.WhiteBoard
+﻿namespace Messzendzser.WhiteBoard
 {
     public class WhiteboardEventMessage : WhiteboardMessage
     {        
@@ -43,27 +28,5 @@ namespace Messzendzser.WhiteBoard
         {
             return Events;
         }
-
-        
-
-        /*public override WhiteboardMessage DeSerialize(byte[] message)
-        {
-            
-            return System.Text.Json.JsonSerializer.Deserialize<WhiteboardEventMessage>(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0'));
-            
-            WhiteboardEventMessage models = JsonConvert.DeserializeObject<WhiteboardEventMessage>(System.Text.Encoding.UTF8.GetString(message).TrimEnd('\0')), new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
-        }*/
-        /*
-        public override WhiteboardMessage DeSerialize(byte[] message)//TODO move this to descendants
-        {
-            using (var stream = new MemoryStream(message))
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return Newtonsoft.Json.JsonSerializer.Create().Deserialize(reader, typeof(WhiteboardEventMessage)) as WhiteboardEventMessage;
-            }
-        }*/
     }
 }
