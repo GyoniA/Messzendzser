@@ -6,8 +6,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function Form() {
 
-    const { register, formState: { errors } } = useForm()
-
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
