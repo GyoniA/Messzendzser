@@ -192,7 +192,8 @@ function Chat() {
             if (res.status === 200) {
                 if (resJson.message === "Ok") {
                     let newMessages = resJson.body;
-                    newMessages.shift();
+                    if (messages.current.length > 0) // If there was a previous message its timestamp is the same as the first one of the new messages
+                        newMessages.shift();
                     newestMessageTime.current = (newMessages[newMessages.length - 1].time.replace('T', ' '));
                     let catMessages = [...messages.current, ...newMessages];
                     messages.current = (catMessages);
