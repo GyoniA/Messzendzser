@@ -1,13 +1,6 @@
 ﻿using Messzendzser.Model.DB;
 using Messzendzser.Model.DB.Models;
 using Messzendzser.Model.Managers.Media;
-using Org.BouncyCastle.Asn1.X509;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Ubiety.Dns.Core.Common;
 
 namespace Messzendzser.Model.Managers.Message
 {

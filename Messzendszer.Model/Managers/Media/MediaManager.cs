@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Org.BouncyCastle.Bcpg.Attr.ImageAttrib;
-using static System.Net.Mime.MediaTypeNames;
-
-namespace Messzendzser.Model.Managers.Media
+﻿namespace Messzendzser.Model.Managers.Media
 {
     public class MediaManager : IMediaManager
     {
