@@ -1,12 +1,4 @@
-﻿using LumiSoft.Net.Mime.vCard;
-
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.SignalR;
-using System;  
-using System.Collections.Generic;  
-using System.Linq;  
-using System.Threading;  
-using System.Web;
+﻿using Microsoft.AspNetCore.SignalR;
 
 namespace Messzendzser.Controllers
 { 
