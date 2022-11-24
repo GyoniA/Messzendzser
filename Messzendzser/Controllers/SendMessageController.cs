@@ -5,6 +5,8 @@ using Messzendzser.Model.Managers.Message;
 using Messzendzser.Model.DB;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using System.Security.Policy;
 
 namespace Messzendzser.Controllers
 {
@@ -32,7 +34,7 @@ namespace Messzendzser.Controllers
         [HttpPost()]
         public ResponseMessage<object> Post( [FromHeader(Name = "message")] string? message, [FromHeader(Name = "chatroomId")] string? chatroomId)
         {
-            return SendMessage(message,chatroomId,new MessageManager(dataSource));
+            return SendMessage(Uri.UnescapeDataString(message),chatroomId,new MessageManager(dataSource));
         }
 
         [NonAction]

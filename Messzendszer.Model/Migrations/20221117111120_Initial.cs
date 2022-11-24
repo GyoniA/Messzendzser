@@ -19,17 +19,17 @@ namespace Messzendzser.Model.Migrations
                 {
                     id = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    name = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "latin1_swedish_ci")
-                        .Annotation("MySql:CharSet", "latin1"),
-                    icon = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "latin1_swedish_ci")
-                        .Annotation("MySql:CharSet", "latin1")
+                    name = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    icon = table.Column<string>(type: "varchar(45)", maxLength: 45, nullable: true, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_chatroom", x => x.id);
                 })
-                .Annotation("MySql:CharSet", "latin1")
-                .Annotation("Relational:Collation", "latin1_swedish_ci");
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_general_ci");
 
             migrationBuilder.CreateTable(
                 name: "ChatroomUser",
@@ -51,12 +51,12 @@ namespace Messzendzser.Model.Migrations
                 {
                     id = table.Column<int>(type: "int(11)", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    email = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false, collation: "latin1_swedish_ci")
-                        .Annotation("MySql:CharSet", "latin1"),
-                    username = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false, collation: "latin1_swedish_ci")
-                        .Annotation("MySql:CharSet", "latin1"),
-                    password = table.Column<string>(type: "varchar(90)", maxLength: 90, nullable: false, collation: "latin1_swedish_ci")
-                        .Annotation("MySql:CharSet", "latin1")
+                    email = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    username = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    password = table.Column<string>(type: "varchar(90)", maxLength: 90, nullable: false, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -153,8 +153,8 @@ namespace Messzendzser.Model.Migrations
                     user_id = table.Column<int>(type: "int(11)", nullable: false),
                     sent_time = table.Column<DateTime>(type: "datetime", nullable: false),
                     chatroom_id = table.Column<int>(type: "int(11)", nullable: false),
-                    message = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false, collation: "latin1_swedish_ci")
-                        .Annotation("MySql:CharSet", "latin1")
+                    message = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: false, collation: "utf8mb4_general_ci")
+                        .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
                 {
@@ -172,8 +172,8 @@ namespace Messzendzser.Model.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 })
-                .Annotation("MySql:CharSet", "latin1")
-                .Annotation("Relational:Collation", "latin1_swedish_ci");
+                .Annotation("MySql:CharSet", "utf8mb4")
+                .Annotation("Relational:Collation", "utf8mb4_general_ci");
 
             migrationBuilder.CreateTable(
                 name: "voice_chat_message",

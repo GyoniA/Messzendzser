@@ -377,7 +377,8 @@ function Chat() {
                 credentials: "include",
                 headers: {
                     'Access-Control-Allow-Origin': '*',
-                    message: message,
+                    'Content-Type': 'text/plain',
+                    message: encodeURI(message),
                     chatroomId: chatroomId,
                 },
             });
