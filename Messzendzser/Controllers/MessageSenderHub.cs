@@ -18,23 +18,5 @@ namespace Messzendzser.Controllers
         {
             await Clients.Group(chatroomId).SendAsync("ReceiveMessage");
         }
-
-
-        /*
-        public async Task SendMessage(string message, string chatroomId, int userId)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, chatroomId);
-            await Clients.OthersInGroup(chatroomId).SendAsync("ReceiveMessage", userId, message);
-        }
-        public async Task SendImageMessage(string token, string chatroomId, int userId)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, chatroomId);
-            await Clients.OthersInGroup(chatroomId).SendAsync("ReceiveImageMessage", userId, token);
-        }
-        public async Task SendVoiceMessage(string token, string chatroomId, int userId)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, chatroomId);
-            await Clients.OthersInGroup(chatroomId).SendAsync("ReceiveVoiceMessage", userId, token);
-        }*/
     }
 }
