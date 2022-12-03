@@ -11,8 +11,8 @@ namespace Messzendzser.WhiteBoard
 
         public override SKCanvas Draw(SKCanvas canvas)
         {
-            canvas.Clear();
-            
+            canvas.Clear(SkiaSharp.SKColors.White);
+
             return canvas;
         }
     }
