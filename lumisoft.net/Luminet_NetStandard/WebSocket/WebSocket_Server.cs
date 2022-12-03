@@ -70,7 +70,7 @@ namespace LumiSoft.Net.WebSoclet
 
         #endregion
 
-        #region class TCP_Acceptor
+        #region class WebSocket_Acceptor
 
         /// <summary>
         /// Implements single TCP connection acceptor.

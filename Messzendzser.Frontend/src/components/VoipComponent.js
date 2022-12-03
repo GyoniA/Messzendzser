@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import VoIP from "./VoIP";
 
 class VoipComponent extends React.Component {
 
@@ -113,6 +112,13 @@ class VoipComponent extends React.Component {
                     }
                 } else {
                     self.activeCallSession = session;
+                    e.session.on("confirmed", function () {
+                        self.stopRingtone();
+                        let voipAudio = document.getElementById("voipAudio")
+                        voipAudio.srcObject = session.connection.getRemoteStreams()[0];
+                        voipAudio.play();
+                        console.log("call confirmed");
+                    });
                 }
             });
             this.ua.on('registered', function (e) {
@@ -173,14 +179,14 @@ class VoipComponent extends React.Component {
             let voipAudio = document.getElementById("voipAudio")
             self.stopRingtone();
             this.incomingCallSession.answer();
-            this.activeCallSession = this.incomingCallSession;
-            this.incomingCallSession = undefined;
-            this.incomingCallSession.on('addstream', function (i) {
+            this.activeCallSession = this.incomingCallSession;            
+            this.activeCallSession.on('addstream', function (i) {
                 console.log("stream added to call");
                 let voipAudio = document.getElementById("voipAudio")
                 voipAudio.src = window.URL.createObjectURL(i.stream);
                 voipAudio.play();
             });
+            this.incomingCallSession = undefined;
         }
     }
 
