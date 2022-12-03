@@ -27,7 +27,7 @@ namespace Messzendzser.WhiteBoard
 
             Canvas = surface.Canvas;
 
-            Canvas.Clear(SKColor.Parse("#FFFFFF"));
+            Canvas.Clear(SkiaSharp.SKColors.White);
         }
 
         public void SaveDataToFile()
