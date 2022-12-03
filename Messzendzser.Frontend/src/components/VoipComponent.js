@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 
-
 class VoipComponent extends React.Component {
 
     
