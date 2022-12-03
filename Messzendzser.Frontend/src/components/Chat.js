@@ -549,8 +549,7 @@ function Chat() {
                         <li id="msg_from_me">
                             <label id="time">{time}</label>
                             <br></br>
-                            <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)} width="400"
-                                height="500">
+                            <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)} style={{ maxWidth: 500 }}>
                             </img>
                         </li>
                     )
@@ -559,8 +558,7 @@ function Chat() {
                         <li id="msg_from_other">
                             <label id="time">{time}</label>
                             <br></br>
-                            <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)} width="400"
-                                height="500">
+                            <img src={"https://localhost:7043/api/GetImage?img=" + encodeURIComponent(msg.token)} style={{ maxWidth: 500 }}>
                             </img>
                         </li>
                     )
