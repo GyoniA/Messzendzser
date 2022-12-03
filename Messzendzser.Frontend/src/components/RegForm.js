@@ -76,7 +76,7 @@ export default function Form() {
                     <button type="submit" className='btn'>
                         Regisztráció</button>
 
-                    <div className="message">
+                    <div id="error_message">
                         <p>{message.username}</p>
                         <p>{message.email}</p> 
                         <p>{message.password}</p>
