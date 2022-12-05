@@ -491,7 +491,10 @@ function Chat() {
                 } else {
                     time = dateString + " " + timeString.split(':')[0] + ":" + timeString.split(':')[1];
                 }
+            } else {
+                time = dateString + " " + timeString.split(':')[0] + ":" + timeString.split(':')[1];
             }
+           
             
 
 
